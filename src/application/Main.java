@@ -1,22 +1,11 @@
 package application;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Exercice6 extends Application {
+public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -31,7 +20,6 @@ public class Exercice6 extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 		
-		//Kouma fou tchiass
 	}
 	
 
