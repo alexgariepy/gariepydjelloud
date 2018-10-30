@@ -31,7 +31,7 @@ public class Exercice6 extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 		
-		
+		//Kouma fou tchiass
 	}
 	
 
