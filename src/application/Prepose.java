@@ -21,6 +21,7 @@ public class Prepose {
 		listDoc.add(document);
 	   return listDoc;
    }
+ //ALLO
    public ArrayList<Adherent> ajouteradherent(ArrayList<Adherent> listDoc){
 	   	String strPrenom = "Mohamed";
 	   	String strNom = "Djelloud";
