@@ -17,7 +17,7 @@ public class Document {
 	}
 	public String toString() {
 		return typeDocument + " " + Titre + " " + Auteur + " " +Date + " " + MotCle;
-		//ALLOa
+		//ALLOaa
 		
 	}
 }
