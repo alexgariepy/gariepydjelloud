@@ -23,8 +23,8 @@ public class Pret {
 			System.out.println(Double.toString(montant));
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO Auto-generated catch bloc
+			e.printStackTrace(); 
 		}
 		
 		

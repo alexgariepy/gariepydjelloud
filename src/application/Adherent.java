@@ -12,6 +12,6 @@ private	String strAdresse;
 	this.strNom = strNom;
 	this.strNum = strNum;
 	this.strAdresse = strAdresse;
-	//ALLOa
+	//ALLO
  }
 }
