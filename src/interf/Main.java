@@ -48,7 +48,7 @@ public class Main extends Application {
 
             newWindow.show();
 			
-		}
+		} 
 		
 };
 	
