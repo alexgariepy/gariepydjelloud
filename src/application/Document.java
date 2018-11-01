@@ -16,8 +16,6 @@ public class Document {
 		this.MotCle = MotCle;
 	}
 	public String toString() {
-		return typeDocument + " " + Titre + " " + Auteur + " " +Date + " " + MotCle;
-		//ALLOaa
-		
+		return typeDocument + " " + Titre + " " + Auteur + " " +Date + " " + MotCle;	
 	}
 }
