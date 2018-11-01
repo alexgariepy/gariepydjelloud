@@ -26,6 +26,9 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	private BorderPane root;
 	private Scene scene;
+	private Image image = new Image("Background.png");
+	private BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
+	private BackgroundImage BGMain = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT, bgTaille);
 	
 	
 	private EventHandler<ActionEvent> gestionUsager = new EventHandler<ActionEvent>() {
@@ -54,9 +57,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 		root  = new BorderPane();
 		scene = new Scene(root, 500, 400);
-		Image image = new Image("Background.png");
-		BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
-		BackgroundImage BGMain = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT, bgTaille);
+		
 		Background bg1 = new Background(BGMain);
 		root.setBackground(bg1);
 		root.setPadding(new Insets(10));
