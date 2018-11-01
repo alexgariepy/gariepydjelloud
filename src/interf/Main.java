@@ -59,11 +59,8 @@ public class Main extends Application {
             secondaryLayout.setBackground(bg2);
             
             VBox vBox1 = new VBox();
-            vBox1.setPadding(new Insets(10, 0 , 0, 0));
             vBox1.setMaxSize(900, 690);
             vBox1.setPrefSize(900, 690);
-            vBox1.setBackground(bg3);
-            vBox1.setBorder(border);
             
             VBox vBox2 = new VBox();
             vBox2.setMaxSize(300, 690);
@@ -74,7 +71,7 @@ public class Main extends Application {
             hBox.setMaxSize(900, 80);
             hBox.setPrefSize(900, 80);
             hBox.setBorder(border);
-            hBox.setPadding(new Insets(30, 0, 0 , 0));
+            hBox.setBackground(bg3);
             
             TabPane tp = new TabPane();
             tp.setBorder(border);
@@ -82,6 +79,8 @@ public class Main extends Application {
            
             tp.setMaxSize(900, 550);
           
+            VBox.setMargin(hBox, new Insets(30, 0, 0, 0));
+            
             Tab tabDoc = new Tab("Documents");
             Tab tabLivre = new Tab("Livres");
             Tab tabPerio = new Tab("Périodiques");
