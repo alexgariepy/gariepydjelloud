@@ -12,6 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -30,6 +31,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -38,6 +42,14 @@ public class Main extends Application {
 	private Scene scene;
 	private Image image = new Image("Background.png");
 	private Image image2 = new Image("img1.jpg");
+	private Image image3 = new Image("livre.png");
+	private ImageView imageView = new ImageView(image3);
+	private Button btnAjouter = new Button("Ajouter un document");
+	private Button btnSupprimer = new Button("Supprimer un document");
+	private Button btnGerer = new Button("Gérer les adhérents");
+	private Button btnInscire = new Button("Inscire un prêt");
+	private Button btnRetour = new Button("Inscire un retour");
+	private Button btnQuitter = new Button("Déconnexion");
 	private BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
 	private BackgroundSize bgTaille2 = new BackgroundSize(1280, 720, false, false, false, false);
 	private BackgroundImage BGMain = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT, bgTaille);
@@ -66,12 +78,62 @@ public class Main extends Application {
             vBox2.setMaxSize(300, 690);
             vBox2.setPrefSize(300, 690);
             vBox2.setBackground(bg3);
+            vBox2.setPadding(new Insets(10));
+            vBox2.setSpacing(50);
+            
+            VBox vBox3 = new VBox();
+            vBox3.setBackground(bg3);
+            vBox3.setSpacing(10);
+            vBox3.setAlignment(Pos.TOP_CENTER);
+            
+            VBox vBox4 = new VBox();
+            vBox4.setBackground(bg3);
+            vBox4.setSpacing(15);
+            vBox4.setAlignment(Pos.TOP_CENTER);
+            
+            imageView.setFitHeight(150);
+            imageView.setFitWidth(150);
+            vBox2.setAlignment(Pos.CENTER);
+            
+            Text t = new Text("\nCopyright © 2018 \nMédiathèque réalisée par : \nAlex Gariépy et Mohamed Djelloud");
+            t.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            t.setTextAlignment(TextAlignment.CENTER);
+            
+            Text t2 = new Text("Actions possibles :");
+            t2.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            t2.setTextAlignment(TextAlignment.LEFT);
+            
+            btnAjouter.setMinHeight(40);
+            btnSupprimer.setMinHeight(40);
+            btnGerer.setMinHeight(40);
+            btnInscire.setMinHeight(40);
+            btnRetour.setMinHeight(40);
+            btnQuitter.setMinHeight(30);
+            
+            btnAjouter.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            btnSupprimer.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            btnGerer.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            btnInscire.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            btnRetour.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            btnQuitter.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
+            
+            btnAjouter.setMinWidth(250);
+            btnSupprimer.setMinWidth(250);
+            btnGerer.setMinWidth(250);
+            btnInscire.setMinWidth(250);
+            btnRetour.setMinWidth(250);
+            
+            vBox3.getChildren().addAll(imageView, t);
+            vBox4.getChildren().addAll(t2, btnAjouter, btnSupprimer, btnGerer, btnInscire, btnRetour, btnQuitter);
+            
+            vBox2.getChildren().addAll(vBox3, vBox4);
             
             HBox hBox = new HBox();
             hBox.setMaxSize(900, 80);
             hBox.setPrefSize(900, 80);
             hBox.setBorder(border);
             hBox.setBackground(bg3);
+            
             
             TabPane tp = new TabPane();
             tp.setBorder(border);
@@ -134,6 +196,7 @@ public class Main extends Application {
 		Button btnUsager = new Button("Êtes vous un usager?");
 		Button btnConnexion = new Button("Connexion");
 		btnUsager.setOnAction(gestionUsager);
+		btnUsager.setOnMouseClicked(e -> primaryStage.hide());
 		btnConnexion.setOnMouseClicked(e -> primaryStage.hide());
 		btnConnexion.setOnAction(gestionUsager);
 		
