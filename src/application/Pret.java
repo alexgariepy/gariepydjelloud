@@ -30,6 +30,18 @@ public class Pret {
 		
 	}
 	
+	public Adherent getAdh() {
+		return adh;
+	}
+	public Date getDatePret() {
+		return DatePret;
+	}
+	public Date getDateRetourPrevu() {
+		return DateRetourPrevu;
+	}
+	public Date getDateDeRemise() {
+		return DateDeRemise;
+	}
 	public static double retournemontantamende(Date DateRetourPrevuAmende,Date DateDeRemiseAmende) {
 		int nombreJour =0 ;
 		double montant =0;

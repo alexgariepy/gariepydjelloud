@@ -14,4 +14,23 @@ private	String strAdresse;
 	this.strAdresse = strAdresse;
 	//ALL
  }
+
+	public String getStrPrenom() {
+		return strPrenom;
+	}
+
+	public String getStrNom() {
+		return strNom;
+	}
+
+	public String getStrNum() {
+		return strNum;
+	}
+
+	public String getStrAdresse() {
+		return strAdresse;
+	}
+	public String toString() {
+		return strPrenom + " " + strNom + " " + strNum + " " +strAdresse + " ";	
+	}
 }

@@ -1,6 +1,14 @@
 package interf;
 
+import java.rmi.dgc.Lease;
+import java.util.Date;
+
+import application.Document;
+import application.LectureFichier;
+import application.TypeDocument;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,6 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -148,15 +158,37 @@ public class Main extends Application {
             Tab tabPerio = new Tab("Périodiques");
             Tab tabDVD = new Tab("DVDS");
             
-            tabDoc.setClosable(false);
-            tabLivre.setClosable(false);
-            tabPerio.setClosable(false);
-            tabDVD.setClosable(false);
             
-            tabDoc.setContent(new Rectangle(900,550, Color.GHOSTWHITE));
-            tabLivre.setContent(new Rectangle(900,550, Color.GHOSTWHITE));
+          // if(tabDoc.isSelected()) {
+        	   LectureFichier fichier = new LectureFichier();
+        	   fichier.lectureDVD();
+        	   
+        	   ObservableList<Document> donnees = FXCollections.observableArrayList();	   
+        	   
+        	   TableView<Document> table = new TableView<Document>();
+        	   VBox vbox = new VBox();
+       		   vbox.getChildren().add(table);
+        	   TableColumn<Document,TypeDocument> colonneNumDoc = new TableColumn<Document,TypeDocument>("Numéro du document");
+        	   TableColumn<Document,String> colonneTitreDoc = new TableColumn<Document,String>("Titre");
+        	   TableColumn<Document,Integer> colonneNomDoc = new TableColumn<Document,Integer>("Nombre de prêt");
+        	   TableColumn<Document,String> colonneNomAuteurDoc = new TableColumn<Document,String>("Nombre de prêt");
+        	   TableColumn<Document,Date> colonneDateDoc = new TableColumn<Document,Date>("Date");
+        	   TableColumn<Document,String> colonneMotCle = new TableColumn<Document,String>("Mots-cle");
+        	   table.getColumns().addAll(colonneNumDoc,colonneTitreDoc,colonneNomDoc,colonneNomAuteurDoc,colonneDateDoc,colonneMotCle);
+        	   for(int i = 0;i < fichier.getListDocAdherent().size();i++) {
+        		   donnees.add(fichier.getListDocAdherent().get(i));
+        	   }
+        	   table.setItems(donnees);
+        	 //  tabDoc.add
+     //      }
+           tabDoc.setClosable(false);
+           tabLivre.setClosable(false);
+           tabPerio.setClosable(false);
+           tabDVD.setClosable(false);
+            tabDoc.setContent(vbox);
+            /*tabLivre.setContent(new Rectangle(900,550, Color.GHOSTWHITE));
             tabPerio.setContent(new Rectangle(900,550, Color.GHOSTWHITE));
-            tabDVD.setContent(new Rectangle(900,550, Color.GHOSTWHITE));
+            tabDVD.setContent(new Rectangle(900,550, Color.GHOSTWHITE));*/
             
             tp.getTabs().addAll(tabDoc, tabLivre, tabPerio, tabDVD);
             vBox1.getChildren().addAll(tp, hBox);
