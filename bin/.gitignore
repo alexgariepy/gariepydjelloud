@@ -1,3 +1,14 @@
+<<<<<<< HEAD
 /application/
 /interf/
 /livre.png
+=======
+/interf/
+/add.png
+/del.png
+/gerer.png
+/pret.png
+/quitter.png
+/retour.png
+/supp.png
+>>>>>>> refs/remotes/origin/master

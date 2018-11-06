@@ -53,7 +53,22 @@ public class Main extends Application {
 	private Image image = new Image("Background.png");
 	private Image image2 = new Image("img1.jpg");
 	private Image image3 = new Image("livre.png");
+	
+	private Image imageAdd = new Image("add.png");
+	private Image imageDel = new Image("supp.png");
+	private Image imageGerer = new Image("gerer.png");
+	private Image imageRetour = new Image("retour.png");
+	private Image imagePret = new Image("pret.png");
+	private Image imageQuitter = new Image("quitter.png");
+	
 	private ImageView imageView = new ImageView(image3);
+	private ImageView addView = new ImageView(imageAdd);
+	private ImageView delView = new ImageView(imageDel);
+	private ImageView gererView = new ImageView(imageGerer);
+	private ImageView retourView = new ImageView(imageRetour);
+	private ImageView pretView = new ImageView(imagePret);
+	private ImageView quitterView = new ImageView(imageQuitter);
+	
 	private Button btnAjouter = new Button("Ajouter un document");
 	private Button btnSupprimer = new Button("Supprimer un document");
 	private Button btnGerer = new Button("Gérer les adhérents");
@@ -112,27 +127,8 @@ public class Main extends Application {
             Text t2 = new Text("Actions possibles :");
             t2.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
             t2.setTextAlignment(TextAlignment.LEFT);
-            
-            btnAjouter.setMinHeight(40);
-            btnSupprimer.setMinHeight(40);
-            btnGerer.setMinHeight(40);
-            btnInscire.setMinHeight(40);
-            btnRetour.setMinHeight(40);
-            btnQuitter.setMinHeight(30);
-            
-            btnAjouter.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            btnSupprimer.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            btnGerer.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            btnInscire.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            btnRetour.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            btnQuitter.setFont(Font.font("Arial", FontWeight.MEDIUM, 13));
-            
-            btnAjouter.setMinWidth(250);
-            btnSupprimer.setMinWidth(250);
-            btnGerer.setMinWidth(250);
-            btnInscire.setMinWidth(250);
-            btnRetour.setMinWidth(250);
-            
+
+            parametreBoutton();          
             vBox3.getChildren().addAll(imageView, t);
             vBox4.getChildren().addAll(t2, btnAjouter, btnSupprimer, btnGerer, btnInscire, btnRetour, btnQuitter);
             
@@ -260,6 +256,51 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public void parametreBoutton() {
+        
+        addView.setFitHeight(40);
+        delView.setFitHeight(40);
+        gererView.setFitHeight(40);
+        pretView.setFitHeight(40);
+        retourView.setFitHeight(40);
+        quitterView.setFitHeight(30);
+        
+        addView.setFitWidth(40);
+        delView.setFitWidth(40);
+        gererView.setFitWidth(40);
+        pretView.setFitWidth(40);
+        retourView.setFitWidth(40);
+        quitterView.setFitWidth(30);
+        
+        btnAjouter.setMinHeight(50);
+        btnSupprimer.setMinHeight(50);
+        btnGerer.setMinHeight(50);
+        btnInscire.setMinHeight(50);
+        btnRetour.setMinHeight(50);
+        btnQuitter.setMinHeight(40);
+        
+        btnAjouter.setGraphic(addView);
+        btnSupprimer.setGraphic(delView);
+        btnGerer.setGraphic(gererView);
+        btnInscire.setGraphic(pretView);
+        btnRetour.setGraphic(retourView);
+        btnQuitter.setGraphic(quitterView);
+        
+        btnAjouter.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        btnSupprimer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        btnGerer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        btnInscire.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        btnRetour.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        btnQuitter.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        
+        btnAjouter.setMinWidth(250);
+        btnSupprimer.setMinWidth(250);
+        btnGerer.setMinWidth(250);
+        btnInscire.setMinWidth(250);
+        btnRetour.setMinWidth(250);
+        
 	}
 	
 }
