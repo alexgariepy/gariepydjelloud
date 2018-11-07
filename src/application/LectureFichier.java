@@ -26,7 +26,6 @@ public class LectureFichier {
 		br = new BufferedReader(new FileReader(file));
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
 	} 
 	 String strLigne = ""; 
 	StringTokenizer st;
