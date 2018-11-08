@@ -307,7 +307,7 @@ public class Main extends Application {
 			vBoxTF.setPadding(new Insets(10));
 			hBoxInfo.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInfo.setBorder(border2);
-			
+			//
 			HBox hBoxButton = new HBox();
 			hBoxButton.getChildren().addAll(btnAnnuler, btnConfirmer);
 			btnAnnuler.setOnMouseClicked(e -> stageAjouter.close());
