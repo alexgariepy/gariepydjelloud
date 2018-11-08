@@ -117,7 +117,7 @@ public class Main extends Application {
 			VBox vBox1 = new VBox();
 			vBox1.setMaxSize(900, 690);
 			vBox1.setPrefSize(900, 690);
-
+			
 			VBox vBox2 = new VBox();
 			vBox2.setMaxSize(300, 690);
 			vBox2.setPrefSize(300, 690);
