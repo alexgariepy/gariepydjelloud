@@ -23,8 +23,8 @@ public class Prepose {
 		int intNombrePret = 0;
 		String Date = "30/10/2018";
 		String MotCle = "Fax";
-		Document document = new Document(typeDocument, Titre,intNombrePret, Auteur, Date, MotCle);
-		listDoc.add(document);
+	//	Document document = new Document(typeDocument, Titre,intNombrePret, Auteur, Date, MotCle);
+	//	listDoc.add(document);
 	   return listDoc;
    }
  //AL

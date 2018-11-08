@@ -1,41 +1,41 @@
 package application;
 
 public class Document {
-	private TypeDocument typeDocument;
+	private int intNumeroDoc;
 	private	String Titre;
-	private String Auteur;
+	private String Etat;
 	private int intNombreDePret;
 	private	String Date;
-	private	String MotCle;
 	
 	
-	Document(TypeDocument typeDocument,String Titre,int intNombreDePret,String Auteur,String Date,String MotCle){
-		this.typeDocument = typeDocument;
+	Document(int intNumeroDoc,String Titre,String Date,String Etat,int intNombreDePret){
+		this.intNumeroDoc = intNumeroDoc;
 		this.Titre = Titre;
-		this.intNombreDePret = intNombreDePret;
-		this.Auteur = Auteur;
+		this.Etat = Etat;
 		this.Date = Date;
-		this.MotCle = MotCle;
+		this.intNombreDePret = intNombreDePret;
+		
 	}
-	public TypeDocument getTypeDocument() {
-		return typeDocument;
-	}
+	
 	public String getTitre() {
 		return Titre;
 	}
-	public String getAuteur() {
-		return Auteur;
-	}
-	public int getIntNombreDePret() {
-		return intNombreDePret;
-	}
+
+
 	public String getDate() {
 		return Date;
 	}
-	public String getMotCle() {
-		return MotCle;
+
+	public int getIntNumeroDoc() {
+		return intNumeroDoc;
 	}
-	public String toString() {
-		return typeDocument + " " + Titre + " " + Auteur + " " +Date + " " + MotCle;	
+
+	public String getEtat() {
+		return Etat;
 	}
+
+	public int getIntNombreDePret() {
+		return intNombreDePret;
+	}
+
 }
