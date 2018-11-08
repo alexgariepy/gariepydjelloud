@@ -236,7 +236,7 @@ public class Main extends Application {
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				newWindow.close();
-
+				
 			});
 
 			newWindow.show();
