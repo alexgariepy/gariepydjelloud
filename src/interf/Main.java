@@ -22,6 +22,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -183,40 +184,45 @@ public class Main extends Application {
 			Tab tabDVD = new Tab("DVDS");
 
 			LectureFichier fichier = new LectureFichier();
-			fichier.lectureDVD();
+			fichier.lecture();
 
-			ObservableList<Document> donnees = FXCollections.observableArrayList();
-
+			ObservableList<Document> donnees = FXCollections.observableArrayList(fichier.getListDoc());
+			
+			
 			TableView<Document> table = new TableView<Document>();
 			VBox vbox = new VBox();
 			vbox.getChildren().add(table);
-			TableColumn<Document, TypeDocument> colonneNumDoc = new TableColumn<Document, TypeDocument>(
+			TableColumn<Document, Integer> colonneNumDoc = new TableColumn<Document, Integer>(
 					"Numéro du document");
 			TableColumn<Document, String> colonneTitreDoc = new TableColumn<Document, String>("Titre");
 			TableColumn<Document, Integer> colonneNomDoc = new TableColumn<Document, Integer>("Nombre de prêt");
-			TableColumn<Document, String> colonneNomAuteurDoc = new TableColumn<Document, String>("Nom auteur");
-			TableColumn<Document, Date> colonneDateDoc = new TableColumn<Document, Date>("Date");
-			TableColumn<Document, String> colonneMotCle = new TableColumn<Document, String>("Mots-cle");
-			table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc, colonneNomAuteurDoc,
-					colonneDateDoc, colonneMotCle);
-			for (int i = 0; i < fichier.getListDocAdherent().size(); i++) {
-				donnees.add(fichier.getListDocAdherent().get(i));
-			}
+			TableColumn<Document, String> colonneDateDoc = new TableColumn<Document, String>("Date");
+			TableColumn<Document, String> colonneEtat = new TableColumn<Document, String>("Mots-cle");
+			
+			colonneNumDoc.setCellValueFactory(new PropertyValueFactory<>("intNumeroDoc"));
+			colonneTitreDoc.setCellValueFactory(new PropertyValueFactory<>("Titre"));
+			colonneNomDoc.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
+			colonneDateDoc.setCellValueFactory(new PropertyValueFactory<>("Date"));
+			colonneEtat.setCellValueFactory(new PropertyValueFactory<>("Etat"));
+			
+			table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc,
+					colonneDateDoc, colonneEtat);
+			table.setItems(donnees);
 			colonneNumDoc.setResizable(false);
 			colonneTitreDoc.setResizable(false);
 			colonneNomDoc.setResizable(false);
-			colonneNomAuteurDoc.setResizable(false);
+		
 			colonneDateDoc.setResizable(false);
-			colonneMotCle.setResizable(false);
+			colonneEtat.setResizable(false);
 
 			colonneNumDoc.setMinWidth(150);
 			colonneNomDoc.setMinWidth(150);
-			colonneNomAuteurDoc.setMinWidth(150);
+		
 			colonneDateDoc.setMinWidth(150);
-			colonneMotCle.setMinWidth(150);
+		
 			colonneTitreDoc.setMinWidth(150);
 
-			table.setItems(donnees);
+			
 			tabDoc.setClosable(false);
 			tabLivre.setClosable(false);
 			tabPerio.setClosable(false);

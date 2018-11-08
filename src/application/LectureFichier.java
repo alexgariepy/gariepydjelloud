@@ -8,18 +8,17 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class LectureFichier {
-	private ArrayList<Document> listDocAdherent = new ArrayList<Document>();
+	private ArrayList<Document> listDoc = new ArrayList<Document>();
 	
-	public ArrayList<Document> getListDocAdherent() {
-		return listDocAdherent;
+	public ArrayList<Document> getListDoc() {
+		return listDoc;
 	}
 
-	public void setListDocAdherent(ArrayList<Document> listDocAdherent) {
-		this.listDocAdherent = listDocAdherent;
+	public void setListDoc(ArrayList<Document> listDoc) {
+		this.listDoc = listDoc;
 	}
 
-	public void lectureDVD() {
-
+	public void lecture() {
 	File file = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
 	BufferedReader br = null;
 	try {
@@ -27,23 +26,72 @@ public class LectureFichier {
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 	} 
-	 String strLigne = ""; 
-	StringTokenizer st;
 	  try {
-		  
-		while ((strLigne = br.readLine()) != null) {
+		  String strLigne = ""; 
+		  StringTokenizer st;
+		  while ((strLigne = br.readLine()) != null) {
 			st = new StringTokenizer(strLigne, ",");
-			int intNumeroDoc = Integer.parseInt(st.nextToken().trim().substring(2,1));
-		    String strTitre = st.nextToken().trim();
+			String strNumeroDoc = st.nextToken();
+			int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+			String strTitre = st.nextToken().trim();
 		    String strDate = st.nextToken().trim();
-		    int intNombreDePret = Integer.parseInt(st.nextToken().trim());
-		    String strAuteur = st.nextToken().trim();
-		    
-		    Document docDvd = new Document(TypeDocument.DVD, strTitre,intNombreDePret, strAuteur, strDate, "");
-		    listDocAdherent.add(docDvd);
+			int intNombreDePret = Integer.parseInt(st.nextToken().trim());
+			String strAuteur = st.nextToken().trim();
+		    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+		    listDoc.add(docDvd);
 		}
 		}catch(Exception e) {
-			
 		}
+	  File fileLivre = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Livres.txt");
+		BufferedReader brLivre = null;
+		try {
+			brLivre = new BufferedReader(new FileReader(fileLivre));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+		}
+		 try {
+			  String strLigne = ""; 
+			  StringTokenizer st;
+			  while ((strLigne = brLivre.readLine()) != null) {
+				st = new StringTokenizer(strLigne, ",");
+				String strNumeroDoc = st.nextToken();
+				int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+				String strTitre = st.nextToken().trim();
+			    String strDate = st.nextToken().trim();
+				String strAuteur = st.nextToken().trim();
+			    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+			    listDoc.add(docDvd);
+			}
+			}catch(Exception e) {
+			}
+		 
+		 
+		 
+		 	File filePer = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
+			BufferedReader brPer = null;
+			try {
+				brLivre = new BufferedReader(new FileReader(filePer));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+			}
+			 try {
+				  String strLigne = ""; 
+				  StringTokenizer st;
+				  System.out.println("a");
+				  while ((strLigne = brPer.readLine()) != null) {
+					  System.out.println(strLigne);
+					st = new StringTokenizer(strLigne, ",");
+					String strNumeroDoc = st.nextToken();
+					int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+					String strTitre = st.nextToken().trim();
+				    String strDate = st.nextToken().trim();
+					//String strAuteur = st.nextToken().trim();
+				    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+				    listDoc.add(docDvd);
+				}
+				}catch(Exception e) {
+				}
 	  }
+	
+	
 }
