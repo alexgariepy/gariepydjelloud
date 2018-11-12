@@ -9,7 +9,7 @@ public class Document {
 	private TypeDocument typeDocument;
 	
 	
-	Document(String strNumeroDoc,String Titre,String Date,String Etat,int intNombreDePret,TypeDocument typeDocument){
+	public Document(String strNumeroDoc,String Titre,String Date,String Etat,int intNombreDePret,TypeDocument typeDocument){
 		this.strNumeroDoc = strNumeroDoc;
 		this.Titre = Titre;
 		this.Etat = Etat;
