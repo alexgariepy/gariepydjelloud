@@ -1,19 +1,21 @@
 package application;
 
 public class Document {
-	private int intNumeroDoc;
+	private String strNumeroDoc;
 	private	String Titre;
 	private String Etat;
 	private int intNombreDePret;
 	private	String Date;
+	private TypeDocument typeDocument;
 	
 	
-	Document(int intNumeroDoc,String Titre,String Date,String Etat,int intNombreDePret){
-		this.intNumeroDoc = intNumeroDoc;
+	Document(String strNumeroDoc,String Titre,String Date,String Etat,int intNombreDePret,TypeDocument typeDocument){
+		this.strNumeroDoc = strNumeroDoc;
 		this.Titre = Titre;
 		this.Etat = Etat;
 		this.Date = Date;
 		this.intNombreDePret = intNombreDePret;
+		this.typeDocument = typeDocument;
 		
 	}
 	
@@ -26,8 +28,8 @@ public class Document {
 		return Date;
 	}
 
-	public int getIntNumeroDoc() {
-		return intNumeroDoc;
+	public String getStrNumeroDoc() {
+		return strNumeroDoc;
 	}
 
 	public String getEtat() {

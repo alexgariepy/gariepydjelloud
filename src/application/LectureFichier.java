@@ -9,7 +9,9 @@ import java.util.StringTokenizer;
 
 public class LectureFichier {
 	private ArrayList<Document> listDoc = new ArrayList<Document>();
-	
+	private ArrayList<DVD> listDvd = new ArrayList<DVD>();
+	private ArrayList<Periodiques> listPeriodique = new ArrayList<Periodiques>();
+	private ArrayList<Livre> listLivre = new ArrayList<Livre>();
 	public ArrayList<Document> getListDoc() {
 		return listDoc;
 	}
@@ -19,7 +21,7 @@ public class LectureFichier {
 	}
 
 	public void lecture() {
-	File file = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
+	File file = new File("A:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
 	BufferedReader br = null;
 	try {
 		br = new BufferedReader(new FileReader(file));
@@ -31,18 +33,20 @@ public class LectureFichier {
 		  StringTokenizer st;
 		  while ((strLigne = br.readLine()) != null) {
 			st = new StringTokenizer(strLigne, ",");
-			String strNumeroDoc = st.nextToken();
-			int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+			String strNumeroDoc = st.nextToken().trim();
+		//	int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
 			String strTitre = st.nextToken().trim();
 		    String strDate = st.nextToken().trim();
-			int intNombreDePret = Integer.parseInt(st.nextToken().trim());
+			int intNombreDeDisque = Integer.parseInt(st.nextToken().trim());
 			String strAuteur = st.nextToken().trim();
-		    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+		    Document docDvd = new Document(strNumeroDoc, strTitre, strDate, "Disponible",0,TypeDocument.DVD);
+		    DVD dvd = new DVD(strNumeroDoc, strTitre, strDate, intNombreDeDisque, strAuteur, 0, "Disponible");
+		    listDvd.add(dvd);
 		    listDoc.add(docDvd);
 		}
 		}catch(Exception e) {
 		}
-	  File fileLivre = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Livres.txt");
+	  File fileLivre = new File("A:\\Objet2\\gariepydjelloud\\donneesEntrees\\Livres.txt");
 		BufferedReader brLivre = null;
 		try {
 			brLivre = new BufferedReader(new FileReader(fileLivre));
@@ -55,11 +59,13 @@ public class LectureFichier {
 			  while ((strLigne = brLivre.readLine()) != null) {
 				st = new StringTokenizer(strLigne, ",");
 				String strNumeroDoc = st.nextToken();
-				int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+			//	int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
 				String strTitre = st.nextToken().trim();
 			    String strDate = st.nextToken().trim();
 				String strAuteur = st.nextToken().trim();
-			    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+			    Document docDvd = new Document(strNumeroDoc, strTitre, strDate, "Disponible",0,TypeDocument.LIVRE);
+			    Livre livre = new Livre(strNumeroDoc, strTitre, "Disponible", strDate, strAuteur, TypeDocument.LIVRE,0);
+			    listLivre.add(livre);
 			    listDoc.add(docDvd);
 			}
 			}catch(Exception e) {
@@ -67,31 +73,44 @@ public class LectureFichier {
 		 
 		 
 		 
-		 	File filePer = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
+		 	File filePer = new File("A:\\Objet2\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
 			BufferedReader brPer = null;
 			try {
-				brLivre = new BufferedReader(new FileReader(filePer));
+				brPer = new BufferedReader(new FileReader(filePer));
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 			}
 			 try {
 				  String strLigne = ""; 
 				  StringTokenizer st;
-				  System.out.println("a");
-				  while ((strLigne = brPer.readLine()) != null) {
-					  System.out.println(strLigne);
+				  while ((strLigne = brPer.readLine()) != null) {		  
 					st = new StringTokenizer(strLigne, ",");
 					String strNumeroDoc = st.nextToken();
-					int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
+					//int intNumeroDo = Integer.parseInt(strNumeroDoc.trim().substring(3,strNumeroDoc.trim().length()));
 					String strTitre = st.nextToken().trim();
 				    String strDate = st.nextToken().trim();
-					//String strAuteur = st.nextToken().trim();
-				    Document docDvd = new Document(intNumeroDo, strTitre, strDate, "Disponible",0);
+					int intNumDuVolume = Integer.parseInt(st.nextToken().trim());
+					int intNumDuPeriodique = Integer.parseInt(st.nextToken().trim());
+				    Document docDvd = new Document(strNumeroDoc, strTitre, strDate, "Disponible",0,TypeDocument.PERIODIQUES);
+				    Periodiques Per = new Periodiques(strNumeroDoc, strTitre, strDate, intNumDuVolume, intNumDuPeriodique, "Disponible", 0, TypeDocument.PERIODIQUES);
+				    listPeriodique.add(Per);
 				    listDoc.add(docDvd);
 				}
 				}catch(Exception e) {
 				}
 	  }
+
+	public ArrayList<Livre> getListLivre() {
+		return listLivre;
+	}
+
+	public ArrayList<Periodiques> getListPeriodique() {
+		return listPeriodique;
+	}
+
+	public ArrayList<DVD> getListDvd() {
+		return listDvd;
+	}
 	
 	
 }
