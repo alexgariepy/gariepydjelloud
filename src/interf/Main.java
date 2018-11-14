@@ -495,19 +495,31 @@ public class Main extends Application {
 						
 						switch (typeDoc) {
 						case "DVD":
-							 Document docDvd = new Document("DVD11", strTitre, date, "Disponible",0,TypeDocument.DVD);
-							    DVD dvd = new DVD("DVD11", strTitre, date, 2, strAuteur, 0, "Disponible");
+							int intNumeroDocDVD = fichier.getListDvd().size()+1;
+								Document docDvd = new Document("DVD" + intNumeroDocDVD, strTitre, date, "Disponible",0,TypeDocument.DVD);
+							    DVD dvd = new DVD("DVD" + intNumeroDocDVD, strTitre, date, 2, strAuteur, 0, "Disponible");
 							    fichier.getListDvd().add(dvd);
 							    fichier.getListDoc().add(docDvd);
-							   System.out.println(fichier.getListDvd().size());
+							  /* System.out.println(fichier.getListDvd().size());
 							   for(int i = 0;i<fichier.getListDvd().size();i++) {
 								   System.out.println(fichier.getListDvd().get(i).getStrAuteur());
-							   }
+							   }*/
+							    tabDoc.setContent(remplirTabDocument(tabDoc));
 							  tabDVD.setContent(remplirTabDVD(tabDVD)); 
 							break;
 						case "Periodiques":
+							
 							break;
-						case "Livre":	
+						case "Livre":
+							int intNumeroDocLivre = fichier.getListLivre().size()+1;
+							Document docLivre = new Document("Livre" + intNumeroDocLivre, strTitre, date, "Disponible",0,TypeDocument.LIVRE);
+						    Livre liv = new Livre("Livre"+ intNumeroDocLivre, strTitre, "Disponible", date, strAuteur, TypeDocument.LIVRE, 0);
+						    fichier.getListLivre().add(liv);
+						    fichier.getListDoc().add(docLivre);
+						    
+						    
+						    tabDoc.setContent(remplirTabDocument(tabDoc));
+						    tabLivre.setContent(remplirTabLivre(tabLivre)); 
 							break;
 
 						default:
