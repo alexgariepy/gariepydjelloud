@@ -1,7 +1,6 @@
 package interf;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import application.DVD;
 import application.Document;
@@ -17,6 +16,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -29,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -88,12 +90,12 @@ public class Main extends Application {
 	private Button btnConnexion = new Button("Connexion");
 	private Button btnConfirmer = new Button("Confirmer");
 	private Button btnAnnuler = new Button("Annuler");
-	
+
 	private Tab tabDoc = new Tab("Collection");
 	private Tab tabLivre = new Tab("Livres");
 	private Tab tabPerio = new Tab("Périodiques");
 	private Tab tabDVD = new Tab("DVDS");
-	
+
 	private BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
 	private BackgroundSize bgTaille2 = new BackgroundSize(1280, 720, false, false, false, false);
 	private BackgroundImage BGMain = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
@@ -111,7 +113,13 @@ public class Main extends Application {
 	private Border border2 = new Border(
 			new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 	private boolean booUsager = false;
+	private ComboBox comboBox;
 	private LectureFichier fichier = new LectureFichier();
+	private TextField tfTitre;
+	private TextField tfAuteur;
+	private TextField tfMC;
+	private Stage stageAjouter;
+	private DatePicker dp = new DatePicker();
 	private EventHandler<ActionEvent> gestionConnexion = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -127,7 +135,7 @@ public class Main extends Application {
 			VBox vBox1 = new VBox();
 			vBox1.setMaxSize(900, 690);
 			vBox1.setPrefSize(900, 690);
-			
+
 			VBox vBox2 = new VBox();
 			vBox2.setMaxSize(300, 690);
 			vBox2.setPrefSize(300, 690);
@@ -187,22 +195,17 @@ public class Main extends Application {
 
 			VBox.setMargin(hBox, new Insets(30, 0, 0, 0));
 
-			
-
-			
 			fichier.lecture();
-			
+
 			tabDoc.setContent(remplirTabDocument(tabDoc));
 			tabLivre.setContent(remplirTabLivre(tabLivre));
 			tabPerio.setContent(remplirTabPer(tabPerio));
 			tabDVD.setContent(remplirTabDVD(tabDVD));
-			
-			
+
 			tabDoc.setClosable(false);
 			tabLivre.setClosable(false);
 			tabPerio.setClosable(false);
 			tabDVD.setClosable(false);
-			
 
 			tp.getTabs().addAll(tabDoc, tabLivre, tabPerio, tabDVD);
 			vBox1.getChildren().addAll(tp, hBox);
@@ -217,7 +220,7 @@ public class Main extends Application {
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				newWindow.close();
-				
+
 			});
 
 			newWindow.show();
@@ -225,8 +228,9 @@ public class Main extends Application {
 		}
 
 	};
+
 	public VBox remplirTabDocument(Tab tabDoc) {
-		//Tous les documents
+		// Tous les documents
 		ObservableList<Document> donnees = FXCollections.observableArrayList(fichier.getListDoc());
 		TableView<Document> table = new TableView<Document>();
 		VBox vbox = new VBox();
@@ -236,42 +240,40 @@ public class Main extends Application {
 		TableColumn<Document, Integer> colonneNomDoc = new TableColumn<Document, Integer>("Nombre de prêt");
 		TableColumn<Document, String> colonneDateDoc = new TableColumn<Document, String>("Date");
 		TableColumn<Document, String> colonneEtat = new TableColumn<Document, String>("Mots-cle");
-		
+
 		colonneNumDoc.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
 		colonneTitreDoc.setCellValueFactory(new PropertyValueFactory<>("Titre"));
 		colonneNomDoc.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
 		colonneDateDoc.setCellValueFactory(new PropertyValueFactory<>("Date"));
 		colonneEtat.setCellValueFactory(new PropertyValueFactory<>("Etat"));
-		
-		table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc,
-				colonneDateDoc, colonneEtat);
+
+		table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc, colonneDateDoc, colonneEtat);
 		table.setItems(donnees);
-		
+
 		colonneNumDoc.setResizable(false);
 		colonneTitreDoc.setResizable(false);
 		colonneNomDoc.setResizable(false);
-	
+
 		colonneDateDoc.setResizable(false);
 		colonneEtat.setResizable(false);
 
 		colonneNumDoc.setMinWidth(150);
 		colonneNomDoc.setMinWidth(150);
-	
+
 		colonneDateDoc.setMinWidth(150);
-	
+		colonneEtat.setMinWidth(300);
 		colonneTitreDoc.setMinWidth(150);
-		
+
 		return vbox;
 	}
+
 	public VBox remplirTabDVD(Tab tabDVD) {
-		//DVD
-		System.out.println("aaa");
+		// DVD
 		ObservableList<DVD> donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
 		TableView<DVD> tableDVD = new TableView<DVD>();
 		VBox vboxDVD = new VBox();
 		vboxDVD.getChildren().add(tableDVD);
-		
-		
+
 		TableColumn<DVD, String> colonneNumDVD = new TableColumn<DVD, String>("Numéro du document");
 		TableColumn<DVD, String> colonneTitreDVD = new TableColumn<DVD, String>("Titre");
 		TableColumn<DVD, Integer> colonneNombreDeDisque = new TableColumn<DVD, Integer>("Nombre de disque");
@@ -279,7 +281,7 @@ public class Main extends Application {
 		TableColumn<DVD, String> colonneEtatDVD = new TableColumn<DVD, String>("Etat");
 		TableColumn<DVD, String> colonneAuteurDVD = new TableColumn<DVD, String>("Auteur");
 		TableColumn<DVD, Integer> colonneNombreDePret = new TableColumn<DVD, Integer>("Nombre de pret");
-		
+
 		colonneNumDVD.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
 		colonneTitreDVD.setCellValueFactory(new PropertyValueFactory<>("strNomDuDvd"));
 		colonneDateDVD.setCellValueFactory(new PropertyValueFactory<>("strDate"));
@@ -287,9 +289,9 @@ public class Main extends Application {
 		colonneAuteurDVD.setCellValueFactory(new PropertyValueFactory<>("strAuteur"));
 		colonneNombreDePret.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
 		colonneEtatDVD.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
-		
-		tableDVD.getColumns().addAll(colonneNumDVD, colonneTitreDVD, colonneDateDVD,
-				colonneNombreDeDisque, colonneAuteurDVD,colonneNombreDePret,colonneEtatDVD);
+
+		tableDVD.getColumns().addAll(colonneNumDVD, colonneTitreDVD, colonneDateDVD, colonneNombreDeDisque,
+				colonneAuteurDVD, colonneNombreDePret, colonneEtatDVD);
 		tableDVD.setItems(donneesDVD);
 		colonneNumDVD.setResizable(false);
 		colonneTitreDVD.setResizable(false);
@@ -298,9 +300,7 @@ public class Main extends Application {
 		colonneAuteurDVD.setResizable(false);
 		colonneNombreDePret.setResizable(false);
 		colonneEtatDVD.setResizable(false);
-		
-		
-		
+
 		colonneNumDVD.setMinWidth(150);
 		colonneTitreDVD.setMinWidth(150);
 		colonneDateDVD.setMinWidth(150);
@@ -308,28 +308,30 @@ public class Main extends Application {
 		colonneAuteurDVD.setMinWidth(150);
 		colonneNombreDePret.setMinWidth(150);
 		colonneEtatDVD.setMinWidth(150);
-		
-	
+
 		return vboxDVD;
-		
+
 	}
+
 	public VBox remplirTabPer(Tab tabPerio) {
-		//Periodiques
-		
+		// Periodiques
+
 		ObservableList<Periodiques> donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
 		TableView<Periodiques> tablePer = new TableView<Periodiques>();
 		VBox vboxPer = new VBox();
 		vboxPer.getChildren().add(tablePer);
-		
+
 		TableColumn<Periodiques, String> colonneNumPer = new TableColumn<Periodiques, String>("Numéro du document");
 		TableColumn<Periodiques, String> colonneTitrePer = new TableColumn<Periodiques, String>("Titre");
-		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques,Integer>("Numero de volume");
-		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique= new TableColumn<Periodiques,Integer>("Numero de periodique");
+		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>(
+				"Numero de volume");
+		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique = new TableColumn<Periodiques, Integer>(
+				"Numero de periodique");
 		TableColumn<Periodiques, String> colonneDatePer = new TableColumn<Periodiques, String>("Date");
 		TableColumn<Periodiques, String> colonneEtatPer = new TableColumn<Periodiques, String>("Etat");
-		TableColumn<Periodiques,Integer> colonneNombreDePretPer = new TableColumn<Periodiques, Integer>("Nombre de pret");
-		
-		
+		TableColumn<Periodiques, Integer> colonneNombreDePretPer = new TableColumn<Periodiques, Integer>(
+				"Nombre de pret");
+
 		colonneNumPer.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
 		colonneTitrePer.setCellValueFactory(new PropertyValueFactory<>("strNomDuPeriodique"));
 		colonneNumeroDeVolume.setCellValueFactory(new PropertyValueFactory<>("intNumDuVolume"));
@@ -337,9 +339,9 @@ public class Main extends Application {
 		colonneDatePer.setCellValueFactory(new PropertyValueFactory<>("strDate"));
 		colonneEtatPer.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
 		colonneNombreDePretPer.setCellValueFactory(new PropertyValueFactory<>("intNumDePret"));
-		
-		tablePer.getColumns().addAll(colonneNumPer, colonneTitrePer, colonneNumeroDeVolume,
-				colonneNumeroDePeriodique, colonneDatePer,colonneEtatPer,colonneNombreDePretPer);
+
+		tablePer.getColumns().addAll(colonneNumPer, colonneTitrePer, colonneNumeroDeVolume, colonneNumeroDePeriodique,
+				colonneDatePer, colonneEtatPer, colonneNombreDePretPer);
 		tablePer.setItems(donneesPer);
 		colonneNumPer.setResizable(false);
 		colonneTitrePer.setResizable(false);
@@ -348,8 +350,7 @@ public class Main extends Application {
 		colonneDatePer.setResizable(false);
 		colonneEtatPer.setResizable(false);
 		colonneNombreDePretPer.setResizable(false);
-		
-		
+
 		colonneNumPer.setMinWidth(150);
 		colonneTitrePer.setMinWidth(150);
 		colonneNumeroDeVolume.setMinWidth(150);
@@ -358,50 +359,50 @@ public class Main extends Application {
 		colonneEtatPer.setMinWidth(150);
 		colonneNombreDePretPer.setMinWidth(150);
 		return vboxPer;
-		
+
 	}
+
 	public VBox remplirTabLivre(Tab tabLivre) {
-		//Livre
-		
+		// Livre
+
 		ObservableList<Livre> donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
 		TableView<Livre> tableLivre = new TableView<Livre>();
 		VBox vboxLivre = new VBox();
 		vboxLivre.getChildren().add(tableLivre);
-		
+
 		TableColumn<Livre, String> colonneNumLivre = new TableColumn<Livre, String>("Numéro du document");
 		TableColumn<Livre, String> colonneTitreLivre = new TableColumn<Livre, String>("Titre");
 		TableColumn<Livre, String> colonneAuteurLivre = new TableColumn<Livre, String>("Auteur");
 		TableColumn<Livre, String> colonneDateLivre = new TableColumn<Livre, String>("Date");
 		TableColumn<Livre, String> colonneEtatLivre = new TableColumn<Livre, String>("Etat");
-		TableColumn<Livre,Integer> colonneNombreDePretLivre = new TableColumn<Livre, Integer>("Nombre de pret");
-		
-		
+		TableColumn<Livre, Integer> colonneNombreDePretLivre = new TableColumn<Livre, Integer>("Nombre de pret");
+
 		colonneNumLivre.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
 		colonneTitreLivre.setCellValueFactory(new PropertyValueFactory<>("Titre"));
 		colonneAuteurLivre.setCellValueFactory(new PropertyValueFactory<>("Auteur"));
 		colonneDateLivre.setCellValueFactory(new PropertyValueFactory<>("Date"));
 		colonneEtatLivre.setCellValueFactory(new PropertyValueFactory<>("Etat"));
 		colonneNombreDePretLivre.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
-		
+
 		colonneNumLivre.setResizable(false);
 		colonneTitreLivre.setResizable(false);
 		colonneAuteurLivre.setResizable(false);
 		colonneDateLivre.setResizable(false);
 		colonneEtatLivre.setResizable(false);
 		colonneNombreDePretLivre.setResizable(false);
-		
+
 		colonneNumLivre.setMinWidth(150);
 		colonneTitreLivre.setMinWidth(150);
 		colonneAuteurLivre.setMinWidth(150);
 		colonneDateLivre.setMinWidth(150);
 		colonneEtatLivre.setMinWidth(150);
 		colonneNombreDePretLivre.setMinWidth(150);
-		
-		tableLivre.getColumns().addAll(colonneNumLivre, colonneTitreLivre, colonneAuteurLivre,
-				colonneDateLivre, colonneEtatLivre,colonneNombreDePretLivre);
+
+		tableLivre.getColumns().addAll(colonneNumLivre, colonneTitreLivre, colonneAuteurLivre, colonneDateLivre,
+				colonneEtatLivre, colonneNombreDePretLivre);
 		tableLivre.setItems(donneesLivre);
 		return vboxLivre;
-		
+
 	}
 
 	private EventHandler<ActionEvent> gestionAjouter = new EventHandler<ActionEvent>() {
@@ -409,7 +410,7 @@ public class Main extends Application {
 		@Override
 		public void handle(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			Stage stageAjouter = new Stage();
+			stageAjouter = new Stage();
 			VBox ajouterFenetre = new VBox();
 			VBox vBox = new VBox();
 			ajouterFenetre.setAlignment(Pos.CENTER);
@@ -424,7 +425,7 @@ public class Main extends Application {
 			labelTitre.setMinSize(180, 30);
 			labelAuteur.setMinSize(180, 30);
 			labelDate.setMinSize(180, 30);
-			
+
 			labelTypeDoc.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelTypeDoc.setTextFill(Color.WHITE);
 			labelTitre.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -435,19 +436,18 @@ public class Main extends Application {
 			labelMC.setTextFill(Color.WHITE);
 			labelDate.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelDate.setTextFill(Color.WHITE);
-			
-			TextField tfTitre = new TextField();
-			TextField tfAuteur = new TextField();
-			TextField tfMC = new TextField();
+
+			tfTitre = new TextField();
+			tfAuteur = new TextField();
+			tfMC = new TextField();
 			tfTitre.setMinSize(180, 30);
 			tfAuteur.setMinSize(180, 30);
 			tfMC.setMinSize(180, 30);
-			
-			DatePicker dp = new DatePicker();
-	
-			ObservableList<String> optionDocument = FXCollections.observableArrayList("Livre", "DVD",
-					"Periodiques");
-			ComboBox comboBox = new ComboBox(optionDocument);
+
+			dp = new DatePicker();
+
+			ObservableList<String> optionDocument = FXCollections.observableArrayList("Livre", "DVD", "Periodiques");
+			comboBox = new ComboBox(optionDocument);
 			comboBox.setMinWidth(250);
 			HBox hBox = new HBox();
 			hBox.getChildren().addAll(labelTypeDoc, comboBox);
@@ -456,7 +456,7 @@ public class Main extends Application {
 			hBox.setPadding(new Insets(10));
 			vBox.getChildren().add(hBox);
 			vBox.setBorder(border2);
-			
+
 			HBox hBoxInfo = new HBox();
 			VBox vBoxLabel = new VBox();
 			vBoxLabel.setSpacing(10);
@@ -469,77 +469,19 @@ public class Main extends Application {
 			//
 			HBox hBoxButton = new HBox();
 			hBoxButton.getChildren().addAll(btnAnnuler, btnConfirmer);
-			btnConfirmer.setOnAction(new EventHandler<ActionEvent>(){
-
-				@Override
-				public void handle(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-				String typeDoc =(String) comboBox.getSelectionModel().getSelectedItem();
-				String strTitre = tfTitre.getText();
-				String strAuteur = tfAuteur.getText();
-				String strMotCle = tfMC.getText();
-				String date = dp.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-				
-				if(typeDoc == null) {
-					
-					}else if(strTitre == "") {
-						
-					}else if(strAuteur == "") {
-						
-					}else if(strMotCle == "") {
-						
-					}else if(date == "") {
-						
-					}
-					else {
-						
-						switch (typeDoc) {
-						case "DVD":
-							int intNumeroDocDVD = fichier.getListDvd().size()+1;
-								Document docDvd = new Document("DVD" + intNumeroDocDVD, strTitre, date, "Disponible",0,TypeDocument.DVD);
-							    DVD dvd = new DVD("DVD" + intNumeroDocDVD, strTitre, date, 2, strAuteur, 0, "Disponible");
-							    fichier.getListDvd().add(dvd);
-							    fichier.getListDoc().add(docDvd);
-							  /* System.out.println(fichier.getListDvd().size());
-							   for(int i = 0;i<fichier.getListDvd().size();i++) {
-								   System.out.println(fichier.getListDvd().get(i).getStrAuteur());
-							   }*/
-							    tabDoc.setContent(remplirTabDocument(tabDoc));
-							  tabDVD.setContent(remplirTabDVD(tabDVD)); 
-							break;
-						case "Periodiques":
-							
-							break;
-						case "Livre":
-							int intNumeroDocLivre = fichier.getListLivre().size()+1;
-							Document docLivre = new Document("Livre" + intNumeroDocLivre, strTitre, date, "Disponible",0,TypeDocument.LIVRE);
-						    Livre liv = new Livre("Livre"+ intNumeroDocLivre, strTitre, "Disponible", date, strAuteur, TypeDocument.LIVRE, 0);
-						    fichier.getListLivre().add(liv);
-						    fichier.getListDoc().add(docLivre);
-						    
-						    
-						    tabDoc.setContent(remplirTabDocument(tabDoc));
-						    tabLivre.setContent(remplirTabLivre(tabLivre)); 
-							break;
-
-						default:
-							break;
-						}
-					}
-				}
-				
-			});
 			btnAnnuler.setOnMouseClicked(e -> stageAjouter.close());
+			System.out.println("allo");
+			btnConfirmer.setOnMouseClicked(gestionConfirmer);
 			hBoxButton.setSpacing(20);
 			hBoxButton.setAlignment(Pos.BOTTOM_RIGHT);
-			
+
 			vBoxLabel.getChildren().addAll(labelTitre, labelAuteur, labelDate, labelMC);
-			vBoxTF.getChildren().addAll(tfTitre, tfAuteur,dp,  tfMC);
-		
+			vBoxTF.getChildren().addAll(tfTitre, tfAuteur, dp, tfMC);
+
 			ajouterFenetre.setSpacing(20);
 			ajouterFenetre.getChildren().addAll(vBox, hBoxInfo, hBoxButton);
 			ajouterFenetre.setPadding(new Insets(10));
-			
+
 			ajouterFenetre.setBackground(bg4);
 			stageAjouter.setTitle("Ajouter un document");
 			stageAjouter.setScene(troisiemeScene);
@@ -547,6 +489,67 @@ public class Main extends Application {
 			stageAjouter.setResizable(false);
 		}
 
+	};
+	private EventHandler<MouseEvent> gestionConfirmer = new EventHandler<MouseEvent>() {
+
+		@Override
+		public void handle(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			System.out.println("salut");
+			try {
+				String typeDoc = (String) comboBox.getSelectionModel().getSelectedItem();
+				String strTitre = tfTitre.getText();
+				String strAuteur = tfAuteur.getText();
+				String strMotCle = tfMC.getText();
+				String date = dp.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+				switch (typeDoc) {
+				case "DVD":
+					int intNumeroDocDVD = fichier.getListDvd().size() + 1;
+					Document docDvd = new Document("DVD" + intNumeroDocDVD, strTitre, date, "Disponible", 0,
+							TypeDocument.DVD);
+					DVD dvd = new DVD("DVD" + intNumeroDocDVD, strTitre, date, 2, strAuteur, 0, "Disponible");
+					fichier.getListDvd().add(dvd);
+					fichier.getListDoc().add(docDvd);
+					tabDoc.setContent(remplirTabDocument(tabDoc));
+					tabDVD.setContent(remplirTabDVD(tabDVD));
+					break;
+				case "Periodiques":
+
+					break;
+				case "Livre":
+					int intNumeroDocLivre = fichier.getListLivre().size() + 1;
+					Document docLivre = new Document("Livre" + intNumeroDocLivre, strTitre, date, "Disponible", 0,
+							TypeDocument.LIVRE);
+					Livre liv = new Livre("Livre" + intNumeroDocLivre, strTitre, "Disponible", date, strAuteur,
+							TypeDocument.LIVRE, 0);
+					fichier.getListLivre().add(liv);
+					fichier.getListDoc().add(docLivre);
+
+					tabDoc.setContent(remplirTabDocument(tabDoc));
+					tabLivre.setContent(remplirTabLivre(tabLivre));
+					break;
+
+				default:
+					break;
+				}
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Ajout de document");
+				alert.setHeaderText(null);
+				alert.setContentText("Votre document à été ajouté");
+				stageAjouter.close();
+				alert.showAndWait();
+				
+
+			} catch (Exception e) {
+				Alert alert1 = new Alert(AlertType.ERROR);
+				alert1.setTitle("Erreur!");
+				alert1.setHeaderText("Une des cases est vide!");
+				alert1.setContentText("Il est obligatoire de remplir tous les cases pour ajouter un document");
+
+				alert1.showAndWait();
+			}
+		}
 	};
 
 	@Override
