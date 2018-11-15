@@ -261,8 +261,8 @@ public class Main extends Application {
 		colonneNomDoc.setMinWidth(150);
 
 		colonneDateDoc.setMinWidth(150);
-		colonneEtat.setMinWidth(300);
-		colonneTitreDoc.setMinWidth(150);
+		colonneEtat.setMinWidth(184);
+		colonneTitreDoc.setMinWidth(250);
 
 		return vbox;
 	}
@@ -276,7 +276,7 @@ public class Main extends Application {
 
 		TableColumn<DVD, String> colonneNumDVD = new TableColumn<DVD, String>("Numéro du document");
 		TableColumn<DVD, String> colonneTitreDVD = new TableColumn<DVD, String>("Titre");
-		TableColumn<DVD, Integer> colonneNombreDeDisque = new TableColumn<DVD, Integer>("Nombre de disque");
+		TableColumn<DVD, Integer> colonneNombreDeDisque = new TableColumn<DVD, Integer>("Volume");
 		TableColumn<DVD, String> colonneDateDVD = new TableColumn<DVD, String>("Date");
 		TableColumn<DVD, String> colonneEtatDVD = new TableColumn<DVD, String>("Etat");
 		TableColumn<DVD, String> colonneAuteurDVD = new TableColumn<DVD, String>("Auteur");
@@ -302,12 +302,12 @@ public class Main extends Application {
 		colonneEtatDVD.setResizable(false);
 
 		colonneNumDVD.setMinWidth(150);
-		colonneTitreDVD.setMinWidth(150);
-		colonneDateDVD.setMinWidth(150);
-		colonneNombreDeDisque.setMinWidth(150);
-		colonneAuteurDVD.setMinWidth(150);
-		colonneNombreDePret.setMinWidth(150);
-		colonneEtatDVD.setMinWidth(150);
+		colonneTitreDVD.setMinWidth(227);
+		colonneDateDVD.setMinWidth(100);
+		colonneNombreDeDisque.setMinWidth(70);
+		colonneAuteurDVD.setMinWidth(120);
+		colonneNombreDePret.setMinWidth(120);
+		colonneEtatDVD.setMinWidth(100);
 
 		return vboxDVD;
 
@@ -324,7 +324,7 @@ public class Main extends Application {
 		TableColumn<Periodiques, String> colonneNumPer = new TableColumn<Periodiques, String>("Numéro du document");
 		TableColumn<Periodiques, String> colonneTitrePer = new TableColumn<Periodiques, String>("Titre");
 		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>(
-				"Numero de volume");
+				"Volume");
 		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique = new TableColumn<Periodiques, Integer>(
 				"Numero de periodique");
 		TableColumn<Periodiques, String> colonneDatePer = new TableColumn<Periodiques, String>("Date");
@@ -352,12 +352,12 @@ public class Main extends Application {
 		colonneNombreDePretPer.setResizable(false);
 
 		colonneNumPer.setMinWidth(150);
-		colonneTitrePer.setMinWidth(150);
-		colonneNumeroDeVolume.setMinWidth(150);
+		colonneTitrePer.setMinWidth(197);
+		colonneNumeroDeVolume.setMinWidth(70);
 		colonneNumeroDePeriodique.setMinWidth(150);
-		colonneDatePer.setMinWidth(150);
-		colonneEtatPer.setMinWidth(150);
-		colonneNombreDePretPer.setMinWidth(150);
+		colonneDatePer.setMinWidth(100);
+		colonneEtatPer.setMinWidth(100);
+		colonneNombreDePretPer.setMinWidth(120);
 		return vboxPer;
 
 	}
@@ -391,12 +391,13 @@ public class Main extends Application {
 		colonneEtatLivre.setResizable(false);
 		colonneNombreDePretLivre.setResizable(false);
 
+		 
 		colonneNumLivre.setMinWidth(150);
-		colonneTitreLivre.setMinWidth(150);
-		colonneAuteurLivre.setMinWidth(150);
-		colonneDateLivre.setMinWidth(150);
-		colonneEtatLivre.setMinWidth(150);
-		colonneNombreDePretLivre.setMinWidth(150);
+		colonneTitreLivre.setMinWidth(247);
+		colonneAuteurLivre.setMinWidth(180);
+		colonneDateLivre.setMinWidth(100);
+		colonneEtatLivre.setMinWidth(100);
+		colonneNombreDePretLivre.setMinWidth(120);
 
 		tableLivre.getColumns().addAll(colonneNumLivre, colonneTitreLivre, colonneAuteurLivre, colonneDateLivre,
 				colonneEtatLivre, colonneNombreDePretLivre);
@@ -502,7 +503,6 @@ public class Main extends Application {
 				String strAuteur = tfAuteur.getText();
 				String strMotCle = tfMC.getText();
 				String date = dp.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
 				switch (typeDoc) {
 				case "DVD":
 					int intNumeroDocDVD = fichier.getListDvd().size() + 1;
