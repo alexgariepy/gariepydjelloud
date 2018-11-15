@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class LectureFichier {
@@ -98,6 +101,8 @@ public class LectureFichier {
 				}
 				}catch(Exception e) {
 				}
+			 
+			 
 	  }
 
 	public ArrayList<Livre> getListLivre() {
