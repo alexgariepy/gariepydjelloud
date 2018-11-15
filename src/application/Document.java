@@ -19,6 +19,10 @@ public class Document {
 		
 	}
 	
+	public TypeDocument getTypeDocument() {
+		return typeDocument;
+	}
+
 	public String getTitre() {
 		return Titre;
 	}

@@ -120,6 +120,14 @@ public class Main extends Application {
 	private TextField tfMC;
 	private Stage stageAjouter;
 	private DatePicker dp = new DatePicker();
+	private ObservableList<Document> donnees;
+	private ObservableList<DVD> donneesDVD;
+	private ObservableList<Periodiques> donneesPer;
+	private TableView<Periodiques> tablePer;
+	private TableView<Document> table;
+	private TableView<DVD> tableDVD;
+	private ObservableList<Livre> donneesLivre;
+	private TableView<Livre> tableLivre;
 	private EventHandler<ActionEvent> gestionConnexion = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -207,6 +215,122 @@ public class Main extends Application {
 			tabPerio.setClosable(false);
 			tabDVD.setClosable(false);
 
+			//Supprimer
+			btnSupprimer.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+					//ObservableList<Document> listeSelectionne = .getSelectionModel().getSelectedItems();
+					Document doc = table.getSelectionModel().getSelectedItem();
+					DVD docDVD = tableDVD.getSelectionModel().getSelectedItem();
+					Livre docLivre = tableLivre.getSelectionModel().getSelectedItem();
+					Periodiques docPer = tablePer.getSelectionModel().getSelectedItem();
+					if(doc != null) {
+						
+						for(int i = 0; i < fichier.getListDoc().size();i++) {
+							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
+								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD){
+									for(int j = 0; j < fichier.getListDvd().size();j++) {
+										if(fichier.getListDvd().get(j).getStrNumeroDuDoc().equals(doc.getStrNumeroDoc())) {
+											fichier.getListDvd().remove(j);
+										}
+									}
+								}
+								else if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE) {
+									for(int j = 0; j < fichier.getListLivre().size();j++) {
+										if(fichier.getListLivre().get(j).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
+											fichier.getListLivre().remove(j);
+										}
+									}
+								}
+								else if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES) {
+									for(int j = 0; j < fichier.getListPeriodique().size();j++) {
+										if(fichier.getListPeriodique().get(j).getStrNumeroDuDoc().equals(doc.getStrNumeroDoc())) {
+											fichier.getListPeriodique().remove(j);
+										}
+									}
+								}
+								
+								fichier.getListDoc().remove(i);
+								
+							//	table.getItems().remove(doc);
+								tabDoc.setContent(remplirTabDocument(tabDoc));
+								tabLivre.setContent(remplirTabLivre(tabLivre));
+								tabPerio.setContent(remplirTabPer(tabPerio));
+								tabDVD.setContent(remplirTabDVD(tabDVD));
+							}
+						}
+					}
+					if(docDVD != null) {
+						
+						for(int i = 0; i < fichier.getListDoc().size();i++) {
+							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docDVD.getStrNumeroDuDoc())) {
+								
+								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD){
+									for(int j = 0; j < fichier.getListDvd().size();j++) {
+										if(fichier.getListDvd().get(j).getStrNumeroDuDoc().equals(docDVD.getStrNumeroDuDoc())) {
+											fichier.getListDvd().remove(j);
+										}
+									}
+								}
+								fichier.getListDoc().remove(i);
+							}
+							
+							}
+						tabDoc.setContent(remplirTabDocument(tabDoc));
+						tabDVD.setContent(remplirTabDVD(tabDVD));
+						
+					}
+					
+					
+					
+					
+					if(docLivre != null) {
+						
+						for(int i = 0; i < fichier.getListDoc().size();i++) {
+							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docLivre.getStrNumeroDoc())) {
+								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE){
+									for(int j = 0; j < fichier.getListLivre().size();j++) {
+										if(fichier.getListLivre().get(j).getStrNumeroDoc().equals(docLivre.getStrNumeroDoc())) {
+											fichier.getListLivre().remove(j);
+										}
+									}
+								}
+								fichier.getListDoc().remove(i);
+							}
+							
+							}
+						tabDoc.setContent(remplirTabDocument(tabDoc));
+						tabLivre.setContent(remplirTabLivre(tabLivre));
+						
+					}
+					
+					
+							if(docPer != null) {
+						
+						for(int i = 0; i < fichier.getListDoc().size();i++) {
+							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docPer.getStrNumeroDuDoc())) {
+								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES){
+									for(int j = 0; j < fichier.getListPeriodique().size();j++) {
+										if(fichier.getListPeriodique().get(j).getStrNumeroDuDoc().equals(docPer.getStrNumeroDuDoc())) {
+											fichier.getListPeriodique().remove(j);
+										}
+									}
+								}
+								fichier.getListDoc().remove(i);
+							}
+							
+							}
+						tabDoc.setContent(remplirTabDocument(tabDoc));
+						tabPerio.setContent(remplirTabPer(tabPerio));
+						
+					}
+				}
+				
+			});
+			
+			
 			tp.getTabs().addAll(tabDoc, tabLivre, tabPerio, tabDVD);
 			vBox1.getChildren().addAll(tp, hBox);
 			mediathequeFenetre.setLeft(vBox1);
@@ -231,8 +355,8 @@ public class Main extends Application {
 
 	public VBox remplirTabDocument(Tab tabDoc) {
 		// Tous les documents
-		ObservableList<Document> donnees = FXCollections.observableArrayList(fichier.getListDoc());
-		TableView<Document> table = new TableView<Document>();
+		 donnees = FXCollections.observableArrayList(fichier.getListDoc());
+		 table = new TableView<Document>();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(table);
 		TableColumn<Document, String> colonneNumDoc = new TableColumn<Document, String>("Numéro du document");
@@ -269,8 +393,8 @@ public class Main extends Application {
 
 	public VBox remplirTabDVD(Tab tabDVD) {
 		// DVD
-		ObservableList<DVD> donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
-		TableView<DVD> tableDVD = new TableView<DVD>();
+		 donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
+		 tableDVD = new TableView<DVD>();
 		VBox vboxDVD = new VBox();
 		vboxDVD.getChildren().add(tableDVD);
 
@@ -316,8 +440,8 @@ public class Main extends Application {
 	public VBox remplirTabPer(Tab tabPerio) {
 		// Periodiques
 
-		ObservableList<Periodiques> donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
-		TableView<Periodiques> tablePer = new TableView<Periodiques>();
+		donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
+		 tablePer = new TableView<Periodiques>();
 		VBox vboxPer = new VBox();
 		vboxPer.getChildren().add(tablePer);
 
@@ -365,8 +489,8 @@ public class Main extends Application {
 	public VBox remplirTabLivre(Tab tabLivre) {
 		// Livre
 
-		ObservableList<Livre> donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
-		TableView<Livre> tableLivre = new TableView<Livre>();
+		 donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+		 tableLivre = new TableView<Livre>();
 		VBox vboxLivre = new VBox();
 		vboxLivre.getChildren().add(tableLivre);
 
