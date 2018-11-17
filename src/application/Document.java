@@ -44,4 +44,28 @@ public class Document {
 		return intNombreDePret;
 	}
 
+	public void setEtat(String etat) {
+		Etat = etat;
+	}
+
+	public void setStrNumeroDoc(String strNumeroDoc) {
+		this.strNumeroDoc = strNumeroDoc;
+	}
+
+	public void setTitre(String titre) {
+		Titre = titre;
+	}
+
+	public void setIntNombreDePret(int intNombreDePret) {
+		this.intNombreDePret = intNombreDePret;
+	}
+
+	public void setDate(String date) {
+		Date = date;
+	}
+
+	public void setTypeDocument(TypeDocument typeDocument) {
+		this.typeDocument = typeDocument;
+	}
+
 }

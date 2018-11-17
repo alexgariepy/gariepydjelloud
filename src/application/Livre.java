@@ -47,4 +47,32 @@ public class Livre {
 			this.typeDocument = typeDocument;
 			this.intNombreDePret = intNombreDePret;
 		}
+
+		public void setEtat(String etat) {
+			Etat = etat;
+		}
+
+		public void setStrNumeroDoc(String strNumeroDoc) {
+			this.strNumeroDoc = strNumeroDoc;
+		}
+
+		public void setTitre(String titre) {
+			Titre = titre;
+		}
+
+		public void setDate(String date) {
+			Date = date;
+		}
+
+		public void setAuteur(String auteur) {
+			Auteur = auteur;
+		}
+
+		public void setIntNombreDePret(int intNombreDePret) {
+			this.intNombreDePret = intNombreDePret;
+		}
+
+		public void setTypeDocument(TypeDocument typeDocument) {
+			this.typeDocument = typeDocument;
+		}
 }

@@ -1,6 +1,10 @@
 package interf;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 import application.DVD;
 import application.Document;
@@ -128,6 +132,10 @@ public class Main extends Application {
 	private TableView<DVD> tableDVD;
 	private ObservableList<Livre> donneesLivre;
 	private TableView<Livre> tableLivre;
+	private int intCompteurLivre = 0;
+	private int intCompteurDVD = 0;
+	private int intCompteurPerio = 0;
+
 	private EventHandler<ActionEvent> gestionConnexion = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -143,6 +151,7 @@ public class Main extends Application {
 			VBox vBox1 = new VBox();
 			vBox1.setMaxSize(900, 690);
 			vBox1.setPrefSize(900, 690);
+			vBox1.setSpacing(20);
 
 			VBox vBox2 = new VBox();
 			vBox2.setMaxSize(300, 690);
@@ -181,11 +190,11 @@ public class Main extends Application {
 				btnAjouter.setDisable(true);
 				btnSupprimer.setDisable(true);
 				btnGerer.setDisable(true);
-				btnInscire.setDisable(true);
-				btnRetour.setDisable(true);
 			}
 
 			btnAjouter.setOnAction(gestionAjouter);
+			btnRetour.setOnAction(gestionRetour);
+			btnInscire.setOnAction(gestionPret);
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
@@ -195,13 +204,17 @@ public class Main extends Application {
 			hBox.setBorder(border);
 			hBox.setBackground(bg3);
 
+			HBox hBox2 = new HBox();
+			hBox2.setMaxSize(900, 120);
+			hBox2.setPrefSize(900, 120);
+			hBox2.setBorder(border);
+			hBox2.setBackground(bg3);
+
 			TabPane tp = new TabPane();
 			tp.setBorder(border);
 			vBox2.setBorder(border);
 
 			tp.setMaxSize(900, 550);
-
-			VBox.setMargin(hBox, new Insets(30, 0, 0, 0));
 
 			fichier.lecture();
 
@@ -215,124 +228,11 @@ public class Main extends Application {
 			tabPerio.setClosable(false);
 			tabDVD.setClosable(false);
 
-			//Supprimer
-			btnSupprimer.setOnAction(new EventHandler<ActionEvent>() {
+			// Supprimer
+			btnSupprimer.setOnAction(gestionSupprimer);
 
-				@Override
-				public void handle(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-					//ObservableList<Document> listeSelectionne = .getSelectionModel().getSelectedItems();
-					Document doc = table.getSelectionModel().getSelectedItem();
-					DVD docDVD = tableDVD.getSelectionModel().getSelectedItem();
-					Livre docLivre = tableLivre.getSelectionModel().getSelectedItem();
-					Periodiques docPer = tablePer.getSelectionModel().getSelectedItem();
-					if(doc != null) {
-						
-						for(int i = 0; i < fichier.getListDoc().size();i++) {
-							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
-								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD){
-									for(int j = 0; j < fichier.getListDvd().size();j++) {
-										if(fichier.getListDvd().get(j).getStrNumeroDuDoc().equals(doc.getStrNumeroDoc())) {
-											fichier.getListDvd().remove(j);
-										}
-									}
-								}
-								else if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE) {
-									for(int j = 0; j < fichier.getListLivre().size();j++) {
-										if(fichier.getListLivre().get(j).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
-											fichier.getListLivre().remove(j);
-										}
-									}
-								}
-								else if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES) {
-									for(int j = 0; j < fichier.getListPeriodique().size();j++) {
-										if(fichier.getListPeriodique().get(j).getStrNumeroDuDoc().equals(doc.getStrNumeroDoc())) {
-											fichier.getListPeriodique().remove(j);
-										}
-									}
-								}
-								
-								fichier.getListDoc().remove(i);
-								
-							//	table.getItems().remove(doc);
-								tabDoc.setContent(remplirTabDocument(tabDoc));
-								tabLivre.setContent(remplirTabLivre(tabLivre));
-								tabPerio.setContent(remplirTabPer(tabPerio));
-								tabDVD.setContent(remplirTabDVD(tabDVD));
-							}
-						}
-					}
-					if(docDVD != null) {
-						
-						for(int i = 0; i < fichier.getListDoc().size();i++) {
-							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docDVD.getStrNumeroDuDoc())) {
-								
-								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD){
-									for(int j = 0; j < fichier.getListDvd().size();j++) {
-										if(fichier.getListDvd().get(j).getStrNumeroDuDoc().equals(docDVD.getStrNumeroDuDoc())) {
-											fichier.getListDvd().remove(j);
-										}
-									}
-								}
-								fichier.getListDoc().remove(i);
-							}
-							
-							}
-						tabDoc.setContent(remplirTabDocument(tabDoc));
-						tabDVD.setContent(remplirTabDVD(tabDVD));
-						
-					}
-					
-					
-					
-					
-					if(docLivre != null) {
-						
-						for(int i = 0; i < fichier.getListDoc().size();i++) {
-							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docLivre.getStrNumeroDoc())) {
-								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE){
-									for(int j = 0; j < fichier.getListLivre().size();j++) {
-										if(fichier.getListLivre().get(j).getStrNumeroDoc().equals(docLivre.getStrNumeroDoc())) {
-											fichier.getListLivre().remove(j);
-										}
-									}
-								}
-								fichier.getListDoc().remove(i);
-							}
-							
-							}
-						tabDoc.setContent(remplirTabDocument(tabDoc));
-						tabLivre.setContent(remplirTabLivre(tabLivre));
-						
-					}
-					
-					
-							if(docPer != null) {
-						
-						for(int i = 0; i < fichier.getListDoc().size();i++) {
-							if(fichier.getListDoc().get(i).getStrNumeroDoc().equals(docPer.getStrNumeroDuDoc())) {
-								if(fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES){
-									for(int j = 0; j < fichier.getListPeriodique().size();j++) {
-										if(fichier.getListPeriodique().get(j).getStrNumeroDuDoc().equals(docPer.getStrNumeroDuDoc())) {
-											fichier.getListPeriodique().remove(j);
-										}
-									}
-								}
-								fichier.getListDoc().remove(i);
-							}
-							
-							}
-						tabDoc.setContent(remplirTabDocument(tabDoc));
-						tabPerio.setContent(remplirTabPer(tabPerio));
-						
-					}
-				}
-				
-			});
-			
-			
 			tp.getTabs().addAll(tabDoc, tabLivre, tabPerio, tabDVD);
-			vBox1.getChildren().addAll(tp, hBox);
+			vBox1.getChildren().addAll(tp, hBox, hBox2);
 			mediathequeFenetre.setLeft(vBox1);
 			mediathequeFenetre.setRight(vBox2);
 			mediathequeFenetre.setPadding(new Insets(30));
@@ -355,8 +255,8 @@ public class Main extends Application {
 
 	public VBox remplirTabDocument(Tab tabDoc) {
 		// Tous les documents
-		 donnees = FXCollections.observableArrayList(fichier.getListDoc());
-		 table = new TableView<Document>();
+		donnees = FXCollections.observableArrayList(fichier.getListDoc());
+		table = new TableView<Document>();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(table);
 		TableColumn<Document, String> colonneNumDoc = new TableColumn<Document, String>("Numéro du document");
@@ -393,8 +293,8 @@ public class Main extends Application {
 
 	public VBox remplirTabDVD(Tab tabDVD) {
 		// DVD
-		 donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
-		 tableDVD = new TableView<DVD>();
+		donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
+		tableDVD = new TableView<DVD>();
 		VBox vboxDVD = new VBox();
 		vboxDVD.getChildren().add(tableDVD);
 
@@ -441,14 +341,13 @@ public class Main extends Application {
 		// Periodiques
 
 		donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
-		 tablePer = new TableView<Periodiques>();
+		tablePer = new TableView<Periodiques>();
 		VBox vboxPer = new VBox();
 		vboxPer.getChildren().add(tablePer);
 
 		TableColumn<Periodiques, String> colonneNumPer = new TableColumn<Periodiques, String>("Numéro du document");
 		TableColumn<Periodiques, String> colonneTitrePer = new TableColumn<Periodiques, String>("Titre");
-		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>(
-				"Volume");
+		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>("Volume");
 		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique = new TableColumn<Periodiques, Integer>(
 				"Numero de periodique");
 		TableColumn<Periodiques, String> colonneDatePer = new TableColumn<Periodiques, String>("Date");
@@ -489,8 +388,8 @@ public class Main extends Application {
 	public VBox remplirTabLivre(Tab tabLivre) {
 		// Livre
 
-		 donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
-		 tableLivre = new TableView<Livre>();
+		donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+		tableLivre = new TableView<Livre>();
 		VBox vboxLivre = new VBox();
 		vboxLivre.getChildren().add(tableLivre);
 
@@ -515,7 +414,6 @@ public class Main extends Application {
 		colonneEtatLivre.setResizable(false);
 		colonneNombreDePretLivre.setResizable(false);
 
-		 
 		colonneNumLivre.setMinWidth(150);
 		colonneTitreLivre.setMinWidth(247);
 		colonneAuteurLivre.setMinWidth(180);
@@ -529,6 +427,225 @@ public class Main extends Application {
 		return vboxLivre;
 
 	}
+
+	private EventHandler<ActionEvent> gestionSupprimer = new EventHandler<ActionEvent>() {
+
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			// ObservableList<Document> listeSelectionne =
+			// .getSelectionModel().getSelectedItems();
+			Document doc = table.getSelectionModel().getSelectedItem();
+			DVD docDVD = tableDVD.getSelectionModel().getSelectedItem();
+			Livre docLivre = tableLivre.getSelectionModel().getSelectedItem();
+			Periodiques docPer = tablePer.getSelectionModel().getSelectedItem();
+			if (doc != null) {
+
+				for (int i = 0; i < fichier.getListDoc().size(); i++) {
+					if (fichier.getListDoc().get(i).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
+						if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD) {
+							for (int j = 0; j < fichier.getListDvd().size(); j++) {
+								if (fichier.getListDvd().get(j).getStrNumeroDuDoc().equals(doc.getStrNumeroDoc())) {
+									fichier.getListDvd().remove(j);
+								}
+							}
+						} else if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE) {
+							for (int j = 0; j < fichier.getListLivre().size(); j++) {
+								if (fichier.getListLivre().get(j).getStrNumeroDoc().equals(doc.getStrNumeroDoc())) {
+									fichier.getListLivre().remove(j);
+								}
+							}
+						} else if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES) {
+							for (int j = 0; j < fichier.getListPeriodique().size(); j++) {
+								if (fichier.getListPeriodique().get(j).getStrNumeroDuDoc()
+										.equals(doc.getStrNumeroDoc())) {
+									fichier.getListPeriodique().remove(j);
+								}
+							}
+						}
+
+						fichier.getListDoc().remove(i);
+
+						// table.getItems().remove(doc);
+						tabDoc.setContent(remplirTabDocument(tabDoc));
+						tabLivre.setContent(remplirTabLivre(tabLivre));
+						tabPerio.setContent(remplirTabPer(tabPerio));
+						tabDVD.setContent(remplirTabDVD(tabDVD));
+					}
+				}
+			}
+			if (docDVD != null) {
+
+				for (int i = 0; i < fichier.getListDoc().size(); i++) {
+					if (fichier.getListDoc().get(i).getStrNumeroDoc().equals(docDVD.getStrNumeroDuDoc())) {
+
+						if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.DVD) {
+							for (int j = 0; j < fichier.getListDvd().size(); j++) {
+								if (fichier.getListDvd().get(j).getStrNumeroDuDoc()
+										.equals(docDVD.getStrNumeroDuDoc())) {
+									fichier.getListDvd().remove(j);
+								}
+							}
+						}
+						fichier.getListDoc().remove(i);
+					}
+
+				}
+				tabDoc.setContent(remplirTabDocument(tabDoc));
+				tabDVD.setContent(remplirTabDVD(tabDVD));
+
+			}
+
+			if (docLivre != null) {
+
+				for (int i = 0; i < fichier.getListDoc().size(); i++) {
+					if (fichier.getListDoc().get(i).getStrNumeroDoc().equals(docLivre.getStrNumeroDoc())) {
+						if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.LIVRE) {
+							for (int j = 0; j < fichier.getListLivre().size(); j++) {
+								if (fichier.getListLivre().get(j).getStrNumeroDoc()
+										.equals(docLivre.getStrNumeroDoc())) {
+									fichier.getListLivre().remove(j);
+								}
+							}
+						}
+						fichier.getListDoc().remove(i);
+					}
+
+				}
+				tabDoc.setContent(remplirTabDocument(tabDoc));
+				tabLivre.setContent(remplirTabLivre(tabLivre));
+
+			}
+
+			if (docPer != null) {
+
+				for (int i = 0; i < fichier.getListDoc().size(); i++) {
+					if (fichier.getListDoc().get(i).getStrNumeroDoc().equals(docPer.getStrNumeroDuDoc())) {
+						if (fichier.getListDoc().get(i).getTypeDocument() == TypeDocument.PERIODIQUES) {
+							for (int j = 0; j < fichier.getListPeriodique().size(); j++) {
+								if (fichier.getListPeriodique().get(j).getStrNumeroDuDoc()
+										.equals(docPer.getStrNumeroDuDoc())) {
+									fichier.getListPeriodique().remove(j);
+								}
+							}
+						}
+						fichier.getListDoc().remove(i);
+					}
+
+				}
+				tabDoc.setContent(remplirTabDocument(tabDoc));
+				tabPerio.setContent(remplirTabPer(tabPerio));
+
+			}
+		}
+
+	};
+
+	private EventHandler<ActionEvent> gestionPret = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent a) {
+			// TODO Auto-generated method stub
+			Document doc = table.getSelectionModel().getSelectedItem();
+			DVD docDVD = tableDVD.getSelectionModel().getSelectedItem();
+			Livre docLivre = tableLivre.getSelectionModel().getSelectedItem();
+			Periodiques docPer = tablePer.getSelectionModel().getSelectedItem();
+
+			if (doc != null) {
+				if (doc.getEtat() == "Disponible") {
+					switch (doc.getTypeDocument()) {
+					case LIVRE:
+						if (intCompteurLivre < 3) {
+							pret(doc);
+							tabLivre.setContent(remplirTabLivre(tabLivre));
+							intCompteurLivre++;
+
+						} else {
+							messageErreurMaxLivre();
+						}
+						break;
+					case PERIODIQUES:
+						if (intCompteurPerio < 3) {
+							pret(doc);
+							tabPerio.setContent(remplirTabPer(tabPerio));
+							intCompteurPerio++;
+						} else {
+							messageErreurMaxPerio();
+						}
+						break;
+					case DVD:
+						if (intCompteurDVD < 3) {
+							pret(doc);
+							intCompteurDVD++;
+							tabDVD.setContent(remplirTabDVD(tabDVD));
+						} else {
+							messageErreurMaxDVD();
+						}
+						break;
+					}
+				} else {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Prêt du livre");
+					alert.setHeaderText(null);
+					alert.setContentText("Le livre '" + doc.getTitre() + "' n'est pas disponible");
+					alert.showAndWait();
+				}
+			} else if (docLivre != null) {
+				if (docLivre.getEtat() == "Disponible") {
+					if (intCompteurLivre < 3) {
+						pret(doc);
+						tabLivre.setContent(remplirTabLivre(tabLivre));
+						intCompteurLivre++;
+
+					} else {
+						messageErreurMaxLivre();
+					}
+				}
+				else {
+					messageErreur();
+				}
+			} else if (docPer != null) {
+				if (docPer.getStrEtat() == "Disponible") {
+					if (intCompteurPerio < 3) {
+						pret(doc);
+						tabPerio.setContent(remplirTabPer(tabPerio));
+						intCompteurPerio++;
+					} else {
+						messageErreurMaxPerio();
+					}
+				}
+				else {
+					messageErreur();
+				}
+			} else if (docDVD != null) {
+				if (docDVD.getStrDate() == "Disponible") {
+					if (intCompteurDVD < 3) {
+						pret(doc);
+						intCompteurDVD++;
+						tabDVD.setContent(remplirTabDVD(tabDVD));
+					} else {
+						messageErreurMaxDVD();
+					}
+				}
+				else {
+					messageErreur();
+				}
+			}
+
+			else {
+				messageErreur();
+			}
+		}
+	};
+
+	private EventHandler<ActionEvent> gestionRetour = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent a) {
+			// TODO Auto-generated method stub
+
+		}
+
+	};
 
 	private EventHandler<ActionEvent> gestionAjouter = new EventHandler<ActionEvent>() {
 
@@ -615,6 +732,7 @@ public class Main extends Application {
 		}
 
 	};
+
 	private EventHandler<MouseEvent> gestionConfirmer = new EventHandler<MouseEvent>() {
 
 		@Override
@@ -663,7 +781,6 @@ public class Main extends Application {
 				alert.setContentText("Votre document à été ajouté");
 				stageAjouter.close();
 				alert.showAndWait();
-				
 
 			} catch (Exception e) {
 				Alert alert1 = new Alert(AlertType.ERROR);
@@ -789,4 +906,91 @@ public class Main extends Application {
 		btnAnnuler.setMinWidth(100);
 	}
 
+	public void pret(Document doc) {
+		int nbJour = 0;
+		doc.setEtat("Non Disponible");
+
+		switch (doc.getTypeDocument()) {
+		case LIVRE:
+			for (int i = 0; i < fichier.getListLivre().size(); i++) {
+				if (doc.getStrNumeroDoc() == fichier.getListLivre().get(i).getStrNumeroDoc()) {
+					fichier.getListLivre().get(i).setEtat("Non Disponible");
+					fichier.getListLivre().get(i)
+							.setIntNombreDePret(fichier.getListLivre().get(i).getIntNombreDePret() + 1);
+					nbJour = 14;
+				}
+			}
+			break;
+		case PERIODIQUES:
+			for (int j = 0; j < fichier.getListPeriodique().size(); j++) {
+				if (doc.getStrNumeroDoc() == fichier.getListPeriodique().get(j).getStrNumeroDuDoc()) {
+					fichier.getListPeriodique().get(j).setStrEtat("Non Disponible");
+					fichier.getListPeriodique().get(j)
+							.setIntNumDePret(fichier.getListPeriodique().get(j).getIntNumDePret() + 1);
+					nbJour = 3;
+				}
+			}
+			break;
+		case DVD:
+			for (int k = 0; k < fichier.getListDvd().size(); k++) {
+				if (doc.getStrNumeroDoc() == fichier.getListDvd().get(k).getStrNumeroDuDoc()) {
+					fichier.getListDvd().get(k).setStrEtat("Non Disponible");
+					fichier.getListDvd().get(k)
+							.setIntNombreDePret(fichier.getListDvd().get(k).getIntNombreDePret() + 1);
+					nbJour = 7;
+				}
+			}
+			break;
+		}
+		tabDoc.setContent(remplirTabDocument(tabDoc));
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date datePret = new Date();
+
+		// i.e two weeks
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(datePret);
+		calendar.add(Calendar.DAY_OF_YEAR, nbJour);
+		Date dateRetour = calendar.getTime();
+
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Prêt du document");
+		alert.setHeaderText(null);
+		alert.setContentText("Vous avez emprunté le document '" + doc.getTitre() + "'\n\nType du document : "
+				+ doc.getTypeDocument() + "\nDate du prêt : " + dateFormat.format(datePret) + "\nDate de retour : "
+				+ dateFormat.format(dateRetour));
+		alert.showAndWait();
+
+	}
+	
+	public void messageErreur() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Prêt du document impossible");
+		alert.setHeaderText(null);
+		alert.setContentText("Veuillez choisir un document disponible dans la liste");
+		alert.showAndWait();
+	}
+	
+	public void messageErreurMaxLivre() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Prêt du livre impossible");
+		alert.setHeaderText(null);
+		alert.setContentText("Vous avez déjà emprunté le nombre maximum de livres!");
+		alert.showAndWait();
+	}
+	public void messageErreurMaxPerio() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Prêt du périodique impossible");
+		alert.setHeaderText(null);
+		alert.setContentText("Vous avez déjà emprunté le nombre maximum de périodiques!");
+		alert.showAndWait();
+	}
+	public void messageErreurMaxDVD() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Prêt du DVD impossible");
+		alert.setHeaderText(null);
+		alert.setContentText("Vous avez déjà emprunté le nombre maximum de DVDs!");
+		alert.showAndWait();;
+	}
+	
 }

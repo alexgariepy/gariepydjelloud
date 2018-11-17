@@ -46,4 +46,28 @@ public class Periodiques {
 	public TypeDocument getTypeDocument() {
 		return typeDocument;
 	}
+	public void setStrEtat(String strEtat) {
+		this.strEtat = strEtat;
+	}
+	public void setStrNumeroDuDoc(String strNumeroDuDoc) {
+		this.strNumeroDuDoc = strNumeroDuDoc;
+	}
+	public void setStrNomDuPeriodique(String strNomDuPeriodique) {
+		this.strNomDuPeriodique = strNomDuPeriodique;
+	}
+	public void setStrDate(String strDate) {
+		this.strDate = strDate;
+	}
+	public void setIntNumDuVolume(int intNumDuVolume) {
+		this.intNumDuVolume = intNumDuVolume;
+	}
+	public void setIntNumDuPeriodique(int intNumDuPeriodique) {
+		this.intNumDuPeriodique = intNumDuPeriodique;
+	}
+	public void setIntNumDePret(int intNumDePret) {
+		this.intNumDePret = intNumDePret;
+	}
+	public void setTypeDocument(TypeDocument typeDocument) {
+		this.typeDocument = typeDocument;
+	}
 }

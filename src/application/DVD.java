@@ -39,4 +39,25 @@ public class DVD {
 			public String getStrEtat() {
 				return strEtat;
 			}
+			public void setStrEtat(String strEtat) {
+				this.strEtat = strEtat;
+			}
+			public void setStrNumeroDuDoc(String strNumeroDuDoc) {
+				this.strNumeroDuDoc = strNumeroDuDoc;
+			}
+			public void setStrNomDuDvd(String strNomDuDvd) {
+				this.strNomDuDvd = strNomDuDvd;
+			}
+			public void setStrDate(String strDate) {
+				this.strDate = strDate;
+			}
+			public void setIntNombreDeDisque(int intNombreDeDisque) {
+				this.intNombreDeDisque = intNombreDeDisque;
+			}
+			public void setStrAuteur(String strAuteur) {
+				this.strAuteur = strAuteur;
+			}
+			public void setIntNombreDePret(int intNombreDePret) {
+				this.intNombreDePret = intNombreDePret;
+			}
 }
