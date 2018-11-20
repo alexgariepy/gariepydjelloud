@@ -1,7 +1,8 @@
 package application;
 
+import java.io.Serializable;
 
-public class Periodiques {
+public class Periodiques implements Serializable{
 	
 	private String strNumeroDuDoc;
 	private String strNomDuPeriodique;
@@ -69,5 +70,8 @@ public class Periodiques {
 	}
 	public void setTypeDocument(TypeDocument typeDocument) {
 		this.typeDocument = typeDocument;
+	}
+	public String toString() {
+		return  strNomDuPeriodique + "  " + intNumDuVolume;
 	}
 }

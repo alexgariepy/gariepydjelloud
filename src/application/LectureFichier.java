@@ -2,13 +2,17 @@ package application;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import javafx.scene.control.Alert;
 
 public class LectureFichier {
 	private ArrayList<Document> listDoc = new ArrayList<Document>();
@@ -24,7 +28,45 @@ public class LectureFichier {
 	}
 
 	public void lecture() {
-	File file = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\DVD.txt");
+	File fileSer = new File("L:\\Objet2\\gariepydjelloud\\DVD.ser");
+		
+		
+		
+		if(fileSer.exists()) {
+			System.out.println("rentrer");
+		try {
+		FileInputStream fileIn = new FileInputStream("DVD.ser");
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        while(in.readObject() != null ) {
+        listDvd.add((DVD)in.readObject());
+        }
+        in.close();
+        fileIn.close();
+        
+        
+        FileInputStream fileInPer = new FileInputStream("Per.ser");
+        ObjectInputStream inPer = new ObjectInputStream(fileInPer);
+        while(in.readObject() != null ) {
+        listPeriodique.add((Periodiques)in.readObject());
+        }
+        inPer.close();
+        fileInPer.close();
+        
+        
+        FileInputStream fileInLivre = new FileInputStream("Liv.ser");
+        ObjectInputStream inLivre = new ObjectInputStream(fileInLivre);
+        while(in.readObject() != null ) {
+        listLivre.add((Livre)in.readObject());
+        }
+        inLivre.close();
+        fileInLivre.close();
+        
+		}catch(Exception e) {
+			
+		}
+		}else {
+			System.out.println("sorti");
+	File file = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
 	BufferedReader br = null;
 	try {
 		br = new BufferedReader(new FileReader(file));
@@ -49,7 +91,7 @@ public class LectureFichier {
 		}
 		}catch(Exception e) {
 		}
-	  File fileLivre = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\Livres.txt");
+	  File fileLivre = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Livres.txt");
 		BufferedReader brLivre = null;
 		try {
 			brLivre = new BufferedReader(new FileReader(fileLivre));
@@ -76,7 +118,7 @@ public class LectureFichier {
 		 
 		 
 		 
-		 	File filePer = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
+		 	File filePer = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
 			BufferedReader brPer = null;
 			try {
 				brPer = new BufferedReader(new FileReader(filePer));
@@ -102,7 +144,7 @@ public class LectureFichier {
 				}catch(Exception e) {
 				}
 			 
-			 
+		}
 	  }
 
 	public ArrayList<Livre> getListLivre() {

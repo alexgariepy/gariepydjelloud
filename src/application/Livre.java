@@ -1,6 +1,8 @@
 package application;
 
-public class Livre {
+import java.io.Serializable;
+
+public class Livre implements Serializable{
 	private String strNumeroDoc;
 	private	String Titre;
 	private String Etat;
@@ -74,5 +76,8 @@ public class Livre {
 
 		public void setTypeDocument(TypeDocument typeDocument) {
 			this.typeDocument = typeDocument;
+		}
+		public String toString() {
+			return  Titre + "  " + Auteur;
 		}
 }
