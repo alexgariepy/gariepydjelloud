@@ -8,6 +8,9 @@ public class Pret {
 	private Adherent adh;
 	private	Date DatePret;
 	private Date DateRetourPrevu;
+
+	private Date DateDeRemise;
+
 	Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
 		this.adh = adh;
 		this.DatePret = DatePret;
