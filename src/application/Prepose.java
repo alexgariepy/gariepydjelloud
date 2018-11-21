@@ -1,21 +1,16 @@
 package application;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Prepose {
 	 public static void main(String[] args) {
 		   ArrayList<Adherent> listDocAdherent = new ArrayList<Adherent>();
 		   ArrayList<Document> listDocDocument = new ArrayList<Document>();
 		   ArrayList<Pret> listDocPret = new ArrayList<Pret>();
-		 //  ajouterdocument(listDocDocument);
-		   ajouterpret(listDocPret);
-		   System.out.println( ((Pret) listDocPret.get(0)).getAdh().toString());
-		   System.out.println( listDocPret.get(0).getDateDeRemise());
+		 
 		  
 	}
+<<<<<<< HEAD
    public ArrayList<Document> ajouterdocument(ArrayList<Document> listDoc){
 	    TypeDocument typeDocument = TypeDocument.DVD;
 		String Titre = "Allo";
@@ -59,5 +54,9 @@ public class Prepose {
 	  
 	   	return listDoc;
 	}
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
    
 }

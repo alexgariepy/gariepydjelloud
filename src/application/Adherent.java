@@ -12,7 +12,7 @@ private	String strAdresse;
 	this.strNom = strNom;
 	this.strNum = strNum;
 	this.strAdresse = strAdresse;
-	//ALL
+	//ALL	
  }
 
 	public String getStrPrenom() {

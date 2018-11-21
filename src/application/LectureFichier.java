@@ -35,39 +35,72 @@ public class LectureFichier {
 		
 		
 		if(fileSer.exists()) {
-			System.out.println("rentrer");
+			DVD dvd = null;
 		try {
 		FileInputStream fileIn = new FileInputStream("DVD.ser");
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        while(in.readObject() != null ) {
-        listDvd.add((DVD)in.readObject());
+        try {
+        while(( dvd = (DVD) in.readObject()) != null ) {
+        	
+        		
+        listDvd.add(dvd);
+        
         }
         in.close();
         fileIn.close();
+        }catch(Exception e) {
+        	
+        }
+        
+        try {
         
         
+        Periodiques per =null;
         FileInputStream fileInPer = new FileInputStream("Per.ser");
         ObjectInputStream inPer = new ObjectInputStream(fileInPer);
-        while(in.readObject() != null ) {
-        listPeriodique.add((Periodiques)in.readObject());
+        System.out.println("aa");
+        while((per = (Periodiques)inPer.readObject()) != null ) {
+        	
+        listPeriodique.add(per);
         }
         inPer.close();
         fileInPer.close();
+        }catch(Exception e) {
+        	
+        }
         
-        
-        FileInputStream fileInLivre = new FileInputStream("Liv.ser");
+        try {
+        Livre liv = null;
+        FileInputStream fileInLivre = new FileInputStream("Livre.ser");
         ObjectInputStream inLivre = new ObjectInputStream(fileInLivre);
-        while(in.readObject() != null ) {
-        listLivre.add((Livre)in.readObject());
+        while((liv=(Livre)inLivre.readObject()) != null ) {
+        listLivre.add(liv);
         }
         inLivre.close();
         fileInLivre.close();
         
+	        }catch(Exception e) {
+	        	
+	        }
+        
+        try {
+            Document doc = null;
+            FileInputStream fileInDoc = new FileInputStream("Doc.ser");
+            ObjectInputStream inDoc = new ObjectInputStream(fileInDoc);
+            while((doc=(Document)inDoc.readObject()) != null ) {
+            listDoc.add(doc);
+            }
+            inDoc.close();
+            fileInDoc.close();
+            
+    	        }catch(Exception e) {
+    	        	
+    	        }
 		}catch(Exception e) {
 			
 		}
 		}else {
-			System.out.println("sorti");
+			
 	File file = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
 	BufferedReader br = null;
 	try {
