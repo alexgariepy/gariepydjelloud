@@ -19,6 +19,8 @@ public class LectureFichier {
 	private ArrayList<DVD> listDvd = new ArrayList<DVD>();
 	private ArrayList<Periodiques> listPeriodique = new ArrayList<Periodiques>();
 	private ArrayList<Livre> listLivre = new ArrayList<Livre>();
+	private ArrayList<Pret> listPret = new ArrayList<Pret>();
+	private ArrayList<Adherent> listAdherent = new ArrayList<Adherent>();
 	public ArrayList<Document> getListDoc() {
 		return listDoc;
 	}
@@ -157,6 +159,14 @@ public class LectureFichier {
 
 	public ArrayList<DVD> getListDvd() {
 		return listDvd;
+	}
+
+	public ArrayList<Pret> getListPret() {
+		return listPret;
+	}
+
+	public ArrayList<Adherent> getListAdherent() {
+		return listAdherent;
 	}
 	
 	

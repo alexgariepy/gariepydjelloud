@@ -47,7 +47,7 @@ public class Prepose {
 			Date strDatePret = new SimpleDateFormat("dd/MM/yyyy").parse("01/11/2018");
 			Date strDateRetourPrevu = new SimpleDateFormat("dd/MM/yyyy").parse("03/11/2018");
 			Date strDateDeRemise = new SimpleDateFormat("dd/MM/yyyy").parse("04/11/2018");
-			Pret pret = new Pret(adherent,strDatePret,strDateRetourPrevu,strDateDeRemise);
+			Pret pret = new Pret(adherent,strDatePret,strDateRetourPrevu);
 			listDoc.add(pret);	  
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

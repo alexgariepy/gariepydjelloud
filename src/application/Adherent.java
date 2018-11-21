@@ -7,7 +7,7 @@ private	String strNom;
 private	String strNum;
 private	String strAdresse;
 	
-	Adherent(String strPrenom,String strNom,String strNum,String strAdresse){
+	public Adherent(String strPrenom,String strNom,String strNum,String strAdresse){
 	this.strPrenom = strPrenom;
 	this.strNom = strNom;
 	this.strNum = strNum;

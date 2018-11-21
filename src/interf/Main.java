@@ -1,11 +1,15 @@
 package interf;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import javax.swing.text.MaskFormatter;
 
 import application.DVD;
 import application.Document;
@@ -57,6 +61,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import application.Pret;
+import application.LectureFichier;
+import application.Adherent;
 
 public class Main extends Application {
 	private BorderPane root;
@@ -145,12 +152,15 @@ public class Main extends Application {
 	private int intCompteurPerio = 0;
 	private String strReponse = "";
 	private Stage primaryStage;
+	private Stage stageAdherant;
+	private Boolean booValide;
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
 		@Override
 		public void handle(ActionEvent arg0) {
 			// TODO Auto-generated method stub
+			booValide=false;
 			VBox vBoxInscire = new VBox();
 			vBoxInscire.setSpacing(10);
 			vBoxInscire.setPadding(new Insets(10));
@@ -174,7 +184,6 @@ public class Main extends Application {
 			hBoxButton.setAlignment(Pos.CENTER);
 			hBoxButton.setSpacing(20);
 			Button btnConfirmer = new Button("Confirmer");
-			btnConfirmer.setOnMouseClicked(e -> gestionErreurInscriptionAdherant(tfPrenom, tfNom, tfTel, tfAdresse));
 			Button btnAnnuler = new Button("Annuler");
 			btnAnnuler.setOnAction(gestionUsager);
 			
@@ -231,6 +240,22 @@ public class Main extends Application {
 			stageInscription.setResizable(false);
 			stageInscription.show();
 			btnAnnuler.setOnMouseClicked(e -> stageInscription.close());
+			
+			btnConfirmer.setOnMouseClicked(e -> {
+				booValide = gestionErreurInscriptionAdherant(tfPrenom, tfNom, tfTel, tfAdresse);
+				if(booValide) {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Inscription confirmé!");
+					alert.setHeaderText(null);
+					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()  + " de vous avoir inscrit dans la base de donnée de la médiathèque.");
+					alert.showAndWait();
+					stageInscription.close();
+					Adherent a = new Adherent(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(), tfAdresse.getText().trim());
+					fichier.getListAdherent().add(a);
+					debutLogin();
+				}
+			});
+			
 		}
 		
 	};
@@ -330,7 +355,7 @@ public class Main extends Application {
 
 			vBoxAdherant.getChildren().addAll(labelConnexionNumTel, hBoxInfo, labelConnexionNom, hBoxInfoNom, hBoxButton, hBoxRetour);
 
-			Stage stageAdherant = new Stage();
+			stageAdherant = new Stage();
 			stageAdherant.setTitle("Médiathèque");
 			stageAdherant.setScene(sceneAdherant);
 			stageAdherant.setResizable(false);
@@ -396,11 +421,13 @@ public class Main extends Application {
 				btnAjouter.setDisable(true);
 				btnSupprimer.setDisable(true);
 				btnGerer.setDisable(true);
+				btnInscire.setDisable(true);
 			}
 
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
 			btnInscire.setOnAction(gestionPret);
+			
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
@@ -485,6 +512,7 @@ public class Main extends Application {
 				System.out.println(e1.getMessage() + " >>>");
 				}
 				newWindow.close();
+				debutLogin();
 			});
 
 			newWindow.show();
@@ -821,6 +849,7 @@ public class Main extends Application {
 							messageErreurMaxDVD();
 						}
 						break;
+						
 					}
 				} else {
 					Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -1068,60 +1097,27 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		root = new BorderPane();
-		scene = new Scene(root, 500, 400);
-		root.setBackground(bg1);
-		root.setPadding(new Insets(10));
-
-		GridPane gp = new GridPane();
-		gp.setVgap(10);
-		gp.setHgap(10);
-
-		Label labelNoEmploye = new Label("No. d'employé : ");
-		Label labelMDP = new Label("Mot de passe : ");
-
-		TextField tfNoEmploye = new TextField();
-		TextField tfMDP = new TextField();
-
-		btnUsager.setOnAction(gestionUsager);
-		btnUsager.setOnMouseClicked(e -> {
-			primaryStage.hide();
-
-		});
-
-		btnConnexion.setOnAction(gestionConnexion);
+		scene = new Scene(root, 200, 100);
 		btnConnexion.setOnMouseClicked(e -> {
 			primaryStage.hide();
-
+			debutLogin();
 		});
-		labelNoEmploye.setFont(Font.font("Arial", 15));
-		labelNoEmploye.setTextFill(Color.WHITE);
-
-		labelMDP.setFont(Font.font("Arial", 15));
-		labelMDP.setTextFill(Color.WHITE);
-
-		gp.add(labelNoEmploye, 0, 0);
-		gp.add(labelMDP, 0, 1);
-		gp.add(tfNoEmploye, 1, 0);
-		gp.add(tfMDP, 1, 1);
-		gp.add(btnConnexion, 1, 3);
-		gp.add(btnUsager, 0, 3);
-
-		gp.setAlignment(Pos.CENTER);
-		root.setCenter(gp);
+		
+		root.setCenter(btnConnexion);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setTitle("Bienvenue à la médiathèque");
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
-
 	}
 	
-	public void launch() {
-		root = new BorderPane();
-		scene = new Scene(root, 500, 400);
-		root.setBackground(bg1);
-		root.setPadding(new Insets(10));
+	public Stage debutLogin() {
+		Stage stageLogin = new Stage();
+		BorderPane bpLogin = new BorderPane();
+		Scene sceneLogin = new Scene(bpLogin, 500, 400);
+		bpLogin.setBackground(bg1);
+		bpLogin.setPadding(new Insets(10));
 
 		GridPane gp = new GridPane();
 		gp.setVgap(10);
@@ -1135,13 +1131,13 @@ public class Main extends Application {
 
 		btnUsager.setOnAction(gestionUsager);
 		btnUsager.setOnMouseClicked(e -> {
-			primaryStage.hide();
+			stageLogin.hide();
 
 		});
 
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
-			primaryStage.hide();
+			stageLogin.hide();
 
 		});
 
@@ -1159,13 +1155,14 @@ public class Main extends Application {
 		gp.add(btnUsager, 0, 3);
 
 		gp.setAlignment(Pos.CENTER);
-		root.setCenter(gp);
+		bpLogin.setCenter(gp);
 
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		primaryStage.setTitle("Bienvenue à la médiathèque");
-		primaryStage.setResizable(false);
-		primaryStage.sizeToScene();
+		stageLogin.setScene(sceneLogin);
+		stageLogin.show();
+		stageLogin.setTitle("Bienvenue à la médiathèque");
+		stageLogin.setResizable(false);
+		stageLogin.sizeToScene();
+		return stageLogin;
 	}
 
 	public static void main(String[] args) {
@@ -1232,6 +1229,7 @@ public class Main extends Application {
 
 	public void pret(Document doc) {
 		int nbJour = 0;
+		
 		doc.setEtat("Non Disponible");
 
 		switch (doc.getTypeDocument()) {
@@ -1285,6 +1283,7 @@ public class Main extends Application {
 				+ dateFormat.format(dateRetour));
 		alert.showAndWait();
 
+		//Pret p = new Pret();
 	}
 
 	public void messageErreur() {
@@ -1324,13 +1323,68 @@ public class Main extends Application {
 		
 	}
 	
-	public void gestionErreurInscriptionAdherant(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
-		if (tf1.getText().isEmpty() || tf2.getText().isEmpty() || tf3.getText().isEmpty() || tf4.getText().isEmpty()) {
+	public Boolean gestionErreurInscriptionAdherant(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
+		
+		String strPrenom = tf1.getText();
+		String strNom = tf2.getText();
+		String strNumTel = tf3.getText();
+		String strAdress = tf4.getText();
+		
+		
+		boolean booPrenomAlpha = estAlpha(strPrenom);
+		boolean booNomAlpha = estAlpha(strNom);
+		boolean booNumTel = estNumeric(strNumTel);
+		boolean booAddress = estValide(strAdress);
+		
+		if (strPrenom.isEmpty() || strNom.isEmpty() || strNumTel.isEmpty() || strAdress.isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Inscription impossible");
 			alert.setHeaderText(null);
 			alert.setContentText("Vous devez remplir toutes les cases pour vous inscire en tant qu'adhérant");
 			alert.showAndWait();
 		}
+		else if (!booPrenomAlpha || !booNomAlpha) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Inscription impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Seulement les charactères alphanumériques sont acceptés pour les sections Prénom et Nom");
+			alert.showAndWait();
+		}
+		else if(strNumTel.trim().length() != 10) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Inscription impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Le format pour les numéros de téléphones est : 0000000000\n");
+			alert.showAndWait();
+			if (!booNumTel) {
+				Alert alertNum = new Alert(AlertType.ERROR);
+				alertNum.setTitle("Inscription impossible");
+				alertNum.setHeaderText(null);
+				alertNum.setContentText("Seulement les charactères numériques sont acceptés pour la section Numéro de téléphone");
+				alertNum.showAndWait();
+			}
+			booNumTel=false;
+			
+		}
+		else if(!booAddress) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Inscription impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Les charactères spéciaux ne sont pas acceptés dans la section Adresse");
+			alert.showAndWait();
+		}
+		return booPrenomAlpha && booNomAlpha && booNumTel && booAddress;
+		
+	}
+	
+	public boolean estAlpha(String s) {  
+	    return s != null && s.matches("[A-Za-z]+");  
+	}  
+	
+	public boolean estNumeric(String s) {  
+	    return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
+	}  
+	public boolean estValide(String s) {
+		return s != null && s.matches("[a-zA-Z0-9 ]*");
 	}
 }
