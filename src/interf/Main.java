@@ -1,5 +1,6 @@
 package interf;
 
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -448,6 +449,41 @@ public class Main extends Application {
 			newWindow.setScene(secondScene);
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
+				try {
+				 FileOutputStream fileOutDvD =new FileOutputStream("DVD.ser");
+					         ObjectOutputStream outDvD = new ObjectOutputStream(fileOutDvD);
+					         for(int i = 0 ; i < fichier.getListDvd().size();i++) {
+					        	 outDvD.writeObject(fichier.getListDvd().get(i));
+					         
+					         }
+					         
+					         
+				         outDvD.close();
+				         fileOutDvD.close();
+				        
+				         
+				         
+				         
+				         FileOutputStream fileOutPer =
+							     new FileOutputStream("Per.ser");
+							         ObjectOutputStream outPer = new ObjectOutputStream(fileOutPer);
+							         for(int i = 0 ; i < fichier.getListPeriodique().size();i++) {
+							        	 outPer.writeObject(fichier.getListPeriodique().get(i));
+							         }
+							         outPer.close();
+							         fileOutPer.close();
+
+							         FileOutputStream fileOutLivre =
+										     new FileOutputStream("Livre.ser");
+										         ObjectOutputStream outLivre = new ObjectOutputStream(fileOutLivre);
+										         for(int i = 0 ; i < fichier.getListLivre().size();i++) {
+										        	 outLivre.writeObject(fichier.getListLivre().get(i));
+										         }
+										         outLivre.close();
+										         fileOutLivre.close();
+				}catch (Exception e1) {
+				System.out.println(e1.getMessage() + " >>>");
+				}
 				newWindow.close();
 			});
 
@@ -1057,7 +1093,6 @@ public class Main extends Application {
 			primaryStage.hide();
 
 		});
-
 		labelNoEmploye.setFont(Font.font("Arial", 15));
 		labelNoEmploye.setTextFill(Color.WHITE);
 

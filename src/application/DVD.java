@@ -1,6 +1,8 @@
 package application;
 
-public class DVD {
+import java.io.Serializable;
+
+public class DVD implements Serializable{
 	private String strNumeroDuDoc;
 	private String strNomDuDvd;
 	private String strDate;
@@ -59,5 +61,8 @@ public class DVD {
 			}
 			public void setIntNombreDePret(int intNombreDePret) {
 				this.intNombreDePret = intNombreDePret;
+			}
+			public String toString() {
+				return  strNomDuDvd + "  " + strAuteur;
 			}
 }
