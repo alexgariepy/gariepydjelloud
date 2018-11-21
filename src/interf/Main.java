@@ -450,37 +450,44 @@ public class Main extends Application {
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				try {
-				 FileOutputStream fileOutDvD =new FileOutputStream("DVD.ser");
+				 FileOutputStream fileOutDvD =new FileOutputStream("DVD.ser",false);
 					         ObjectOutputStream outDvD = new ObjectOutputStream(fileOutDvD);
 					         for(int i = 0 ; i < fichier.getListDvd().size();i++) {
 					        	 outDvD.writeObject(fichier.getListDvd().get(i));
-					         
 					         }
-					         
-					         
 				         outDvD.close();
 				         fileOutDvD.close();
 				        
 				         
 				         
 				         
-				         FileOutputStream fileOutPer =
-							     new FileOutputStream("Per.ser");
+				        FileOutputStream fileOutPer =
+							     new FileOutputStream("Per.ser",false);
 							         ObjectOutputStream outPer = new ObjectOutputStream(fileOutPer);
 							         for(int i = 0 ; i < fichier.getListPeriodique().size();i++) {
 							        	 outPer.writeObject(fichier.getListPeriodique().get(i));
 							         }
 							         outPer.close();
 							         fileOutPer.close();
-
-							         FileOutputStream fileOutLivre =
-										     new FileOutputStream("Livre.ser");
+							         
+							         FileOutputStream fileOutLivre = new FileOutputStream("Livre.ser",false);
 										         ObjectOutputStream outLivre = new ObjectOutputStream(fileOutLivre);
 										         for(int i = 0 ; i < fichier.getListLivre().size();i++) {
 										        	 outLivre.writeObject(fichier.getListLivre().get(i));
 										         }
 										         outLivre.close();
 										         fileOutLivre.close();
+										         
+										         FileOutputStream fileOutDoc = new FileOutputStream("Doc.ser",false);
+										         ObjectOutputStream outDoc = new ObjectOutputStream(fileOutDoc);
+										         for(int i = 0 ; i < fichier.getListDoc().size();i++) {
+										        	 outDoc.writeObject(fichier.getListDoc().get(i));
+										         }
+										         outDoc.close();
+										         fileOutDoc.close();						         
+										         
+										         
+										         
 				}catch (Exception e1) {
 				System.out.println(e1.getMessage() + " >>>");
 				}

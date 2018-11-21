@@ -8,12 +8,10 @@ public class Pret {
 	private Adherent adh;
 	private	Date DatePret;
 	private Date DateRetourPrevu;
-	private Date DateDeRemise;
-	Pret(Adherent adh,Date DatePret,Date DateRetourPrevu,Date DateDeRemise){
+	Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
 		this.adh = adh;
 		this.DatePret = DatePret;
 		this.DateRetourPrevu = DateRetourPrevu;
-		this.DateDeRemise = DateDeRemise;
 	}
 	public static void main(String[] args) {
 		try {
@@ -38,9 +36,6 @@ public class Pret {
 	}
 	public Date getDateRetourPrevu() {
 		return DateRetourPrevu;
-	}
-	public Date getDateDeRemise() {
-		return DateDeRemise;
 	}
 	public static double retournemontantamende(Date DateRetourPrevuAmende,Date DateDeRemiseAmende) {
 		int nombreJour =0 ;
