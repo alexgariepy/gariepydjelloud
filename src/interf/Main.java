@@ -73,6 +73,7 @@ public class Main extends Application {
 	private Image imageQuitter = new Image("quitter.png");
 	private Image imageConfirmer = new Image("confirmer.png");
 	private Image imageAnnuler = new Image("annuler.png");
+	private Image imageInscire = new Image("inscire.png");
 
 	private ImageView imageView = new ImageView(image3);
 	private ImageView addView = new ImageView(imageAdd);
@@ -83,6 +84,7 @@ public class Main extends Application {
 	private ImageView quitterView = new ImageView(imageQuitter);
 	private ImageView confirmerView = new ImageView(imageConfirmer);
 	private ImageView annulerView = new ImageView(imageAnnuler);
+	private ImageView inscireView = new ImageView(imageInscire);
 
 	private Button btnAjouter = new Button("Ajouter un document");
 	private Button btnSupprimer = new Button("Supprimer un document");
@@ -101,7 +103,7 @@ public class Main extends Application {
 	private Tab tabDVD = new Tab("DVDS");
 
 	private BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
-	private BackgroundSize bgTaille2 = new BackgroundSize(1280, 720, false, false, false, false);
+	private BackgroundSize bgTaille2 = new BackgroundSize(1290, 730, false, false, false, false);
 	private BackgroundImage BGMain = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
 			BackgroundPosition.DEFAULT, bgTaille);
 	private BackgroundImage BGMain2 = new BackgroundImage(image2, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
@@ -123,6 +125,11 @@ public class Main extends Application {
 	private TextField tfAuteur;
 	private TextField tfMC;
 	private Stage stageAjouter;
+	private TextField tfVolumePerio;
+	private TextField tfNumPerio;
+	private TextField tfNumTel;
+	private TextField tfNom;
+	private TextField tfPrenom;
 	private DatePicker dp = new DatePicker();
 	private ObservableList<Document> donnees;
 	private ObservableList<DVD> donneesDVD;
@@ -135,6 +142,204 @@ public class Main extends Application {
 	private int intCompteurLivre = 0;
 	private int intCompteurDVD = 0;
 	private int intCompteurPerio = 0;
+	private String strReponse = "";
+	private Stage primaryStage;
+
+	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			VBox vBoxInscire = new VBox();
+			vBoxInscire.setSpacing(10);
+			vBoxInscire.setPadding(new Insets(10));
+			Scene sceneInsciption = new Scene(vBoxInscire, 450, 325);
+			vBoxInscire.setBackground(bg4);
+			vBoxInscire.setPadding(new Insets(10));
+			
+			Label lableInscription = new Label("Inscription");
+			Label labelPrenom = new Label("Prénom : ");
+			Label labelNom = new Label("Nom : ");
+			Label labelTel = new Label("Numéro de téléphone : ");
+			Label labelAdresse = new Label("Adresse : ");
+			
+			TextField tfPrenom = new TextField();
+			TextField tfNom = new TextField();
+			TextField tfTel = new TextField();
+			TextField tfAdresse = new TextField();
+			
+			HBox hBoxButton = new HBox();
+			hBoxButton.setPadding(new Insets(20));
+			hBoxButton.setAlignment(Pos.CENTER);
+			hBoxButton.setSpacing(20);
+			Button btnConfirmer = new Button("Confirmer");
+			btnConfirmer.setOnMouseClicked(e -> gestionErreurInscriptionAdherant(tfPrenom, tfNom, tfTel, tfAdresse));
+			Button btnAnnuler = new Button("Annuler");
+			btnAnnuler.setOnAction(gestionUsager);
+			
+			parametreBoutton();
+			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnConfirmer.setGraphic(confirmerView);
+			btnAnnuler.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnAnnuler.setGraphic(annulerView);
+			
+			hBoxButton.getChildren().addAll(btnConfirmer, btnAnnuler);
+			
+			lableInscription.setMinSize(180, 30);
+			labelPrenom.setMinSize(180, 30);
+			labelNom.setMinSize(180, 30);
+			labelTel.setMinSize(180, 30);
+			labelAdresse.setMinSize(180, 30);
+			
+			tfPrenom.setMinSize(180, 30);
+			tfNom.setMinSize(180, 30);
+			tfTel.setMinSize(180, 30);
+			tfAdresse.setMinSize(180, 30);
+			
+			lableInscription.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelAdresse.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			
+			lableInscription.setTextFill(Color.WHITE);
+			labelPrenom.setTextFill(Color.WHITE);
+			labelNom.setTextFill(Color.WHITE);
+			labelTel.setTextFill(Color.WHITE);
+			labelAdresse.setTextFill(Color.WHITE);
+			
+			HBox hBoxInscription = new HBox();
+			VBox vBoxLabel = new VBox();
+			vBoxLabel.setSpacing(10);
+			vBoxLabel.setPadding(new Insets(10));
+			vBoxLabel.getChildren().addAll(labelPrenom, labelNom, labelTel, labelAdresse);
+
+			VBox vBoxTF = new VBox();
+			vBoxTF.setSpacing(10);
+			vBoxTF.setPadding(new Insets(10));
+			vBoxTF.getChildren().addAll(tfPrenom, tfNom, tfTel, tfAdresse);
+
+			hBoxInscription.getChildren().addAll(vBoxLabel, vBoxTF);
+			hBoxInscription.setBorder(border2);
+			
+			vBoxInscire.getChildren().addAll(lableInscription, hBoxInscription, hBoxButton);
+			
+			Stage stageInscription = new Stage();
+			stageInscription.setTitle("Inscription d'un adhérant");
+			stageInscription.setScene(sceneInsciption);
+			stageInscription.setResizable(false);
+			stageInscription.show();
+			btnAnnuler.setOnMouseClicked(e -> stageInscription.close());
+		}
+		
+	};
+	
+	private EventHandler<ActionEvent> gestionUsager = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent event) {
+			// TODO Auto-generated method stub
+			VBox vBoxAdherant = new VBox();
+			vBoxAdherant.setSpacing(20);
+			Scene sceneAdherant = new Scene(vBoxAdherant, 450, 360);
+			vBoxAdherant.setBackground(bg1);
+			vBoxAdherant.setPadding(new Insets(10));
+
+			Label labelConnexionNumTel = new Label("Connexion avec numéro de téléphone");
+			Label labelConnexionNom = new Label("Connexion avec Nom et Prénom");
+
+			Label labelNumTel = new Label("Numéro de téléphone : ");
+
+			Label labelNom = new Label("Nom : ");
+			Label labelPrenom = new Label("Prénom : ");
+
+			tfNumTel = new TextField();
+			tfNom = new TextField();
+			tfPrenom = new TextField();
+			
+			labelNumTel.setMinSize(180, 30);
+			labelNom.setMinSize(180, 30);
+			labelPrenom.setMinSize(180, 30);
+			tfNumTel.setMinSize(180, 30);
+			tfNom.setMinSize(180, 30);
+			tfPrenom.setMinSize(180, 30);
+
+			labelNumTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelNumTel.setTextFill(Color.WHITE);
+			labelConnexionNumTel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+			labelConnexionNumTel.setTextFill(Color.WHITE);
+			labelConnexionNom.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+			labelConnexionNom.setTextFill(Color.WHITE);
+			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelNom.setTextFill(Color.WHITE);
+			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelPrenom.setTextFill(Color.WHITE);
+
+			HBox hBoxButton = new HBox();
+			hBoxButton.setSpacing(10);
+			hBoxButton.setAlignment(Pos.CENTER);
+			Button btnConfirmation = new Button("Confirmer");
+			Button btnInscrire = new Button("Inscrivez vous!");
+			Button btnRetour = new Button("Retour");
+			
+			parametreBoutton();
+			btnConfirmation.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnConfirmation.setGraphic(confirmerView);
+			btnInscrire.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnInscrire.setGraphic(inscireView);
+			HBox hBoxRetour = new HBox();		
+			retourView.setFitHeight(20);
+			retourView.setFitWidth(20);		
+			btnRetour.setGraphic(retourView);
+			btnRetour.setFont(Font.font("Arial", FontWeight.BOLD, 11));
+			hBoxRetour.setAlignment(Pos.CENTER);
+			hBoxRetour.getChildren().add(btnRetour);
+			
+			btnInscrire.setOnAction(gestionInscrire);
+
+			hBoxButton.getChildren().addAll(btnConfirmation, btnInscrire);
+
+			HBox hBoxInfo = new HBox();
+			VBox vBoxLabel = new VBox();
+			vBoxLabel.setSpacing(10);
+			vBoxLabel.setPadding(new Insets(10));
+			vBoxLabel.getChildren().add(labelNumTel);
+
+			VBox vBoxTF = new VBox();
+			vBoxTF.setSpacing(10);
+			vBoxTF.setPadding(new Insets(10));
+			vBoxTF.getChildren().addAll(tfNumTel);
+
+			hBoxInfo.getChildren().addAll(vBoxLabel, vBoxTF);
+			hBoxInfo.setBorder(border2);
+
+			HBox hBoxInfoNom = new HBox();
+			VBox vBoxLabelNom = new VBox();
+			vBoxLabelNom.setSpacing(10);
+			vBoxLabelNom.setPadding(new Insets(10));
+			vBoxLabelNom.getChildren().addAll(labelNom, labelPrenom);
+
+			VBox vBoxTFNom = new VBox();
+			vBoxTFNom.setSpacing(10);
+			vBoxTFNom.setPadding(new Insets(10));
+			vBoxTFNom.getChildren().addAll(tfNom, tfPrenom);
+
+			hBoxInfoNom.getChildren().addAll(vBoxLabelNom, vBoxTFNom);
+			hBoxInfoNom.setBorder(border2);
+
+			vBoxAdherant.getChildren().addAll(labelConnexionNumTel, hBoxInfo, labelConnexionNom, hBoxInfoNom, hBoxButton, hBoxRetour);
+
+			Stage stageAdherant = new Stage();
+			stageAdherant.setTitle("Médiathèque");
+			stageAdherant.setScene(sceneAdherant);
+			stageAdherant.setResizable(false);
+			stageAdherant.show();
+			btnInscrire.setOnMouseClicked(e -> stageAdherant.close());
+			btnRetour.setOnMouseClicked(e -> stageAdherant.close());
+			
+		}
+
+	};
 
 	private EventHandler<ActionEvent> gestionConnexion = new EventHandler<ActionEvent>() {
 
@@ -244,7 +449,6 @@ public class Main extends Application {
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				newWindow.close();
-
 			});
 
 			newWindow.show();
@@ -599,8 +803,7 @@ public class Main extends Application {
 					} else {
 						messageErreurMaxLivre();
 					}
-				}
-				else {
+				} else {
 					messageErreur();
 				}
 			} else if (docPer != null) {
@@ -612,8 +815,7 @@ public class Main extends Application {
 					} else {
 						messageErreurMaxPerio();
 					}
-				}
-				else {
+				} else {
 					messageErreur();
 				}
 			} else if (docDVD != null) {
@@ -625,8 +827,7 @@ public class Main extends Application {
 					} else {
 						messageErreurMaxDVD();
 					}
-				}
-				else {
+				} else {
 					messageErreur();
 				}
 			}
@@ -663,10 +864,15 @@ public class Main extends Application {
 			Label labelAuteur = new Label("Auteur : ");
 			Label labelMC = new Label("Mots clés (séparé par des virgules) : ");
 			Label labelDate = new Label("Date : ");
+			Label labelNumPerio = new Label("Numéro de périodique : ");
+			Label labelVolumePerio = new Label("Volume : ");
+
 			labelMC.setMinSize(180, 30);
 			labelTitre.setMinSize(180, 30);
 			labelAuteur.setMinSize(180, 30);
 			labelDate.setMinSize(180, 30);
+			labelNumPerio.setMinSize(180, 30);
+			labelVolumePerio.setMinSize(180, 30);
 
 			labelTypeDoc.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelTypeDoc.setTextFill(Color.WHITE);
@@ -678,13 +884,21 @@ public class Main extends Application {
 			labelMC.setTextFill(Color.WHITE);
 			labelDate.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelDate.setTextFill(Color.WHITE);
+			labelNumPerio.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelNumPerio.setTextFill(Color.WHITE);
+			labelVolumePerio.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelVolumePerio.setTextFill(Color.WHITE);
 
+			tfVolumePerio = new TextField();
+			tfNumPerio = new TextField();
 			tfTitre = new TextField();
 			tfAuteur = new TextField();
 			tfMC = new TextField();
 			tfTitre.setMinSize(180, 30);
 			tfAuteur.setMinSize(180, 30);
 			tfMC.setMinSize(180, 30);
+			tfVolumePerio.setMinSize(180, 30);
+			tfNumPerio.setMinSize(180, 30);
 
 			dp = new DatePicker();
 
@@ -708,17 +922,39 @@ public class Main extends Application {
 			vBoxTF.setPadding(new Insets(10));
 			hBoxInfo.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInfo.setBorder(border2);
-			//
 			HBox hBoxButton = new HBox();
 			hBoxButton.getChildren().addAll(btnAnnuler, btnConfirmer);
 			btnAnnuler.setOnMouseClicked(e -> stageAjouter.close());
-			System.out.println("allo");
 			btnConfirmer.setOnMouseClicked(gestionConfirmer);
 			hBoxButton.setSpacing(20);
 			hBoxButton.setAlignment(Pos.BOTTOM_RIGHT);
 
-			vBoxLabel.getChildren().addAll(labelTitre, labelAuteur, labelDate, labelMC);
-			vBoxTF.getChildren().addAll(tfTitre, tfAuteur, dp, tfMC);
+			vBoxLabel.getChildren().addAll(labelTitre, labelDate, labelMC, labelAuteur);
+			vBoxTF.getChildren().addAll(tfTitre, dp, tfMC, tfAuteur);
+
+			comboBox.setOnAction(e -> {
+				Object strChoix = comboBox.getSelectionModel().getSelectedItem();
+				strReponse = strChoix.toString();
+				if (strReponse == "Periodiques") {
+					try {
+						vBoxLabel.getChildren().addAll(labelVolumePerio, labelNumPerio);
+						vBoxTF.getChildren().addAll(tfVolumePerio, tfNumPerio);
+						vBoxLabel.getChildren().remove(labelAuteur);
+						vBoxTF.getChildren().remove(tfAuteur);
+					} catch (Exception e1) {
+
+					}
+				} else {
+					try {
+						vBoxLabel.getChildren().add(labelAuteur);
+						vBoxTF.getChildren().add(tfAuteur);
+						vBoxLabel.getChildren().removeAll(labelVolumePerio, labelNumPerio);
+						vBoxTF.getChildren().removeAll(tfVolumePerio, tfNumPerio);
+					} catch (Exception e2) {
+
+					}
+				}
+			});
 
 			ajouterFenetre.setSpacing(20);
 			ajouterFenetre.getChildren().addAll(vBox, hBoxInfo, hBoxButton);
@@ -738,7 +974,6 @@ public class Main extends Application {
 		@Override
 		public void handle(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			System.out.println("salut");
 			try {
 				String typeDoc = (String) comboBox.getSelectionModel().getSelectedItem();
 				String strTitre = tfTitre.getText();
@@ -811,11 +1046,12 @@ public class Main extends Application {
 		TextField tfNoEmploye = new TextField();
 		TextField tfMDP = new TextField();
 
-		btnUsager.setOnAction(gestionConnexion);
+		btnUsager.setOnAction(gestionUsager);
 		btnUsager.setOnMouseClicked(e -> {
 			primaryStage.hide();
 
 		});
+
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
 			primaryStage.hide();
@@ -845,6 +1081,57 @@ public class Main extends Application {
 		primaryStage.sizeToScene();
 
 	}
+	
+	public void launch() {
+		root = new BorderPane();
+		scene = new Scene(root, 500, 400);
+		root.setBackground(bg1);
+		root.setPadding(new Insets(10));
+
+		GridPane gp = new GridPane();
+		gp.setVgap(10);
+		gp.setHgap(10);
+
+		Label labelNoEmploye = new Label("No. d'employé : ");
+		Label labelMDP = new Label("Mot de passe : ");
+
+		TextField tfNoEmploye = new TextField();
+		TextField tfMDP = new TextField();
+
+		btnUsager.setOnAction(gestionUsager);
+		btnUsager.setOnMouseClicked(e -> {
+			primaryStage.hide();
+
+		});
+
+		btnConnexion.setOnAction(gestionConnexion);
+		btnConnexion.setOnMouseClicked(e -> {
+			primaryStage.hide();
+
+		});
+
+		labelNoEmploye.setFont(Font.font("Arial", 15));
+		labelNoEmploye.setTextFill(Color.WHITE);
+
+		labelMDP.setFont(Font.font("Arial", 15));
+		labelMDP.setTextFill(Color.WHITE);
+
+		gp.add(labelNoEmploye, 0, 0);
+		gp.add(labelMDP, 0, 1);
+		gp.add(tfNoEmploye, 1, 0);
+		gp.add(tfMDP, 1, 1);
+		gp.add(btnConnexion, 1, 3);
+		gp.add(btnUsager, 0, 3);
+
+		gp.setAlignment(Pos.CENTER);
+		root.setCenter(gp);
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		primaryStage.setTitle("Bienvenue à la médiathèque");
+		primaryStage.setResizable(false);
+		primaryStage.sizeToScene();
+	}
 
 	public static void main(String[] args) {
 		launch(args);
@@ -860,6 +1147,7 @@ public class Main extends Application {
 		quitterView.setFitHeight(30);
 		confirmerView.setFitHeight(30);
 		annulerView.setFitHeight(30);
+		inscireView.setFitHeight(30);
 
 		addView.setFitWidth(40);
 		delView.setFitWidth(40);
@@ -869,6 +1157,7 @@ public class Main extends Application {
 		quitterView.setFitWidth(30);
 		confirmerView.setFitWidth(30);
 		annulerView.setFitWidth(30);
+		inscireView.setFitWidth(30);
 
 		btnAjouter.setMinHeight(50);
 		btnSupprimer.setMinHeight(50);
@@ -962,7 +1251,7 @@ public class Main extends Application {
 		alert.showAndWait();
 
 	}
-	
+
 	public void messageErreur() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Prêt du document impossible");
@@ -970,7 +1259,7 @@ public class Main extends Application {
 		alert.setContentText("Veuillez choisir un document disponible dans la liste");
 		alert.showAndWait();
 	}
-	
+
 	public void messageErreurMaxLivre() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Prêt du livre impossible");
@@ -978,6 +1267,7 @@ public class Main extends Application {
 		alert.setContentText("Vous avez déjà emprunté le nombre maximum de livres!");
 		alert.showAndWait();
 	}
+
 	public void messageErreurMaxPerio() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Prêt du périodique impossible");
@@ -985,12 +1275,27 @@ public class Main extends Application {
 		alert.setContentText("Vous avez déjà emprunté le nombre maximum de périodiques!");
 		alert.showAndWait();
 	}
+
 	public void messageErreurMaxDVD() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Prêt du DVD impossible");
 		alert.setHeaderText(null);
 		alert.setContentText("Vous avez déjà emprunté le nombre maximum de DVDs!");
-		alert.showAndWait();;
+		alert.showAndWait();
+		;
+	}
+
+	public void gestionErreurLoginAdherant(TextField tfNumTel, TextField tfNom, TextField tfPrenom) {
+		
 	}
 	
+	public void gestionErreurInscriptionAdherant(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
+		if (tf1.getText().isEmpty() || tf2.getText().isEmpty() || tf3.getText().isEmpty() || tf4.getText().isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Inscription impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Vous devez remplir toutes les cases pour vous inscire en tant qu'adhérant");
+			alert.showAndWait();
+		}
+	}
 }
