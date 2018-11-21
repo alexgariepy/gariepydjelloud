@@ -1022,6 +1022,8 @@ public class Main extends Application {
 				String strTitre = tfTitre.getText();
 				String strAuteur = tfAuteur.getText();
 				String strMotCle = tfMC.getText();
+				int intVolumePerio = Integer.parseInt(tfVolumePerio.getText());
+				int intNumPerio = Integer.parseInt(tfNumPerio.getText());
 				String date = dp.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 				switch (typeDoc) {
 				case "DVD":
@@ -1035,7 +1037,15 @@ public class Main extends Application {
 					tabDVD.setContent(remplirTabDVD(tabDVD));
 					break;
 				case "Periodiques":
-
+					int intNumeroDocPer = fichier.getListPeriodique().size() + 1;
+					Document docPer = new Document("Per" + intNumeroDocPer, strTitre, date, "Disponible", 0,
+							TypeDocument.PERIODIQUES);
+					Periodiques per = new Periodiques("Per" + intNumeroDocPer, strTitre, date, intVolumePerio, intNumPerio, "Disponible", 0, TypeDocument.PERIODIQUES);
+					fichier.getListPeriodique().add(per);
+					fichier.getListDoc().add(docPer);
+					tabDoc.setContent(remplirTabDocument(tabDoc));
+					tabPerio.setContent(remplirTabPer(tabPerio));
+					
 					break;
 				case "Livre":
 					int intNumeroDocLivre = fichier.getListLivre().size() + 1;
