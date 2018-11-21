@@ -1,6 +1,9 @@
 package application;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Prepose {
 	 public static void main(String[] args) {
@@ -10,7 +13,6 @@ public class Prepose {
 		 
 		  
 	}
-<<<<<<< HEAD
    public ArrayList<Document> ajouterdocument(ArrayList<Document> listDoc){
 	    TypeDocument typeDocument = TypeDocument.DVD;
 		String Titre = "Allo";
@@ -54,9 +56,5 @@ public class Prepose {
 	  
 	   	return listDoc;
 	}
-=======
-
-
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
-   
+ 
 }

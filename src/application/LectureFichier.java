@@ -30,7 +30,7 @@ public class LectureFichier {
 	}
 
 	public void lecture() {
-	File fileSer = new File("L:\\Objet2\\gariepydjelloud\\DVD.ser");
+	File fileSer = new File("L:\\420-3P6\\gariepydjelloud\\DVD.ser");
 		
 		
 		
@@ -101,7 +101,7 @@ public class LectureFichier {
 		}
 		}else {
 			
-	File file = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\DVD.txt");
+	File file = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\DVD.txt");
 	BufferedReader br = null;
 	try {
 		br = new BufferedReader(new FileReader(file));
@@ -126,7 +126,7 @@ public class LectureFichier {
 		}
 		}catch(Exception e) {
 		}
-	  File fileLivre = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Livres.txt");
+	  File fileLivre = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\Livres.txt");
 		BufferedReader brLivre = null;
 		try {
 			brLivre = new BufferedReader(new FileReader(fileLivre));
@@ -153,7 +153,7 @@ public class LectureFichier {
 		 
 		 
 		 
-		 	File filePer = new File("L:\\Objet2\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
+		 	File filePer = new File("L:\\420-3P6\\gariepydjelloud\\donneesEntrees\\Periodiques.txt");
 			BufferedReader brPer = null;
 			try {
 				brPer = new BufferedReader(new FileReader(filePer));

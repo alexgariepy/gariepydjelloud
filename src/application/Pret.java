@@ -8,11 +8,9 @@ public class Pret {
 	private Adherent adh;
 	private	Date DatePret;
 	private Date DateRetourPrevu;
-<<<<<<< HEAD
 	private Date DateDeRemise;
-=======
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
-	Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
+
+	public Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
 		this.adh = adh;
 		this.DatePret = DatePret;
 		this.DateRetourPrevu = DateRetourPrevu;

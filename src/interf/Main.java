@@ -5,8 +5,10 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.text.MaskFormatter;
@@ -97,7 +99,7 @@ public class Main extends Application {
 	private Button btnAjouter = new Button("Ajouter un document");
 	private Button btnSupprimer = new Button("Supprimer un document");
 	private Button btnGerer = new Button("Gérer les adhérents");
-	private Button btnInscire = new Button("Inscire un prêt");
+	private Button btnPret = new Button("Inscire un prêt");
 	private Button btnRetour = new Button("Inscire un retour");
 	private Button btnQuitter = new Button("Déconnexion");
 	private Button btnUsager = new Button("Êtes vous un usager?");
@@ -154,6 +156,7 @@ public class Main extends Application {
 	private Stage primaryStage;
 	private Stage stageAdherant;
 	private Boolean booValide;
+	private ComboBox comboBoxAdherent;
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
@@ -361,7 +364,10 @@ public class Main extends Application {
 			stageAdherant.setResizable(false);
 			stageAdherant.show();
 			btnInscrire.setOnMouseClicked(e -> stageAdherant.close());
-			btnRetour.setOnMouseClicked(e -> stageAdherant.close());
+			btnRetour.setOnMouseClicked(e -> {
+				stageAdherant.close();
+				debutLogin();
+			});
 			
 		}
 
@@ -372,6 +378,7 @@ public class Main extends Application {
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
+			parametreBoutton();
 			if (event.getSource().equals(btnUsager)) {
 				booUsager = true;
 			}
@@ -415,18 +422,18 @@ public class Main extends Application {
 
 			parametreBoutton();
 			vBox3.getChildren().addAll(imageView, t);
-			vBox4.getChildren().addAll(t2, btnAjouter, btnSupprimer, btnGerer, btnInscire, btnRetour, btnQuitter);
+			vBox4.getChildren().addAll(t2, btnAjouter, btnSupprimer, btnGerer, btnPret, btnRetour, btnQuitter);
 
 			if (booUsager) {
 				btnAjouter.setDisable(true);
 				btnSupprimer.setDisable(true);
 				btnGerer.setDisable(true);
-				btnInscire.setDisable(true);
+				btnPret.setDisable(true);
 			}
 
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
-			btnInscire.setOnAction(gestionPret);
+			btnPret.setOnAction(gestionListAdherant);
 			
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
@@ -815,6 +822,58 @@ public class Main extends Application {
 
 	};
 
+	private EventHandler<ActionEvent> gestionListAdherant = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			BorderPane listBP = new BorderPane();
+			Scene listScene = new Scene(listBP, 300, 100);
+			Stage listStage = new Stage();
+			listBP.setBackground(bg2);
+			VBox vBox = new VBox(10);
+			Text t = new Text("Pour quel adhérant faites-vous le prêt?");
+			comboBoxAdherent = new ComboBox();
+			
+			if(fichier.getListAdherent().size() == 0) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Prêt impossible");
+				alert.setHeaderText(null);
+				alert.setContentText("Il n'y a pas d'adhérent inscrit dans la médiathèque. Pour faire un prêt, veuillez avoir au moins un adhérent inscrit.");
+				alert.showAndWait();
+				listStage.close();
+			}
+			else {
+				ObservableList<Adherent> optionAdherent = FXCollections.observableArrayList(fichier.getListAdherent());
+				comboBoxAdherent = new ComboBox(optionAdherent);
+				comboBoxAdherent.getSelectionModel().selectFirst();
+				
+				comboBoxAdherent.setMinSize(150, 30);
+				Button btnChoisir = new Button("Choisir");
+				btnChoisir.setOnMouseClicked(e -> {
+					primaryStage.hide();
+					
+				});
+				btnChoisir.setOnAction(gestionPret);
+				vBox.getChildren().addAll(t, comboBoxAdherent, btnChoisir);
+				vBox.setAlignment(Pos.CENTER);
+				t.setTextAlignment(TextAlignment.CENTER);
+				listBP.setCenter(vBox);
+
+				
+				listStage.setScene(listScene);
+				listStage.show();
+				listStage.setTitle("Choix de l'adhérant");
+				listStage.setResizable(false);
+				listStage.sizeToScene();	
+			}
+			
+			
+			
+		}
+		
+	};
+	
 	private EventHandler<ActionEvent> gestionPret = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -1104,17 +1163,24 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		root = new BorderPane();
-		scene = new Scene(root, 200, 100);
-		btnConnexion.setOnMouseClicked(e -> {
+		scene = new Scene(root, 300, 100);
+		root.setBackground(bg2);
+		VBox vBox = new VBox(10);
+		Text t = new Text("Bienvenue au projet de\nMohamed Djelloud et Alex Gariépy");
+		t.setFont(Font.font("Calibri", FontWeight.MEDIUM, 15));
+		Button btnContinuer = new Button("Continuer");
+		btnContinuer.setOnMouseClicked(e -> {
 			primaryStage.hide();
 			debutLogin();
 		});
-		
-		root.setCenter(btnConnexion);
+		vBox.getChildren().addAll(t, btnContinuer);
+		vBox.setAlignment(Pos.CENTER);
+		t.setTextAlignment(TextAlignment.CENTER);
+		root.setCenter(vBox);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		primaryStage.setTitle("Bienvenue à la médiathèque");
+		primaryStage.setTitle("Bienvenue");
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 	}
@@ -1144,6 +1210,7 @@ public class Main extends Application {
 
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
+			parametreBoutton();
 			stageLogin.hide();
 
 		});
@@ -1201,7 +1268,7 @@ public class Main extends Application {
 		btnAjouter.setMinHeight(50);
 		btnSupprimer.setMinHeight(50);
 		btnGerer.setMinHeight(50);
-		btnInscire.setMinHeight(50);
+		btnPret.setMinHeight(50);
 		btnRetour.setMinHeight(50);
 		btnQuitter.setMinHeight(40);
 		btnConfirmer.setMinHeight(40);
@@ -1210,7 +1277,7 @@ public class Main extends Application {
 		btnAjouter.setGraphic(addView);
 		btnSupprimer.setGraphic(delView);
 		btnGerer.setGraphic(gererView);
-		btnInscire.setGraphic(pretView);
+		btnPret.setGraphic(pretView);
 		btnRetour.setGraphic(retourView);
 		btnQuitter.setGraphic(quitterView);
 		btnConfirmer.setGraphic(confirmerView);
@@ -1219,7 +1286,7 @@ public class Main extends Application {
 		btnAjouter.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		btnSupprimer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		btnGerer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-		btnInscire.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+		btnPret.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		btnRetour.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		btnQuitter.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 		btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -1228,7 +1295,7 @@ public class Main extends Application {
 		btnAjouter.setMinWidth(250);
 		btnSupprimer.setMinWidth(250);
 		btnGerer.setMinWidth(250);
-		btnInscire.setMinWidth(250);
+		btnPret.setMinWidth(250);
 		btnRetour.setMinWidth(250);
 		btnConfirmer.setMinWidth(100);
 		btnAnnuler.setMinWidth(100);
@@ -1290,7 +1357,8 @@ public class Main extends Application {
 				+ dateFormat.format(dateRetour));
 		alert.showAndWait();
 
-		//Pret p = new Pret();
+		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour);
+		fichier.getListPret().add(p);
 	}
 
 	public void messageErreur() {
