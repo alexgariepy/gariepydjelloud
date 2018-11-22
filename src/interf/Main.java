@@ -462,8 +462,6 @@ public class Main extends Application {
 				btnPret.setDisable(true);
 			}
 
-			
-			
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
 			btnPret.setOnAction(gestionListAdherant);
@@ -471,11 +469,32 @@ public class Main extends Application {
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
+			RadioButton rbAuteur = new RadioButton("Auteur");
+			RadioButton rbMC = new RadioButton("Mots Clés");
+			
+			ToggleGroup tg1 = new ToggleGroup();
+			
+			rbAuteur.setToggleGroup(tg1);
+			rbMC.setToggleGroup(tg1);
+			
+			Label labelTri = new Label("Trier par : ");
 			HBox hBox = new HBox();
+			hBox.setSpacing(10);
+			hBox.setPadding(new Insets(10));
 			hBox.setMaxSize(900, 80);
 			hBox.setPrefSize(900, 80);
 			hBox.setBorder(border);
 			hBox.setBackground(bg3);
+			Button btnSearch = new Button("Recherche");
+			TextField tfSearch = new TextField();
+			btnSearch.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelTri.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			rbAuteur.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			rbMC.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnSearch.setGraphic(searchView);
+			tfSearch.setMinSize(400, 40);
+			hBox.getChildren().addAll(tfSearch, btnSearch, labelTri, rbAuteur, rbMC);
+			hBox.setAlignment(Pos.CENTER);
 
 			HBox hBox2 = new HBox();
 			hBox2.setMaxSize(900, 120);
@@ -500,11 +519,7 @@ public class Main extends Application {
 			tabLivre.setClosable(false);
 			tabPerio.setClosable(false);
 			tabDVD.setClosable(false);
-			Recherche(Recherche.MOTCLE, "le");
-			
-			for(int i = 0;i< listDocumentRecherche.size();i++) {
-					System.out.println(listDocumentRecherche.get(i).getTitre());
-			}
+
 			// Supprimer
 			btnSupprimer.setOnAction(gestionSupprimer);
 
@@ -594,6 +609,7 @@ public class Main extends Application {
 		}
 
 	};
+
 
 	private EventHandler<ActionEvent> gestionSupprimer = new EventHandler<ActionEvent>() {
 
