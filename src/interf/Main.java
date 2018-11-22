@@ -29,11 +29,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -82,6 +84,7 @@ public class Main extends Application {
 	private Image imageConfirmer = new Image("confirmer.png");
 	private Image imageAnnuler = new Image("annuler.png");
 	private Image imageInscire = new Image("inscire.png");
+	private Image imageSearch = new Image("search.png");
 
 	private ImageView imageView = new ImageView(image3);
 	private ImageView addView = new ImageView(imageAdd);
@@ -93,6 +96,7 @@ public class Main extends Application {
 	private ImageView confirmerView = new ImageView(imageConfirmer);
 	private ImageView annulerView = new ImageView(imageAnnuler);
 	private ImageView inscireView = new ImageView(imageInscire);
+	private ImageView searchView = new ImageView(imageSearch);
 
 	private Button btnAjouter = new Button("Ajouter un document");
 	private Button btnSupprimer = new Button("Supprimer un document");
@@ -491,6 +495,8 @@ public class Main extends Application {
 			labelTri.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			rbAuteur.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			rbMC.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			searchView.setFitHeight(30);
+			searchView.setFitWidth(30);
 			btnSearch.setGraphic(searchView);
 			tfSearch.setMinSize(400, 40);
 			hBox.getChildren().addAll(tfSearch, btnSearch, labelTri, rbAuteur, rbMC);
