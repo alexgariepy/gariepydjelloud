@@ -35,4 +35,12 @@ private	String strAdresse;
 	public String toString() {
 		return strPrenom + " " + strNom + " " + strNum + " " +strAdresse + " ";	
 	}
+
+	public void setStrNum(String strNum) {
+		this.strNum = strNum;
+	}
+
+	public void setStrAdresse(String strAdresse) {
+		this.strAdresse = strAdresse;
+	}
 }

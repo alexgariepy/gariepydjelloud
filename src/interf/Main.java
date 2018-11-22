@@ -173,7 +173,149 @@ public class Main extends Application {
 	private Stage newWindow;
 	private Boolean booValidationNumTel = false;
 	private Boolean booValidationNomPrenom = false;
-	
+	private Boolean booAnnuler = false;
+	private TableView<Adherent> tableAdherent ;
+	private ObservableList<Adherent> donneeAdherent;
+
+	private EventHandler<ActionEvent> gestionPersonnel = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stu
+			VBox vBoxPersonnel = new VBox();
+			vBoxPersonnel.setSpacing(10);
+			vBoxPersonnel.setPadding(new Insets(10));
+			Scene sceneInsciption = new Scene(vBoxPersonnel, 450, 375);
+			vBoxPersonnel.setBackground(bg2);
+			vBoxPersonnel.setPadding(new Insets(10));
+			
+			VBox vBox1 = new VBox();
+			vBox1.setPrefSize(400, 300);
+			vBox1.setSpacing(20);
+			vBox1.setBackground(bg3);
+			vBox1.setBorder(border); 
+			
+			Tab tabAdherent = new Tab();
+			vBox1.getChildren().add(remplirTabAdherent(tabAdherent));
+			VBox vBox2 = new VBox();
+			vBox2.setPrefSize(400, 80);
+			vBox2.setSpacing(20);
+			HBox hBoxGestion = new HBox(10);
+			hBoxGestion.setPadding(new Insets(10));
+			Button btnAjouter = new Button("Ajouter");
+			booAnnuler = true;
+			btnAjouter.setOnAction(gestionInscrire);
+			
+			Button btnSupprimer = new Button("Supprimer");
+			btnSupprimer.setOnAction(e -> {
+				Adherent a = tableAdherent.getSelectionModel().getSelectedItem();
+				if (a != null) {
+					fichier.getListAdherent().remove(a);
+					tabAdherent.setContent(remplirTabAdherent(tabAdherent));
+					
+				} else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Suppression de l'adhérent impossible");
+					alert.setHeaderText(null);
+					alert.setContentText("Veuillez choisir un adhérent dans la liste pour le supprimer");
+					alert.showAndWait();
+				}
+			});
+
+			Button btnModifier = new Button("Modifier");
+
+			btnModifier.setOnAction(e -> {
+				Adherent a = tableAdherent.getSelectionModel().getSelectedItem();
+				if (a != null) {
+					VBox vBoxModif = new VBox();
+					vBoxModif.setSpacing(10);
+					vBoxModif.setPadding(new Insets(10));
+					Scene sceneModif = new Scene(vBoxModif, 400, 200);
+					vBoxModif.setBackground(bg2);
+					
+					TextField tfAdresse = new TextField();
+					TextField tfTel = new TextField();
+					
+					Label labelA = new Label("Adresse : ");
+					Label labelT = new Label("Numéro de téléphone : ");
+					
+					VBox vBoxtf = new VBox();
+					vBoxtf.setSpacing(10);
+					VBox vBoxLabel = new VBox();
+					vBoxtf.setPadding(new Insets(5));
+					vBoxLabel.setSpacing(10);
+					
+					labelA.setMinSize(180, 30);
+					labelT.setMinSize(180, 30);
+					vBoxtf.setMinSize(180, 30);
+					vBoxLabel.setMinSize(180, 30);
+					
+					labelA.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+					labelA.setTextFill(Color.WHITE);
+					labelT.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+					labelT.setTextFill(Color.WHITE);
+					
+					vBoxtf.getChildren().addAll(tfAdresse, tfTel);
+					vBoxLabel.getChildren().addAll(labelA, labelT);
+					
+					HBox hBoxModif = new HBox();
+					hBoxModif.setSpacing(10);
+					hBoxModif.getChildren().addAll(vBoxLabel, vBoxtf);
+					
+					Button btnConfirmer = new Button("Confirmer");
+					Boolean booA = estValide(tfAdresse.getText());
+					Boolean booT = estNumeric(tfTel.getText());
+			
+					btnConfirmer.setOnAction(e2 ->{
+						if(booA && booT) {
+							a.setStrAdresse(tfAdresse.getText());
+							a.setStrNum(tfTel.getText()); 
+						}
+						else {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Modification de l'adhérent impossible");
+							alert.setHeaderText(null);
+							alert.setContentText("Veuillez bien remplir les champs requis pour modifier l'adhérent");
+							alert.showAndWait();
+						}
+						
+					});
+					
+					btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+					
+					vBoxModif.setAlignment(Pos.CENTER);
+					vBoxModif.getChildren().addAll(hBoxModif, btnConfirmer);
+					
+					Stage stageModif= new Stage();
+					stageModif.setTitle("Modification des adhérents");
+					stageModif.setScene(sceneModif);
+					stageModif.setResizable(false);
+					stageModif.show();
+				} else {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Modification de l'adhérent impossible");
+					alert.setHeaderText(null);
+					alert.setContentText("Veuillez choisir un adhérent dans la liste pour le modifier");
+					alert.showAndWait();
+				}
+			});
+
+			btnAjouter.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnSupprimer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnModifier.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+
+			hBoxGestion.getChildren().addAll(btnAjouter, btnSupprimer, btnModifier);
+			vBox2.getChildren().add(hBoxGestion);
+
+			vBoxPersonnel.getChildren().addAll(vBox1, vBox2);
+			Stage stageInscription = new Stage();
+			stageInscription.setTitle("Gestion des adhérents");
+			stageInscription.setScene(sceneInsciption);
+			stageInscription.setResizable(false);
+			stageInscription.show();
+		}
+
+	};
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
@@ -205,7 +347,9 @@ public class Main extends Application {
 			hBoxButton.setSpacing(20);
 			Button btnConfirmer = new Button("Confirmer");
 			Button btnAnnuler = new Button("Annuler");
-			btnAnnuler.setOnAction(gestionAdherent);
+			if (!booAnnuler) {
+				btnAnnuler.setOnAction(gestionAdherent);
+			}
 
 			parametreBoutton();
 			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -291,6 +435,7 @@ public class Main extends Application {
 						fichier.getListAdherent().add(a);
 						stageInscription.close();
 						debutLogin();
+
 					}
 
 				}
@@ -410,22 +555,20 @@ public class Main extends Application {
 			});
 
 			btnConfirmationNum.setOnAction(e -> {
-				booValidationNumTel = verifLoginNumTel(tfNumTel);			
+				booValidationNumTel = verifLoginNumTel(tfNumTel);
 				if (booValidationNumTel) {
 					btnConfirmationNum.setOnAction(gestionConnexion);
 					booUsager = true;
 				}
 			});
-			
+
 			btnConfirmation.setOnAction(e -> {
-				booValidationNomPrenom = verifLoginNomPrenom(tfNom, tfPrenom);			
+				booValidationNomPrenom = verifLoginNomPrenom(tfNom, tfPrenom);
 				if (booValidationNomPrenom) {
 					btnConfirmation.setOnAction(gestionConnexion);
 					booUsager = true;
 				}
 			});
-			
-			
 
 		}
 
@@ -436,7 +579,7 @@ public class Main extends Application {
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
 			parametreBoutton();
-			if(booValidationNumTel || booValidationNomPrenom) {
+			if (booValidationNumTel || booValidationNomPrenom) {
 				stageAdherant.close();
 			}
 			if (event.getSource().equals(btnUsager)) {
@@ -494,6 +637,7 @@ public class Main extends Application {
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
 			btnPret.setOnAction(gestionListAdherant);
+			btnGerer.setOnAction(gestionPersonnel);
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
@@ -1287,6 +1431,7 @@ public class Main extends Application {
 
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
+			booUsager = false;
 			parametreBoutton();
 			stageLogin.hide();
 
@@ -1364,39 +1509,38 @@ public class Main extends Application {
 		String strNom = tfNom.getText();
 		String strPrenom = tfPrenom.getText();
 		Boolean booReponse = false;
-		
+
 		if (strNom.isEmpty() || strPrenom.isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Login de l'adhérent impossible");
 			alert.setHeaderText(null);
-			alert.setContentText("Vous devez remplir les champs Prénom et Nom pour vous connectez à votre compte Adhérent");
+			alert.setContentText(
+					"Vous devez remplir les champs Prénom et Nom pour vous connectez à votre compte Adhérent");
 			alert.showAndWait();
-		}
-		else {
-			if(fichier.getListAdherent().size() > 0) {
-				for(int i = 0; i < fichier.getListAdherent().size(); i++) {
-					if(strNom.equals(fichier.getListAdherent().get(i).getStrNom())) {
-						if(strPrenom.equals(fichier.getListAdherent().get(i).getStrPrenom())) {
+		} else {
+			if (fichier.getListAdherent().size() > 0) {
+				for (int i = 0; i < fichier.getListAdherent().size(); i++) {
+					if (strNom.equals(fichier.getListAdherent().get(i).getStrNom())) {
+						if (strPrenom.equals(fichier.getListAdherent().get(i).getStrPrenom())) {
 							booReponse = true;
-						}
-						else {
+						} else {
 							Alert alert = new Alert(AlertType.ERROR);
 							alert.setTitle("Login de l'adhérent impossible");
 							alert.setHeaderText(null);
-							alert.setContentText("Votre Prénom ne correspond pas à le Nom inscrit dans la base de donnée");
+							alert.setContentText(
+									"Votre Prénom ne correspond pas à le Nom inscrit dans la base de donnée");
 							alert.showAndWait();
 						}
-					}
-					else {
+					} else {
 						Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Login de l'adhérent impossible");
 						alert.setHeaderText(null);
-						alert.setContentText("Votre nom n'est pas trouvé dans la base de donnée. Avez-vous faites votre inscription?");
+						alert.setContentText(
+								"Votre nom n'est pas trouvé dans la base de donnée. Avez-vous faites votre inscription?");
 						alert.showAndWait();
 					}
 				}
-			}
-			else {
+			} else {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Login de l'adhérent impossible");
 				alert.setHeaderText(null);
@@ -1816,6 +1960,35 @@ public class Main extends Application {
 
 	}
 
+	public VBox remplirTabAdherent(Tab tabAdherent) {
+		donneeAdherent = FXCollections.observableArrayList(fichier.getListAdherent());
+
+		tableAdherent = new TableView<Adherent>();
+		VBox vBoxTab = new VBox();
+		vBoxTab.getChildren().add(tableAdherent);
+		
+
+		TableColumn<Adherent, String> colonneNom = new TableColumn<Adherent, String>("Nom");
+		TableColumn<Adherent, String> colonnePrenom = new TableColumn<Adherent, String>("Prénom");
+		TableColumn<Adherent, String> colonneNumTel = new TableColumn<Adherent, String>("Téléphone");
+
+		colonneNom.setCellValueFactory(new PropertyValueFactory<>("strNom"));
+		colonnePrenom.setCellValueFactory(new PropertyValueFactory<>("strPrenom"));
+		colonneNumTel.setCellValueFactory(new PropertyValueFactory<>("strNum"));
+
+		colonneNom.setResizable(false);
+		colonnePrenom.setResizable(false);
+		colonneNumTel.setResizable(false);
+
+		colonneNom.setMinWidth(150);
+		colonnePrenom.setMinWidth(150);
+		colonneNumTel.setMinWidth(150);
+
+		tableAdherent.getColumns().addAll(colonneNom, colonnePrenom, colonneNumTel);
+		return vBoxTab;
+
+	}
+	
 	public void Recherche(Recherche recherche, String strReponse) {
 		if (recherche.equals(Recherche.AUTEUR)) {
 			for (int i = 0; i < fichier.getListLivre().size(); i++) {
