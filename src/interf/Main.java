@@ -66,6 +66,7 @@ import javafx.stage.Stage;
 import application.Pret;
 import application.LectureFichier;
 import application.Adherent;
+import application.Prepose;
 
 public class Main extends Application {
 	private BorderPane root;
@@ -102,10 +103,11 @@ public class Main extends Application {
 	private Button btnPret = new Button("Inscire un prêt");
 	private Button btnRetour = new Button("Inscire un retour");
 	private Button btnQuitter = new Button("Déconnexion");
-	private Button btnUsager = new Button("Êtes vous un usager?");
+	private Button btnUsager = new Button("Êtes vous un adhérant?");
 	private Button btnConnexion = new Button("Connexion");
 	private Button btnConfirmer = new Button("Confirmer");
 	private Button btnAnnuler = new Button("Annuler");
+	private Button btnPreposer = new Button("Inscire un préposé");
 
 	private Tab tabDoc = new Tab("Collection");
 	private Tab tabLivre = new Tab("Livres");
@@ -157,6 +159,8 @@ public class Main extends Application {
 	private Stage stageAdherant;
 	private Boolean booValide;
 	private ComboBox comboBoxAdherent;
+	private Boolean booValidePrep;
+	private Stage listStage;
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
@@ -188,7 +192,7 @@ public class Main extends Application {
 			hBoxButton.setSpacing(20);
 			Button btnConfirmer = new Button("Confirmer");
 			Button btnAnnuler = new Button("Annuler");
-			btnAnnuler.setOnAction(gestionUsager);
+			btnAnnuler.setOnAction(gestionAdherent);
 			
 			parametreBoutton();
 			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
@@ -245,17 +249,39 @@ public class Main extends Application {
 			btnAnnuler.setOnMouseClicked(e -> stageInscription.close());
 			
 			btnConfirmer.setOnMouseClicked(e -> {
-				booValide = gestionErreurInscriptionAdherant(tfPrenom, tfNom, tfTel, tfAdresse);
+				booValide = gestionErreurInscription(tfPrenom, tfNom, tfTel, tfAdresse);
 				if(booValide) {
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Inscription confirmé!");
 					alert.setHeaderText(null);
 					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()  + " de vous avoir inscrit dans la base de donnée de la médiathèque.");
 					alert.showAndWait();
-					stageInscription.close();
+					
 					Adherent a = new Adherent(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(), tfAdresse.getText().trim());
-					fichier.getListAdherent().add(a);
-					debutLogin();
+					if(fichier.getListAdherent().size() > 0) {
+						for(int i = 0; i < fichier.getListAdherent().size();i++) {
+							if(a.getStrNum().equals(fichier.getListAdherent().get(i).getStrNum())) {
+								Alert alertErr = new Alert(AlertType.ERROR);
+								alertErr.setTitle("Inscription impossible");
+								alertErr.setHeaderText(null);
+								alertErr.setContentText("Le numéro de téléphone est déjà inscrit pour un adhérant!");
+								alertErr.showAndWait();
+							}
+							else {
+								fichier.getListAdherent().add(a);
+								stageInscription.close();
+								debutLogin();
+							}
+						}
+					}
+					else {
+						fichier.getListAdherent().add(a);
+						stageInscription.close();
+						debutLogin();
+					}
+					
+					
+					
 				}
 			});
 			
@@ -263,15 +289,15 @@ public class Main extends Application {
 		
 	};
 	
-	private EventHandler<ActionEvent> gestionUsager = new EventHandler<ActionEvent>() {
+	private EventHandler<ActionEvent> gestionAdherent = new EventHandler<ActionEvent>() {
 
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
 			VBox vBoxAdherant = new VBox();
 			vBoxAdherant.setSpacing(20);
-			Scene sceneAdherant = new Scene(vBoxAdherant, 450, 360);
-			vBoxAdherant.setBackground(bg1);
+			Scene sceneAdherant = new Scene(vBoxAdherant, 450, 450);
+			vBoxAdherant.setBackground(bg2);
 			vBoxAdherant.setPadding(new Insets(10));
 
 			Label labelConnexionNumTel = new Label("Connexion avec numéro de téléphone");
@@ -307,13 +333,15 @@ public class Main extends Application {
 			HBox hBoxButton = new HBox();
 			hBoxButton.setSpacing(10);
 			hBoxButton.setAlignment(Pos.CENTER);
-			Button btnConfirmation = new Button("Confirmer");
+			Button btnConfirmation = new Button("Connexion");
+			Button btnConfirmationNum = new Button("Connexion");
+			
 			Button btnInscrire = new Button("Inscrivez vous!");
 			Button btnRetour = new Button("Retour");
 			
 			parametreBoutton();
 			btnConfirmation.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			btnConfirmation.setGraphic(confirmerView);
+			btnConfirmationNum.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnInscrire.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnInscrire.setGraphic(inscireView);
 			HBox hBoxRetour = new HBox();		
@@ -326,18 +354,18 @@ public class Main extends Application {
 			
 			btnInscrire.setOnAction(gestionInscrire);
 
-			hBoxButton.getChildren().addAll(btnConfirmation, btnInscrire);
+			hBoxButton.getChildren().addAll(btnInscrire);
 
 			HBox hBoxInfo = new HBox();
 			VBox vBoxLabel = new VBox();
 			vBoxLabel.setSpacing(10);
 			vBoxLabel.setPadding(new Insets(10));
-			vBoxLabel.getChildren().add(labelNumTel);
+			vBoxLabel.getChildren().addAll(labelNumTel);
 
 			VBox vBoxTF = new VBox();
 			vBoxTF.setSpacing(10);
 			vBoxTF.setPadding(new Insets(10));
-			vBoxTF.getChildren().addAll(tfNumTel);
+			vBoxTF.getChildren().addAll(tfNumTel,  btnConfirmationNum);
 
 			hBoxInfo.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInfo.setBorder(border2);
@@ -351,7 +379,7 @@ public class Main extends Application {
 			VBox vBoxTFNom = new VBox();
 			vBoxTFNom.setSpacing(10);
 			vBoxTFNom.setPadding(new Insets(10));
-			vBoxTFNom.getChildren().addAll(tfNom, tfPrenom);
+			vBoxTFNom.getChildren().addAll(tfNom, tfPrenom, btnConfirmation);
 
 			hBoxInfoNom.getChildren().addAll(vBoxLabelNom, vBoxTFNom);
 			hBoxInfoNom.setBorder(border2);
@@ -374,7 +402,6 @@ public class Main extends Application {
 	};
 
 	private EventHandler<ActionEvent> gestionConnexion = new EventHandler<ActionEvent>() {
-
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
@@ -558,181 +585,6 @@ public class Main extends Application {
 
 	};
 
-	public VBox remplirTabDocument(Tab tabDoc) {
-		// Tous les documents
-		donnees = FXCollections.observableArrayList(fichier.getListDoc());
-		table = new TableView<Document>();
-		VBox vbox = new VBox();
-		vbox.getChildren().add(table);
-		TableColumn<Document, String> colonneNumDoc = new TableColumn<Document, String>("Numéro du document");
-		TableColumn<Document, String> colonneTitreDoc = new TableColumn<Document, String>("Titre");
-		TableColumn<Document, Integer> colonneNomDoc = new TableColumn<Document, Integer>("Nombre de prêt");
-		TableColumn<Document, String> colonneDateDoc = new TableColumn<Document, String>("Date");
-		TableColumn<Document, String> colonneEtat = new TableColumn<Document, String>("Mots-cle");
-
-		colonneNumDoc.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
-		colonneTitreDoc.setCellValueFactory(new PropertyValueFactory<>("Titre"));
-		colonneNomDoc.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
-		colonneDateDoc.setCellValueFactory(new PropertyValueFactory<>("Date"));
-		colonneEtat.setCellValueFactory(new PropertyValueFactory<>("Etat"));
-
-		table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc, colonneDateDoc, colonneEtat);
-		table.setItems(donnees);
-
-		colonneNumDoc.setResizable(false);
-		colonneTitreDoc.setResizable(false);
-		colonneNomDoc.setResizable(false);
-
-		colonneDateDoc.setResizable(false);
-		colonneEtat.setResizable(false);
-
-		colonneNumDoc.setMinWidth(150);
-		colonneNomDoc.setMinWidth(150);
-
-		colonneDateDoc.setMinWidth(150);
-		colonneEtat.setMinWidth(184);
-		colonneTitreDoc.setMinWidth(250);
-
-		return vbox;
-	}
-
-	public VBox remplirTabDVD(Tab tabDVD) {
-		// DVD
-		donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
-		tableDVD = new TableView<DVD>();
-		VBox vboxDVD = new VBox();
-		vboxDVD.getChildren().add(tableDVD);
-
-		TableColumn<DVD, String> colonneNumDVD = new TableColumn<DVD, String>("Numéro du document");
-		TableColumn<DVD, String> colonneTitreDVD = new TableColumn<DVD, String>("Titre");
-		TableColumn<DVD, Integer> colonneNombreDeDisque = new TableColumn<DVD, Integer>("Volume");
-		TableColumn<DVD, String> colonneDateDVD = new TableColumn<DVD, String>("Date");
-		TableColumn<DVD, String> colonneEtatDVD = new TableColumn<DVD, String>("Etat");
-		TableColumn<DVD, String> colonneAuteurDVD = new TableColumn<DVD, String>("Auteur");
-		TableColumn<DVD, Integer> colonneNombreDePret = new TableColumn<DVD, Integer>("Nombre de pret");
-
-		colonneNumDVD.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
-		colonneTitreDVD.setCellValueFactory(new PropertyValueFactory<>("strNomDuDvd"));
-		colonneDateDVD.setCellValueFactory(new PropertyValueFactory<>("strDate"));
-		colonneNombreDeDisque.setCellValueFactory(new PropertyValueFactory<>("intNombreDeDisque"));
-		colonneAuteurDVD.setCellValueFactory(new PropertyValueFactory<>("strAuteur"));
-		colonneNombreDePret.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
-		colonneEtatDVD.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
-
-		tableDVD.getColumns().addAll(colonneNumDVD, colonneTitreDVD, colonneDateDVD, colonneNombreDeDisque,
-				colonneAuteurDVD, colonneNombreDePret, colonneEtatDVD);
-		tableDVD.setItems(donneesDVD);
-		colonneNumDVD.setResizable(false);
-		colonneTitreDVD.setResizable(false);
-		colonneDateDVD.setResizable(false);
-		colonneNombreDeDisque.setResizable(false);
-		colonneAuteurDVD.setResizable(false);
-		colonneNombreDePret.setResizable(false);
-		colonneEtatDVD.setResizable(false);
-
-		colonneNumDVD.setMinWidth(150);
-		colonneTitreDVD.setMinWidth(227);
-		colonneDateDVD.setMinWidth(100);
-		colonneNombreDeDisque.setMinWidth(70);
-		colonneAuteurDVD.setMinWidth(120);
-		colonneNombreDePret.setMinWidth(120);
-		colonneEtatDVD.setMinWidth(100);
-
-		return vboxDVD;
-
-	}
-
-	public VBox remplirTabPer(Tab tabPerio) {
-		// Periodiques
-
-		donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
-		tablePer = new TableView<Periodiques>();
-		VBox vboxPer = new VBox();
-		vboxPer.getChildren().add(tablePer);
-
-		TableColumn<Periodiques, String> colonneNumPer = new TableColumn<Periodiques, String>("Numéro du document");
-		TableColumn<Periodiques, String> colonneTitrePer = new TableColumn<Periodiques, String>("Titre");
-		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>("Volume");
-		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique = new TableColumn<Periodiques, Integer>(
-				"Numero de periodique");
-		TableColumn<Periodiques, String> colonneDatePer = new TableColumn<Periodiques, String>("Date");
-		TableColumn<Periodiques, String> colonneEtatPer = new TableColumn<Periodiques, String>("Etat");
-		TableColumn<Periodiques, Integer> colonneNombreDePretPer = new TableColumn<Periodiques, Integer>(
-				"Nombre de pret");
-
-		colonneNumPer.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
-		colonneTitrePer.setCellValueFactory(new PropertyValueFactory<>("strNomDuPeriodique"));
-		colonneNumeroDeVolume.setCellValueFactory(new PropertyValueFactory<>("intNumDuVolume"));
-		colonneNumeroDePeriodique.setCellValueFactory(new PropertyValueFactory<>("intNumDuPeriodique"));
-		colonneDatePer.setCellValueFactory(new PropertyValueFactory<>("strDate"));
-		colonneEtatPer.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
-		colonneNombreDePretPer.setCellValueFactory(new PropertyValueFactory<>("intNumDePret"));
-
-		tablePer.getColumns().addAll(colonneNumPer, colonneTitrePer, colonneNumeroDeVolume, colonneNumeroDePeriodique,
-				colonneDatePer, colonneEtatPer, colonneNombreDePretPer);
-		tablePer.setItems(donneesPer);
-		colonneNumPer.setResizable(false);
-		colonneTitrePer.setResizable(false);
-		colonneNumeroDeVolume.setResizable(false);
-		colonneNumeroDePeriodique.setResizable(false);
-		colonneDatePer.setResizable(false);
-		colonneEtatPer.setResizable(false);
-		colonneNombreDePretPer.setResizable(false);
-
-		colonneNumPer.setMinWidth(150);
-		colonneTitrePer.setMinWidth(197);
-		colonneNumeroDeVolume.setMinWidth(70);
-		colonneNumeroDePeriodique.setMinWidth(150);
-		colonneDatePer.setMinWidth(100);
-		colonneEtatPer.setMinWidth(100);
-		colonneNombreDePretPer.setMinWidth(120);
-		return vboxPer;
-
-	}
-
-	public VBox remplirTabLivre(Tab tabLivre) {
-		// Livre
-
-		donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
-		tableLivre = new TableView<Livre>();
-		VBox vboxLivre = new VBox();
-		vboxLivre.getChildren().add(tableLivre);
-
-		TableColumn<Livre, String> colonneNumLivre = new TableColumn<Livre, String>("Numéro du document");
-		TableColumn<Livre, String> colonneTitreLivre = new TableColumn<Livre, String>("Titre");
-		TableColumn<Livre, String> colonneAuteurLivre = new TableColumn<Livre, String>("Auteur");
-		TableColumn<Livre, String> colonneDateLivre = new TableColumn<Livre, String>("Date");
-		TableColumn<Livre, String> colonneEtatLivre = new TableColumn<Livre, String>("Etat");
-		TableColumn<Livre, Integer> colonneNombreDePretLivre = new TableColumn<Livre, Integer>("Nombre de pret");
-
-		colonneNumLivre.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
-		colonneTitreLivre.setCellValueFactory(new PropertyValueFactory<>("Titre"));
-		colonneAuteurLivre.setCellValueFactory(new PropertyValueFactory<>("Auteur"));
-		colonneDateLivre.setCellValueFactory(new PropertyValueFactory<>("Date"));
-		colonneEtatLivre.setCellValueFactory(new PropertyValueFactory<>("Etat"));
-		colonneNombreDePretLivre.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
-
-		colonneNumLivre.setResizable(false);
-		colonneTitreLivre.setResizable(false);
-		colonneAuteurLivre.setResizable(false);
-		colonneDateLivre.setResizable(false);
-		colonneEtatLivre.setResizable(false);
-		colonneNombreDePretLivre.setResizable(false);
-
-		colonneNumLivre.setMinWidth(150);
-		colonneTitreLivre.setMinWidth(247);
-		colonneAuteurLivre.setMinWidth(180);
-		colonneDateLivre.setMinWidth(100);
-		colonneEtatLivre.setMinWidth(100);
-		colonneNombreDePretLivre.setMinWidth(120);
-
-		tableLivre.getColumns().addAll(colonneNumLivre, colonneTitreLivre, colonneAuteurLivre, colonneDateLivre,
-				colonneEtatLivre, colonneNombreDePretLivre);
-		tableLivre.setItems(donneesLivre);
-		return vboxLivre;
-
-	}
-
 	private EventHandler<ActionEvent> gestionSupprimer = new EventHandler<ActionEvent>() {
 
 		public void handle(ActionEvent arg0) {
@@ -852,7 +704,7 @@ public class Main extends Application {
 			// TODO Auto-generated method stub
 			BorderPane listBP = new BorderPane();
 			Scene listScene = new Scene(listBP, 300, 100);
-			Stage listStage = new Stage();
+			listStage = new Stage();
 			listBP.setBackground(bg2);
 			VBox vBox = new VBox(10);
 			Text t = new Text("Pour quel adhérant faites-vous le prêt?");
@@ -908,7 +760,7 @@ public class Main extends Application {
 			Periodiques docPer = tablePer.getSelectionModel().getSelectedItem();
 
 			if (doc != null) {
-				if (doc.getEtat() == "Disponible") {
+				if (doc.getEtat().equals("Disponible")) {
 					switch (doc.getTypeDocument()) {
 					case LIVRE:
 						if (intCompteurLivre < 3) {
@@ -1123,6 +975,133 @@ public class Main extends Application {
 
 	};
 
+	private EventHandler<ActionEvent> gestionPrepose = new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			booValidePrep = false;
+			VBox vBoxInscire = new VBox();
+			vBoxInscire.setSpacing(10);
+			vBoxInscire.setPadding(new Insets(10));
+			Scene sceneInsciption = new Scene(vBoxInscire, 450, 380);
+			vBoxInscire.setBackground(bg2);
+			vBoxInscire.setPadding(new Insets(10));
+			
+			Label lableInscription = new Label("Inscription");
+			Label labelPrenom = new Label("Prénom : ");
+			Label labelNom = new Label("Nom : ");
+			Label labelTel = new Label("Numéro de téléphone : ");
+			Label labelAdresse = new Label("Adresse : ");
+			Label labelMDP = new Label("Mot de passe : ");
+			
+			TextField tfPrenom = new TextField();
+			TextField tfNom = new TextField();
+			TextField tfTel = new TextField();
+			TextField tfAdresse = new TextField();
+			TextField tfMDP = new TextField();
+			
+			HBox hBoxButton = new HBox();
+			hBoxButton.setPadding(new Insets(20));
+			hBoxButton.setAlignment(Pos.CENTER);
+			hBoxButton.setSpacing(20);
+			Button btnConfirmer = new Button("Confirmer");
+			Button btnAnnuler = new Button("Annuler");
+			
+			parametreBoutton();
+			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnConfirmer.setGraphic(confirmerView);
+			btnAnnuler.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnAnnuler.setGraphic(annulerView);
+			
+			hBoxButton.getChildren().addAll(btnConfirmer, btnAnnuler);
+			
+			labelMDP.setMinSize(180, 30);
+			lableInscription.setMinSize(180, 30);
+			labelPrenom.setMinSize(180, 30);
+			labelNom.setMinSize(180, 30);
+			labelTel.setMinSize(180, 30);
+			labelAdresse.setMinSize(180, 30);
+			
+			tfMDP.setMinSize(180, 30);
+			tfPrenom.setMinSize(180, 30);
+			tfNom.setMinSize(180, 30);
+			tfTel.setMinSize(180, 30);
+			tfAdresse.setMinSize(180, 30);
+			
+			labelMDP.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			lableInscription.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelAdresse.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			
+			labelMDP.setTextFill(Color.WHITE);
+			lableInscription.setTextFill(Color.WHITE);
+			labelPrenom.setTextFill(Color.WHITE);
+			labelNom.setTextFill(Color.WHITE);
+			labelTel.setTextFill(Color.WHITE);
+			labelAdresse.setTextFill(Color.WHITE);
+			
+			HBox hBoxInscription = new HBox();
+			VBox vBoxLabel = new VBox();
+			vBoxLabel.setSpacing(10);
+			vBoxLabel.setPadding(new Insets(10));
+			vBoxLabel.getChildren().addAll(labelPrenom, labelNom, labelTel, labelAdresse, labelMDP);
+
+			VBox vBoxTF = new VBox();
+			vBoxTF.setSpacing(10);
+			vBoxTF.setPadding(new Insets(10));
+			vBoxTF.getChildren().addAll(tfPrenom, tfNom, tfTel, tfAdresse, tfMDP);
+
+			hBoxInscription.getChildren().addAll(vBoxLabel, vBoxTF);
+			hBoxInscription.setBorder(border2);
+			
+			vBoxInscire.getChildren().addAll(lableInscription, hBoxInscription, hBoxButton);
+			
+			
+			Stage stageInscription = new Stage();
+			stageInscription.setTitle("Inscription d'un adhérant");
+			stageInscription.setScene(sceneInsciption);
+			stageInscription.setResizable(false);
+			stageInscription.show();
+			
+			
+			btnAnnuler.setOnMouseClicked(e -> {
+				stageInscription.close();
+				debutLogin();
+			});
+			
+			Boolean booMDP = estValide(tfMDP.getText().trim());
+			
+			if(!booMDP) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Inscription impossible");
+				alert.setHeaderText(null);
+				alert.setContentText("Les charactères spéciaux ne sont pas acceptés dans la section Mot de passe");
+				alert.showAndWait();
+			}
+			
+			btnConfirmer.setOnMouseClicked(e -> {
+				booValidePrep = gestionErreurInscription(tfPrenom, tfNom, tfTel, tfAdresse);
+				if(booValidePrep) {
+					int intNoEmp = (1000 + fichier.getListPrepose().size());
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Succès de l'inscription du préposé");
+					alert.setHeaderText(null);
+					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()  + " de vous avoir inscrit dans la base de donnée de la médiathèque.\nVotre numéro d'employé est : " + intNoEmp);
+					alert.showAndWait();
+					stageInscription.close();
+					
+					Prepose p = new Prepose(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(), tfAdresse.getText().trim(), tfMDP.getText().trim(), intNoEmp);
+					fichier.getListPrepose().add(p);
+					debutLogin();
+				}
+			});
+		}
+		
+	};
+	
 	private EventHandler<MouseEvent> gestionConfirmer = new EventHandler<MouseEvent>() {
 
 		@Override
@@ -1191,7 +1170,7 @@ public class Main extends Application {
 			}
 		}
 	};
-
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
@@ -1235,12 +1214,17 @@ public class Main extends Application {
 		TextField tfNoEmploye = new TextField();
 		TextField tfMDP = new TextField();
 
-		btnUsager.setOnAction(gestionUsager);
+		btnUsager.setOnAction(gestionAdherent);
 		btnUsager.setOnMouseClicked(e -> {
 			stageLogin.hide();
 
 		});
-
+		
+		btnPreposer.setOnAction(gestionPrepose);
+		btnPreposer.setOnMouseClicked(e -> {
+			stageLogin.hide();
+		});
+		
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
 			parametreBoutton();
@@ -1260,6 +1244,7 @@ public class Main extends Application {
 		gp.add(tfMDP, 1, 1);
 		gp.add(btnConnexion, 1, 3);
 		gp.add(btnUsager, 0, 3);
+		gp.add(btnPreposer, 0, 4);
 
 		gp.setAlignment(Pos.CENTER);
 		bpLogin.setCenter(gp);
@@ -1337,12 +1322,12 @@ public class Main extends Application {
 	public void pret(Document doc) {
 		int nbJour = 0;
 		
-		doc.setEtat("Non Disponible");
+		
 
 		switch (doc.getTypeDocument()) {
 		case LIVRE:
 			for (int i = 0; i < fichier.getListLivre().size(); i++) {
-				if (doc.getStrNumeroDoc() == fichier.getListLivre().get(i).getStrNumeroDoc()) {
+				if (doc.getStrNumeroDoc().equals(fichier.getListLivre().get(i).getStrNumeroDoc())) {
 					fichier.getListLivre().get(i).setEtat("Non Disponible");
 					fichier.getListLivre().get(i)
 							.setIntNombreDePret(fichier.getListLivre().get(i).getIntNombreDePret() + 1);
@@ -1352,7 +1337,7 @@ public class Main extends Application {
 			break;
 		case PERIODIQUES:
 			for (int j = 0; j < fichier.getListPeriodique().size(); j++) {
-				if (doc.getStrNumeroDoc() == fichier.getListPeriodique().get(j).getStrNumeroDuDoc()) {
+				if (doc.getStrNumeroDoc().equals(fichier.getListPeriodique().get(j).getStrNumeroDuDoc())) {
 					fichier.getListPeriodique().get(j).setStrEtat("Non Disponible");
 					fichier.getListPeriodique().get(j)
 							.setIntNumDePret(fichier.getListPeriodique().get(j).getIntNumDePret() + 1);
@@ -1362,7 +1347,7 @@ public class Main extends Application {
 			break;
 		case DVD:
 			for (int k = 0; k < fichier.getListDvd().size(); k++) {
-				if (doc.getStrNumeroDoc() == fichier.getListDvd().get(k).getStrNumeroDuDoc()) {
+				if (doc.getStrNumeroDoc().equals(fichier.getListDvd().get(k).getStrNumeroDuDoc())) {
 					fichier.getListDvd().get(k).setStrEtat("Non Disponible");
 					fichier.getListDvd().get(k)
 							.setIntNombreDePret(fichier.getListDvd().get(k).getIntNombreDePret() + 1);
@@ -1372,7 +1357,7 @@ public class Main extends Application {
 			break;
 		}
 		tabDoc.setContent(remplirTabDocument(tabDoc));
-
+		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date datePret = new Date();
 
@@ -1389,9 +1374,11 @@ public class Main extends Application {
 				+ doc.getTypeDocument() + "\nDate du prêt : " + dateFormat.format(datePret) + "\nDate de retour : "
 				+ dateFormat.format(dateRetour));
 		alert.showAndWait();
+		listStage.close();
 
 		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour);
 		fichier.getListPret().add(p);
+		doc.setEtat("Non Disponible");
 	}
 
 	public void messageErreur() {
@@ -1426,12 +1413,8 @@ public class Main extends Application {
 		alert.showAndWait();
 		;
 	}
-
-	public void gestionErreurLoginAdherant(TextField tfNumTel, TextField tfNom, TextField tfPrenom) {
-		
-	}
 	
-	public Boolean gestionErreurInscriptionAdherant(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
+	public Boolean gestionErreurInscription(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
 		
 		String strPrenom = tf1.getText();
 		String strNom = tf2.getText();
@@ -1494,5 +1477,181 @@ public class Main extends Application {
 	}  
 	public boolean estValide(String s) {
 		return s != null && s.matches("[a-zA-Z0-9 ]*");
+	}
+	
+
+	public VBox remplirTabDocument(Tab tabDoc) {
+		// Tous les documents
+		donnees = FXCollections.observableArrayList(fichier.getListDoc());
+		table = new TableView<Document>();
+		VBox vbox = new VBox();
+		vbox.getChildren().add(table);
+		TableColumn<Document, String> colonneNumDoc = new TableColumn<Document, String>("Numéro du document");
+		TableColumn<Document, String> colonneTitreDoc = new TableColumn<Document, String>("Titre");
+		TableColumn<Document, Integer> colonneNomDoc = new TableColumn<Document, Integer>("Nombre de prêt");
+		TableColumn<Document, String> colonneDateDoc = new TableColumn<Document, String>("Date");
+		TableColumn<Document, String> colonneEtat = new TableColumn<Document, String>("Mots-cle");
+
+		colonneNumDoc.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
+		colonneTitreDoc.setCellValueFactory(new PropertyValueFactory<>("Titre"));
+		colonneNomDoc.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
+		colonneDateDoc.setCellValueFactory(new PropertyValueFactory<>("Date"));
+		colonneEtat.setCellValueFactory(new PropertyValueFactory<>("Etat"));
+
+		table.getColumns().addAll(colonneNumDoc, colonneTitreDoc, colonneNomDoc, colonneDateDoc, colonneEtat);
+		table.setItems(donnees);
+
+		colonneNumDoc.setResizable(false);
+		colonneTitreDoc.setResizable(false);
+		colonneNomDoc.setResizable(false);
+
+		colonneDateDoc.setResizable(false);
+		colonneEtat.setResizable(false);
+
+		colonneNumDoc.setMinWidth(150);
+		colonneNomDoc.setMinWidth(150);
+
+		colonneDateDoc.setMinWidth(150);
+		colonneEtat.setMinWidth(184);
+		colonneTitreDoc.setMinWidth(250);
+
+		return vbox;
+	}
+
+	public VBox remplirTabDVD(Tab tabDVD) {
+		// DVD
+		donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
+		tableDVD = new TableView<DVD>();
+		VBox vboxDVD = new VBox();
+		vboxDVD.getChildren().add(tableDVD);
+
+		TableColumn<DVD, String> colonneNumDVD = new TableColumn<DVD, String>("Numéro du document");
+		TableColumn<DVD, String> colonneTitreDVD = new TableColumn<DVD, String>("Titre");
+		TableColumn<DVD, Integer> colonneNombreDeDisque = new TableColumn<DVD, Integer>("Volume");
+		TableColumn<DVD, String> colonneDateDVD = new TableColumn<DVD, String>("Date");
+		TableColumn<DVD, String> colonneEtatDVD = new TableColumn<DVD, String>("Etat");
+		TableColumn<DVD, String> colonneAuteurDVD = new TableColumn<DVD, String>("Auteur");
+		TableColumn<DVD, Integer> colonneNombreDePret = new TableColumn<DVD, Integer>("Nombre de pret");
+
+		colonneNumDVD.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
+		colonneTitreDVD.setCellValueFactory(new PropertyValueFactory<>("strNomDuDvd"));
+		colonneDateDVD.setCellValueFactory(new PropertyValueFactory<>("strDate"));
+		colonneNombreDeDisque.setCellValueFactory(new PropertyValueFactory<>("intNombreDeDisque"));
+		colonneAuteurDVD.setCellValueFactory(new PropertyValueFactory<>("strAuteur"));
+		colonneNombreDePret.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
+		colonneEtatDVD.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
+
+		tableDVD.getColumns().addAll(colonneNumDVD, colonneTitreDVD, colonneDateDVD, colonneNombreDeDisque,
+				colonneAuteurDVD, colonneNombreDePret, colonneEtatDVD);
+		tableDVD.setItems(donneesDVD);
+		colonneNumDVD.setResizable(false);
+		colonneTitreDVD.setResizable(false);
+		colonneDateDVD.setResizable(false);
+		colonneNombreDeDisque.setResizable(false);
+		colonneAuteurDVD.setResizable(false);
+		colonneNombreDePret.setResizable(false);
+		colonneEtatDVD.setResizable(false);
+
+		colonneNumDVD.setMinWidth(150);
+		colonneTitreDVD.setMinWidth(227);
+		colonneDateDVD.setMinWidth(100);
+		colonneNombreDeDisque.setMinWidth(70);
+		colonneAuteurDVD.setMinWidth(120);
+		colonneNombreDePret.setMinWidth(120);
+		colonneEtatDVD.setMinWidth(100);
+
+		return vboxDVD;
+
+	}
+
+	public VBox remplirTabPer(Tab tabPerio) {
+		// Periodiques
+
+		donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
+		tablePer = new TableView<Periodiques>();
+		VBox vboxPer = new VBox();
+		vboxPer.getChildren().add(tablePer);
+
+		TableColumn<Periodiques, String> colonneNumPer = new TableColumn<Periodiques, String>("Numéro du document");
+		TableColumn<Periodiques, String> colonneTitrePer = new TableColumn<Periodiques, String>("Titre");
+		TableColumn<Periodiques, Integer> colonneNumeroDeVolume = new TableColumn<Periodiques, Integer>("Volume");
+		TableColumn<Periodiques, Integer> colonneNumeroDePeriodique = new TableColumn<Periodiques, Integer>(
+				"Numero de periodique");
+		TableColumn<Periodiques, String> colonneDatePer = new TableColumn<Periodiques, String>("Date");
+		TableColumn<Periodiques, String> colonneEtatPer = new TableColumn<Periodiques, String>("Etat");
+		TableColumn<Periodiques, Integer> colonneNombreDePretPer = new TableColumn<Periodiques, Integer>(
+				"Nombre de pret");
+
+		colonneNumPer.setCellValueFactory(new PropertyValueFactory<>("strNumeroDuDoc"));
+		colonneTitrePer.setCellValueFactory(new PropertyValueFactory<>("strNomDuPeriodique"));
+		colonneNumeroDeVolume.setCellValueFactory(new PropertyValueFactory<>("intNumDuVolume"));
+		colonneNumeroDePeriodique.setCellValueFactory(new PropertyValueFactory<>("intNumDuPeriodique"));
+		colonneDatePer.setCellValueFactory(new PropertyValueFactory<>("strDate"));
+		colonneEtatPer.setCellValueFactory(new PropertyValueFactory<>("strEtat"));
+		colonneNombreDePretPer.setCellValueFactory(new PropertyValueFactory<>("intNumDePret"));
+
+		tablePer.getColumns().addAll(colonneNumPer, colonneTitrePer, colonneNumeroDeVolume, colonneNumeroDePeriodique,
+				colonneDatePer, colonneEtatPer, colonneNombreDePretPer);
+		tablePer.setItems(donneesPer);
+		colonneNumPer.setResizable(false);
+		colonneTitrePer.setResizable(false);
+		colonneNumeroDeVolume.setResizable(false);
+		colonneNumeroDePeriodique.setResizable(false);
+		colonneDatePer.setResizable(false);
+		colonneEtatPer.setResizable(false);
+		colonneNombreDePretPer.setResizable(false);
+
+		colonneNumPer.setMinWidth(150);
+		colonneTitrePer.setMinWidth(197);
+		colonneNumeroDeVolume.setMinWidth(70);
+		colonneNumeroDePeriodique.setMinWidth(150);
+		colonneDatePer.setMinWidth(100);
+		colonneEtatPer.setMinWidth(100);
+		colonneNombreDePretPer.setMinWidth(120);
+		return vboxPer;
+
+	}
+
+	public VBox remplirTabLivre(Tab tabLivre) {
+		// Livre
+
+		donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+		tableLivre = new TableView<Livre>();
+		VBox vboxLivre = new VBox();
+		vboxLivre.getChildren().add(tableLivre);
+
+		TableColumn<Livre, String> colonneNumLivre = new TableColumn<Livre, String>("Numéro du document");
+		TableColumn<Livre, String> colonneTitreLivre = new TableColumn<Livre, String>("Titre");
+		TableColumn<Livre, String> colonneAuteurLivre = new TableColumn<Livre, String>("Auteur");
+		TableColumn<Livre, String> colonneDateLivre = new TableColumn<Livre, String>("Date");
+		TableColumn<Livre, String> colonneEtatLivre = new TableColumn<Livre, String>("Etat");
+		TableColumn<Livre, Integer> colonneNombreDePretLivre = new TableColumn<Livre, Integer>("Nombre de pret");
+
+		colonneNumLivre.setCellValueFactory(new PropertyValueFactory<>("strNumeroDoc"));
+		colonneTitreLivre.setCellValueFactory(new PropertyValueFactory<>("Titre"));
+		colonneAuteurLivre.setCellValueFactory(new PropertyValueFactory<>("Auteur"));
+		colonneDateLivre.setCellValueFactory(new PropertyValueFactory<>("Date"));
+		colonneEtatLivre.setCellValueFactory(new PropertyValueFactory<>("Etat"));
+		colonneNombreDePretLivre.setCellValueFactory(new PropertyValueFactory<>("intNombreDePret"));
+
+		colonneNumLivre.setResizable(false);
+		colonneTitreLivre.setResizable(false);
+		colonneAuteurLivre.setResizable(false);
+		colonneDateLivre.setResizable(false);
+		colonneEtatLivre.setResizable(false);
+		colonneNombreDePretLivre.setResizable(false);
+
+		colonneNumLivre.setMinWidth(150);
+		colonneTitreLivre.setMinWidth(247);
+		colonneAuteurLivre.setMinWidth(180);
+		colonneDateLivre.setMinWidth(100);
+		colonneEtatLivre.setMinWidth(100);
+		colonneNombreDePretLivre.setMinWidth(120);
+
+		tableLivre.getColumns().addAll(colonneNumLivre, colonneTitreLivre, colonneAuteurLivre, colonneDateLivre,
+				colonneEtatLivre, colonneNombreDePretLivre);
+		tableLivre.setItems(donneesLivre);
+		return vboxLivre;
+
 	}
 }

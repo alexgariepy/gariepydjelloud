@@ -21,6 +21,7 @@ public class LectureFichier {
 	private ArrayList<Livre> listLivre = new ArrayList<Livre>();
 	private ArrayList<Pret> listPret = new ArrayList<Pret>();
 	private ArrayList<Adherent> listAdherent = new ArrayList<Adherent>();
+	private ArrayList<Prepose> listPrepose = new ArrayList<Prepose>();
 	public ArrayList<Document> getListDoc() {
 		return listDoc;
 	}
@@ -229,6 +230,10 @@ public class LectureFichier {
 
 	public ArrayList<Adherent> getListAdherent() {
 		return listAdherent;
+	}
+
+	public ArrayList<Prepose> getListPrepose() {
+		return listPrepose;
 	}
 	
 	
