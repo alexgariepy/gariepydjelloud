@@ -194,6 +194,7 @@ public class Main extends Application {
 	private ComboBox comboBoxAdherent;
 	private Boolean booValidePrep;
 	private Stage listStage;
+	private Boolean booValidationNumTel;
     private RechercheMotCle rc = new RechercheMotCle();
     
     
@@ -387,21 +388,17 @@ public class Main extends Application {
 			tfPrenom.setMinSize(180, 30);
 
 			labelNumTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			labelNumTel.setTextFill(Color.WHITE);
 			labelConnexionNumTel.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-			labelConnexionNumTel.setTextFill(Color.WHITE);
 			labelConnexionNom.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-			labelConnexionNom.setTextFill(Color.WHITE);
 			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			labelNom.setTextFill(Color.WHITE);
 			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			labelPrenom.setTextFill(Color.WHITE);
 
 			HBox hBoxButton = new HBox();
 			hBoxButton.setSpacing(10);
 			hBoxButton.setAlignment(Pos.CENTER);
 			Button btnConfirmation = new Button("Connexion");
 			Button btnConfirmationNum = new Button("Connexion");
+			
 			
 			Button btnInscrire = new Button("Inscrivez vous!");
 			Button btnRetour = new Button("Retour");
@@ -462,6 +459,15 @@ public class Main extends Application {
 			btnRetour.setOnMouseClicked(e -> {
 				stageAdherant.close();
 				debutLogin();
+			});
+			
+			btnConfirmationNum.setOnAction(e -> {
+				booValidationNumTel = verifLoginNumTel(tfNumTel);
+				if(booValidationNumTel) {
+					btnConfirmationNum.setOnAction(gestionConnexion);
+					booUsager = true;
+					stageAdherant.close();
+				}
 			});
 			
 		}
@@ -1328,8 +1334,42 @@ public class Main extends Application {
 		launch(args);
 	}
 
-	public void verifLoginNumTel(TextField tf) {
+	public boolean verifLoginNumTel(TextField tf) {
+		String strContenu = tf.getText();
+		Boolean booReponse = false;
 		
+		if (strContenu.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Login de l'adhérent impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Vous devez mettre votre numéro de téléphone pour vous connectez à votre compte Adhérent");
+			alert.showAndWait();
+		}
+		else {
+			if(fichier.getListAdherent().size() > 0) {
+				for(int i = 0; i < fichier.getListAdherent().size();i++) {
+					if(strContenu.equals(fichier.getListAdherent().get(i).getStrNum())) {
+						booReponse = true;
+					}
+					else {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Login de l'adhérent impossible");
+						alert.setHeaderText(null);
+						alert.setContentText("Impossible de trouver votre numéro de téléphone dans la base de donnée de la médiathèque. Avez-vous faites votre inscription?");
+						alert.showAndWait();
+					}
+				}	
+			}
+			else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Login de l'adhérent impossible");
+				alert.setHeaderText(null);
+				alert.setContentText("Il n'y a aucun adhérent dans la base de donné de la médiathèque. Avez-vous faites au moins une inscription?");
+				alert.showAndWait();
+			}
+			
+		}
+		return booReponse;
 	}
 	
 public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
