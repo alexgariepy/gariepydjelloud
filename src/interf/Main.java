@@ -64,6 +64,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import application.Pret;
+import application.RechercheMotCle;
 import application.LectureFichier;
 import application.Adherent;
 import application.Prepose;
@@ -148,6 +149,38 @@ public class Main extends Application {
 	private ObservableList<Periodiques> donneesPer;
 	private TableView<Periodiques> tablePer;
 	private TableView<Document> table;
+	public TableView<Periodiques> getTablePer() {
+		return tablePer;
+	}
+
+	public void setTablePer(TableView<Periodiques> tablePer) {
+		this.tablePer = tablePer;
+	}
+
+	public TableView<Document> getTable() {
+		return table;
+	}
+
+	public void setTable(TableView<Document> table) {
+		this.table = table;
+	}
+
+	public TableView<DVD> getTableDVD() {
+		return tableDVD;
+	}
+
+	public void setTableDVD(TableView<DVD> tableDVD) {
+		this.tableDVD = tableDVD;
+	}
+
+	public TableView<Livre> getTableLivre() {
+		return tableLivre;
+	}
+
+	public void setTableLivre(TableView<Livre> tableLivre) {
+		this.tableLivre = tableLivre;
+	}
+
 	private TableView<DVD> tableDVD;
 	private ObservableList<Livre> donneesLivre;
 	private TableView<Livre> tableLivre;
@@ -161,6 +194,40 @@ public class Main extends Application {
 	private ComboBox comboBoxAdherent;
 	private Boolean booValidePrep;
 	private Stage listStage;
+    private RechercheMotCle rc = new RechercheMotCle();
+    
+    
+	public ObservableList<Document> getDonnees() {
+		return donnees;
+	}
+
+	public void setDonnees(ObservableList<Document> donnees) {
+		this.donnees = donnees;
+	}
+
+	public ObservableList<DVD> getDonneesDVD() {
+		return donneesDVD;
+	}
+
+	public void setDonneesDVD(ObservableList<DVD> donneesDVD) {
+		this.donneesDVD = donneesDVD;
+	}
+
+	public ObservableList<Periodiques> getDonneesPer() {
+		return donneesPer;
+	}
+
+	public void setDonneesPer(ObservableList<Periodiques> donneesPer) {
+		this.donneesPer = donneesPer;
+	}
+
+	public ObservableList<Livre> getDonneesLivre() {
+		return donneesLivre;
+	}
+
+	public void setDonneesLivre(ObservableList<Livre> donneesLivre) {
+		this.donneesLivre = donneesLivre;
+	}
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
@@ -485,10 +552,10 @@ public class Main extends Application {
 
 			fichier.lecture();
 
-			tabDoc.setContent(remplirTabDocument(tabDoc));
-			tabLivre.setContent(remplirTabLivre(tabLivre));
-			tabPerio.setContent(remplirTabPer(tabPerio));
-			tabDVD.setContent(remplirTabDVD(tabDVD));
+			tabDoc.setContent(remplirTabDocument(tabDoc,true));
+			tabLivre.setContent(remplirTabLivre(tabLivre,true));
+			tabPerio.setContent(remplirTabPer(tabPerio,true));
+			tabDVD.setContent(remplirTabDVD(tabDVD,true));
 
 			tabDoc.setClosable(false);
 			tabLivre.setClosable(false);
@@ -623,10 +690,10 @@ public class Main extends Application {
 						fichier.getListDoc().remove(i);
 
 						// table.getItems().remove(doc);
-						tabDoc.setContent(remplirTabDocument(tabDoc));
-						tabLivre.setContent(remplirTabLivre(tabLivre));
-						tabPerio.setContent(remplirTabPer(tabPerio));
-						tabDVD.setContent(remplirTabDVD(tabDVD));
+						tabDoc.setContent(remplirTabDocument(tabDoc,true));
+						tabLivre.setContent(remplirTabLivre(tabLivre,true));
+						tabPerio.setContent(remplirTabPer(tabPerio,true));
+						tabDVD.setContent(remplirTabDVD(tabDVD,true));
 					}
 				}
 			}
@@ -647,8 +714,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc));
-				tabDVD.setContent(remplirTabDVD(tabDVD));
+				tabDoc.setContent(remplirTabDocument(tabDoc,true));
+				tabDVD.setContent(remplirTabDVD(tabDVD,true));
 
 			}
 
@@ -668,8 +735,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc));
-				tabLivre.setContent(remplirTabLivre(tabLivre));
+				tabDoc.setContent(remplirTabDocument(tabDoc,true));
+				tabLivre.setContent(remplirTabLivre(tabLivre,true));
 
 			}
 
@@ -689,8 +756,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc));
-				tabPerio.setContent(remplirTabPer(tabPerio));
+				tabDoc.setContent(remplirTabDocument(tabDoc,true));
+				tabPerio.setContent(remplirTabPer(tabPerio,true));
 
 			}
 		}
@@ -765,7 +832,7 @@ public class Main extends Application {
 					case LIVRE:
 						if (intCompteurLivre < 3) {
 							pret(doc);
-							tabLivre.setContent(remplirTabLivre(tabLivre));
+							tabLivre.setContent(remplirTabLivre(tabLivre,true));
 							intCompteurLivre++;
 
 						} else {
@@ -775,7 +842,7 @@ public class Main extends Application {
 					case PERIODIQUES:
 						if (intCompteurPerio < 3) {
 							pret(doc);
-							tabPerio.setContent(remplirTabPer(tabPerio));
+							tabPerio.setContent(remplirTabPer(tabPerio,true));
 							intCompteurPerio++;
 						} else {
 							messageErreurMaxPerio();
@@ -785,7 +852,7 @@ public class Main extends Application {
 						if (intCompteurDVD < 3) {
 							pret(doc);
 							intCompteurDVD++;
-							tabDVD.setContent(remplirTabDVD(tabDVD));
+							tabDVD.setContent(remplirTabDVD(tabDVD,true));
 						} else {
 							messageErreurMaxDVD();
 						}
@@ -803,7 +870,7 @@ public class Main extends Application {
 				if (docLivre.getEtat() == "Disponible") {
 					if (intCompteurLivre < 3) {
 						pret(doc);
-						tabLivre.setContent(remplirTabLivre(tabLivre));
+						tabLivre.setContent(remplirTabLivre(tabLivre,true));
 						intCompteurLivre++;
 
 					} else {
@@ -816,7 +883,7 @@ public class Main extends Application {
 				if (docPer.getStrEtat() == "Disponible") {
 					if (intCompteurPerio < 3) {
 						pret(doc);
-						tabPerio.setContent(remplirTabPer(tabPerio));
+						tabPerio.setContent(remplirTabPer(tabPerio,true));
 						intCompteurPerio++;
 					} else {
 						messageErreurMaxPerio();
@@ -829,7 +896,7 @@ public class Main extends Application {
 					if (intCompteurDVD < 3) {
 						pret(doc);
 						intCompteurDVD++;
-						tabDVD.setContent(remplirTabDVD(tabDVD));
+						tabDVD.setContent(remplirTabDVD(tabDVD,true));
 					} else {
 						messageErreurMaxDVD();
 					}
@@ -1123,8 +1190,8 @@ public class Main extends Application {
 					DVD dvd = new DVD("DVD" + intNumeroDocDVD, strTitre, date, 2, strAuteur, 0, "Disponible");
 					fichier.getListDvd().add(dvd);
 					fichier.getListDoc().add(docDvd);
-					tabDoc.setContent(remplirTabDocument(tabDoc));
-					tabDVD.setContent(remplirTabDVD(tabDVD));
+					tabDoc.setContent(remplirTabDocument(tabDoc,true));
+					tabDVD.setContent(remplirTabDVD(tabDVD,true));
 					break;
 				case "Periodiques":
 					int intNumeroDocPer = fichier.getListPeriodique().size() + 1;
@@ -1133,8 +1200,8 @@ public class Main extends Application {
 					Periodiques per = new Periodiques("Per" + intNumeroDocPer, strTitre, date, intVolumePerio, intNumPerio, "Disponible", 0, TypeDocument.PERIODIQUES);
 					fichier.getListPeriodique().add(per);
 					fichier.getListDoc().add(docPer);
-					tabDoc.setContent(remplirTabDocument(tabDoc));
-					tabPerio.setContent(remplirTabPer(tabPerio));
+					tabDoc.setContent(remplirTabDocument(tabDoc,true));
+					tabPerio.setContent(remplirTabPer(tabPerio,true));
 					
 					break;
 				case "Livre":
@@ -1146,8 +1213,8 @@ public class Main extends Application {
 					fichier.getListLivre().add(liv);
 					fichier.getListDoc().add(docLivre);
 
-					tabDoc.setContent(remplirTabDocument(tabDoc));
-					tabLivre.setContent(remplirTabLivre(tabLivre));
+					tabDoc.setContent(remplirTabDocument(tabDoc,true));
+					tabLivre.setContent(remplirTabLivre(tabLivre,true));
 					break;
 
 				default:
@@ -1364,7 +1431,7 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 			}
 			break;
 		}
-		tabDoc.setContent(remplirTabDocument(tabDoc));
+		tabDoc.setContent(remplirTabDocument(tabDoc,true));
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date datePret = new Date();
@@ -1488,9 +1555,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 	}
 	
 
-	public VBox remplirTabDocument(Tab tabDoc) {
+	public VBox remplirTabDocument(Tab tabDoc,boolean booRecherche) {
 		// Tous les documents
-		donnees = FXCollections.observableArrayList(fichier.getListDoc());
+		if(booRecherche) {
+			donnees = FXCollections.observableArrayList(fichier.getListDoc());
+		}else {
+			donnees = FXCollections.observableArrayList(rc.getListDocumentRecherche());
+		}
+		
 		table = new TableView<Document>();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(table);
@@ -1526,9 +1598,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		return vbox;
 	}
 
-	public VBox remplirTabDVD(Tab tabDVD) {
+	public VBox remplirTabDVD(Tab tabDVD,boolean booRecherche) {
 		// DVD
-		donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
+		if(booRecherche) {
+			donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
+		}else {
+			donneesDVD = FXCollections.observableArrayList(rc.getListDvdRecherche());
+		}
+		
 		tableDVD = new TableView<DVD>();
 		VBox vboxDVD = new VBox();
 		vboxDVD.getChildren().add(tableDVD);
@@ -1572,10 +1649,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	}
 
-	public VBox remplirTabPer(Tab tabPerio) {
+	public VBox remplirTabPer(Tab tabPerio,boolean booRecherche) {
 		// Periodiques
-
-		donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
+		if(booRecherche) {
+			donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
+		}else {
+			donneesPer = FXCollections.observableArrayList(rc.getListPeriodiqueRecherche());
+		}
+		
 		tablePer = new TableView<Periodiques>();
 		VBox vboxPer = new VBox();
 		vboxPer.getChildren().add(tablePer);
@@ -1620,10 +1701,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	}
 
-	public VBox remplirTabLivre(Tab tabLivre) {
+	public VBox remplirTabLivre(Tab tabLivre,boolean booRecherche) {
 		// Livre
-
-		donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+        if(booRecherche) {
+        	donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+        }else {
+        	donneesLivre = FXCollections.observableArrayList(rc.getListLivreRecherche());
+        }
+		
 		tableLivre = new TableView<Livre>();
 		VBox vboxLivre = new VBox();
 		vboxLivre.getChildren().add(tableLivre);
