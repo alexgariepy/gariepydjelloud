@@ -12,12 +12,12 @@ public class Prepose {
 		   ArrayList<Pret> listDocPret = new ArrayList<Pret>();
 		 
 		  
-<<<<<<< HEAD
-	}
-=======
+
 	}
 
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
+	
+
+
    public ArrayList<Document> ajouterdocument(ArrayList<Document> listDoc){
 	    TypeDocument typeDocument = TypeDocument.DVD;
 		String Titre = "Allo";
@@ -60,11 +60,11 @@ public class Prepose {
 	   
 	  
 	   	return listDoc;
-<<<<<<< HEAD
-	}
- 
-=======
+
 	}
 
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
+	
+
+
+
 }

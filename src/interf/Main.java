@@ -484,6 +484,7 @@ public class Main extends Application {
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				try {
+					 //Fichier ser DVD
 				 FileOutputStream fileOutDvD =new FileOutputStream("DVD.ser",false);
 					         ObjectOutputStream outDvD = new ObjectOutputStream(fileOutDvD);
 					         for(int i = 0 ; i < fichier.getListDvd().size();i++) {
@@ -494,7 +495,7 @@ public class Main extends Application {
 				        
 				         
 				         
-				         
+				         //Fichier ser Periodique
 				        FileOutputStream fileOutPer =
 							     new FileOutputStream("Per.ser",false);
 							         ObjectOutputStream outPer = new ObjectOutputStream(fileOutPer);
@@ -503,7 +504,7 @@ public class Main extends Application {
 							         }
 							         outPer.close();
 							         fileOutPer.close();
-							         
+							         //Fichier ser Livre
 							         FileOutputStream fileOutLivre = new FileOutputStream("Livre.ser",false);
 										         ObjectOutputStream outLivre = new ObjectOutputStream(fileOutLivre);
 										         for(int i = 0 ; i < fichier.getListLivre().size();i++) {
@@ -511,7 +512,7 @@ public class Main extends Application {
 										         }
 										         outLivre.close();
 										         fileOutLivre.close();
-										         
+										        //Fichier ser Doc 
 										         FileOutputStream fileOutDoc = new FileOutputStream("Doc.ser",false);
 										         ObjectOutputStream outDoc = new ObjectOutputStream(fileOutDoc);
 										         for(int i = 0 ; i < fichier.getListDoc().size();i++) {
@@ -520,12 +521,34 @@ public class Main extends Application {
 										         outDoc.close();
 										         fileOutDoc.close();						         
 										         
+										       //Fichier ser Pret 
 										         
-										         
+										         FileOutputStream fileOutPret = new FileOutputStream("Pret.ser",false);
+										         ObjectOutputStream outPret = new ObjectOutputStream(fileOutPret);
+										         for(int i = 0 ; i < fichier.getListPret().size();i++) {
+										        	 outPret.writeObject(fichier.getListPret().get(i));
+										         }
+										         outPret.close();
+										         fileOutPret.close();
+										         //Fichier ser Adherent
+										         FileOutputStream fileOutAdherent= new FileOutputStream("Adherent.ser",false);
+										         ObjectOutputStream outAdherent = new ObjectOutputStream(fileOutAdherent);
+										         for(int i = 0 ; i < fichier.getListAdherent().size();i++) {
+										        	 outAdherent.writeObject(fichier.getListAdherent().get(i));
+										         }
+										         outAdherent.close();
+										         fileOutAdherent.close();
+										        
 				}catch (Exception e1) {
 				System.out.println(e1.getMessage() + " >>>");
 				}
 				newWindow.close();
+				fichier.getListAdherent().clear();
+				fichier.getListDoc().clear();
+				fichier.getListDvd().clear();
+				fichier.getListLivre().clear();
+				fichier.getListPeriodique().clear();
+				fichier.getListPret().clear();
 				debutLogin();
 			});
 

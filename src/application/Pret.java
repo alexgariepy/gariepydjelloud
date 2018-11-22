@@ -7,19 +7,12 @@ import java.util.Date;
 public class Pret {
 	private Adherent adh;
 	private	Date DatePret;
-<<<<<<< HEAD
 	private Date DateRetourPrevu;
-=======
-	private Date DateRetourPrevu;
-
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
 	private Date DateDeRemise;
 
-<<<<<<< HEAD
+
 	public Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
-=======
-	Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
->>>>>>> branch 'master' of https://github.com/alexgariepy/gariepydjelloud.git
+
 		this.adh = adh;
 		this.DatePret = DatePret;
 		this.DateRetourPrevu = DateRetourPrevu;
