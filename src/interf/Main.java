@@ -5,19 +5,18 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import javax.swing.text.MaskFormatter;
-
+import application.Adherent;
 import application.DVD;
 import application.Document;
 import application.LectureFichier;
 import application.Livre;
 import application.Periodiques;
+import application.Prepose;
+import application.Pret;
+import application.RechercheMotCle;
 import application.TypeDocument;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -33,11 +32,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -63,11 +64,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import application.Pret;
-import application.RechercheMotCle;
-import application.LectureFichier;
-import application.Adherent;
-import application.Prepose;
 
 public class Main extends Application {
 	private BorderPane root;
@@ -86,6 +82,7 @@ public class Main extends Application {
 	private Image imageConfirmer = new Image("confirmer.png");
 	private Image imageAnnuler = new Image("annuler.png");
 	private Image imageInscire = new Image("inscire.png");
+	private Image imageSearch = new Image("search.png");
 
 	private ImageView imageView = new ImageView(image3);
 	private ImageView addView = new ImageView(imageAdd);
@@ -97,6 +94,7 @@ public class Main extends Application {
 	private ImageView confirmerView = new ImageView(imageConfirmer);
 	private ImageView annulerView = new ImageView(imageAnnuler);
 	private ImageView inscireView = new ImageView(imageInscire);
+	private ImageView searchView = new ImageView(imageSearch);
 
 	private Button btnAjouter = new Button("Ajouter un document");
 	private Button btnSupprimer = new Button("Supprimer un document");
@@ -149,6 +147,22 @@ public class Main extends Application {
 	private ObservableList<Periodiques> donneesPer;
 	private TableView<Periodiques> tablePer;
 	private TableView<Document> table;
+	private TableView<DVD> tableDVD;
+	private ObservableList<Livre> donneesLivre;
+	private TableView<Livre> tableLivre;
+	private int intCompteurLivre = 0;
+	private int intCompteurDVD = 0;
+	private int intCompteurPerio = 0;
+	private String strReponse = "";
+	private Stage primaryStage;
+	private Stage stageAdherant;
+	private Boolean booValide;
+	private ComboBox comboBoxAdherent;
+	private Boolean booValidePrep;
+	private Stage listStage;
+	private Boolean booValidationNumTel;
+    private RechercheMotCle rc = new RechercheMotCle();
+	
 	public TableView<Periodiques> getTablePer() {
 		return tablePer;
 	}
@@ -180,23 +194,6 @@ public class Main extends Application {
 	public void setTableLivre(TableView<Livre> tableLivre) {
 		this.tableLivre = tableLivre;
 	}
-
-	private TableView<DVD> tableDVD;
-	private ObservableList<Livre> donneesLivre;
-	private TableView<Livre> tableLivre;
-	private int intCompteurLivre = 0;
-	private int intCompteurDVD = 0;
-	private int intCompteurPerio = 0;
-	private String strReponse = "";
-	private Stage primaryStage;
-	private Stage stageAdherant;
-	private Boolean booValide;
-	private ComboBox comboBoxAdherent;
-	private Boolean booValidePrep;
-	private Stage listStage;
-	private Boolean booValidationNumTel;
-    private RechercheMotCle rc = new RechercheMotCle();
-    
     
 	public ObservableList<Document> getDonnees() {
 		return donnees;
@@ -538,11 +535,32 @@ public class Main extends Application {
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
+			RadioButton rbAuteur = new RadioButton("Auteur");
+			RadioButton rbMC = new RadioButton("Mots Clés");
+			
+			ToggleGroup tg1 = new ToggleGroup();
+			
+			rbAuteur.setToggleGroup(tg1);
+			rbMC.setToggleGroup(tg1);
+			
+			Label labelTri = new Label("Trier par : ");
 			HBox hBox = new HBox();
+			hBox.setSpacing(10);
+			hBox.setPadding(new Insets(10));
 			hBox.setMaxSize(900, 80);
 			hBox.setPrefSize(900, 80);
 			hBox.setBorder(border);
 			hBox.setBackground(bg3);
+			Button btnSearch = new Button("Recherche");
+			TextField tfSearch = new TextField();
+			btnSearch.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			labelTri.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			rbAuteur.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			rbMC.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+			btnSearch.setGraphic(searchView);
+			tfSearch.setMinSize(400, 40);
+			hBox.getChildren().addAll(tfSearch, btnSearch, labelTri, rbAuteur, rbMC);
+			hBox.setAlignment(Pos.CENTER);
 
 			HBox hBox2 = new HBox();
 			hBox2.setMaxSize(900, 120);
@@ -1387,6 +1405,7 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		confirmerView.setFitHeight(30);
 		annulerView.setFitHeight(30);
 		inscireView.setFitHeight(30);
+		searchView.setFitHeight(30);
 
 		addView.setFitWidth(40);
 		delView.setFitWidth(40);
@@ -1397,6 +1416,7 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		confirmerView.setFitWidth(30);
 		annulerView.setFitWidth(30);
 		inscireView.setFitWidth(30);
+		searchView.setFitWidth(30);
 
 		btnAjouter.setMinHeight(50);
 		btnSupprimer.setMinHeight(50);
