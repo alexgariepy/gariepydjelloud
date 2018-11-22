@@ -1261,6 +1261,14 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	public void verifLoginNumTel(TextField tf) {
+		
+	}
+	
+public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
+		                                                                                                                                                                                                                                                                                                                                                                                    
+	}
+	
 	public void parametreBoutton() {
 
 		addView.setFitHeight(40);
