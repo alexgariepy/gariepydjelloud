@@ -123,6 +123,8 @@ public class Main extends Application {
 			BackgroundPosition.DEFAULT, bgTaille2);
 	private BackgroundImage BGMain3 = new BackgroundImage(image4, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
 			BackgroundPosition.DEFAULT, bgTaille);
+	private int intCompteurTel = 0;
+	private int intCompteurNP = 0;
 	private Background bg1 = new Background(BGMain);
 	private Background bg2 = new Background(BGMain2);
 	private Background bg3 = new Background(new BackgroundFill(Color.GHOSTWHITE, CornerRadii.EMPTY, Insets.EMPTY));
@@ -167,33 +169,36 @@ public class Main extends Application {
 	private ComboBox comboBoxAdherent;
 	private Boolean booValidePrep;
 	private Stage listStage;
-    private RechercheMotCle rc = new RechercheMotCle();
-    
+	private RechercheMotCle rc = new RechercheMotCle();
+	private Stage newWindow;
+	private Boolean booValidationNumTel = false;
+	private Boolean booValidationNomPrenom = false;
+	
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
 		@Override
 		public void handle(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			booValide=false;
+			booValide = false;
 			VBox vBoxInscire = new VBox();
 			vBoxInscire.setSpacing(10);
 			vBoxInscire.setPadding(new Insets(10));
 			Scene sceneInsciption = new Scene(vBoxInscire, 450, 325);
 			vBoxInscire.setBackground(bg4);
 			vBoxInscire.setPadding(new Insets(10));
-			
+
 			Label lableInscription = new Label("Inscription");
 			Label labelPrenom = new Label("Prénom : ");
 			Label labelNom = new Label("Nom : ");
 			Label labelTel = new Label("Numéro de téléphone : ");
 			Label labelAdresse = new Label("Adresse : ");
-			
+
 			TextField tfPrenom = new TextField();
 			TextField tfNom = new TextField();
 			TextField tfTel = new TextField();
 			TextField tfAdresse = new TextField();
-			
+
 			HBox hBoxButton = new HBox();
 			hBoxButton.setPadding(new Insets(20));
 			hBoxButton.setAlignment(Pos.CENTER);
@@ -201,38 +206,38 @@ public class Main extends Application {
 			Button btnConfirmer = new Button("Confirmer");
 			Button btnAnnuler = new Button("Annuler");
 			btnAnnuler.setOnAction(gestionAdherent);
-			
+
 			parametreBoutton();
 			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnConfirmer.setGraphic(confirmerView);
 			btnAnnuler.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnAnnuler.setGraphic(annulerView);
-			
+
 			hBoxButton.getChildren().addAll(btnConfirmer, btnAnnuler);
-			
+
 			lableInscription.setMinSize(180, 30);
 			labelPrenom.setMinSize(180, 30);
 			labelNom.setMinSize(180, 30);
 			labelTel.setMinSize(180, 30);
 			labelAdresse.setMinSize(180, 30);
-			
+
 			tfPrenom.setMinSize(180, 30);
 			tfNom.setMinSize(180, 30);
 			tfTel.setMinSize(180, 30);
 			tfAdresse.setMinSize(180, 30);
-			
+
 			lableInscription.setFont(Font.font("Arial", FontWeight.BOLD, 15));
 			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelAdresse.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			
+
 			lableInscription.setTextFill(Color.WHITE);
 			labelPrenom.setTextFill(Color.WHITE);
 			labelNom.setTextFill(Color.WHITE);
 			labelTel.setTextFill(Color.WHITE);
 			labelAdresse.setTextFill(Color.WHITE);
-			
+
 			HBox hBoxInscription = new HBox();
 			VBox vBoxLabel = new VBox();
 			vBoxLabel.setSpacing(10);
@@ -246,57 +251,55 @@ public class Main extends Application {
 
 			hBoxInscription.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInscription.setBorder(border2);
-			
+
 			vBoxInscire.getChildren().addAll(lableInscription, hBoxInscription, hBoxButton);
-			
+
 			Stage stageInscription = new Stage();
 			stageInscription.setTitle("Inscription d'un adhérant");
 			stageInscription.setScene(sceneInsciption);
 			stageInscription.setResizable(false);
 			stageInscription.show();
 			btnAnnuler.setOnMouseClicked(e -> stageInscription.close());
-			
+
 			btnConfirmer.setOnMouseClicked(e -> {
 				booValide = gestionErreurInscription(tfPrenom, tfNom, tfTel, tfAdresse);
-				if(booValide) {
+				if (booValide) {
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Inscription confirmé!");
 					alert.setHeaderText(null);
-					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()  + " de vous avoir inscrit dans la base de donnée de la médiathèque.");
+					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()
+							+ " de vous avoir inscrit dans la base de donnée de la médiathèque.");
 					alert.showAndWait();
-					
-					Adherent a = new Adherent(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(), tfAdresse.getText().trim());
-					if(fichier.getListAdherent().size() > 0) {
-						for(int i = 0; i < fichier.getListAdherent().size();i++) {
-							if(a.getStrNum().equals(fichier.getListAdherent().get(i).getStrNum())) {
+
+					Adherent a = new Adherent(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(),
+							tfAdresse.getText().trim());
+					if (fichier.getListAdherent().size() > 0) {
+						for (int i = 0; i < fichier.getListAdherent().size(); i++) {
+							if (a.getStrNum().equals(fichier.getListAdherent().get(i).getStrNum())) {
 								Alert alertErr = new Alert(AlertType.ERROR);
 								alertErr.setTitle("Inscription impossible");
 								alertErr.setHeaderText(null);
 								alertErr.setContentText("Le numéro de téléphone est déjà inscrit pour un adhérant!");
 								alertErr.showAndWait();
-							}
-							else {
+							} else {
 								fichier.getListAdherent().add(a);
 								stageInscription.close();
 								debutLogin();
 							}
 						}
-					}
-					else {
+					} else {
 						fichier.getListAdherent().add(a);
 						stageInscription.close();
 						debutLogin();
 					}
-					
-					
-					
+
 				}
 			});
-			
+
 		}
-		
+
 	};
-	
+
 	private EventHandler<ActionEvent> gestionAdherent = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -319,7 +322,7 @@ public class Main extends Application {
 			tfNumTel = new TextField();
 			tfNom = new TextField();
 			tfPrenom = new TextField();
-			
+
 			labelNumTel.setMinSize(180, 30);
 			labelNom.setMinSize(180, 30);
 			labelPrenom.setMinSize(180, 30);
@@ -343,23 +346,23 @@ public class Main extends Application {
 			hBoxButton.setAlignment(Pos.CENTER);
 			Button btnConfirmation = new Button("Connexion");
 			Button btnConfirmationNum = new Button("Connexion");
-			
+
 			Button btnInscrire = new Button("Inscrivez vous!");
 			Button btnRetour = new Button("Retour");
-			
+
 			parametreBoutton();
 			btnConfirmation.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnConfirmationNum.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnInscrire.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnInscrire.setGraphic(inscireView);
-			HBox hBoxRetour = new HBox();		
+			HBox hBoxRetour = new HBox();
 			retourView.setFitHeight(20);
-			retourView.setFitWidth(20);		
+			retourView.setFitWidth(20);
 			btnRetour.setGraphic(retourView);
 			btnRetour.setFont(Font.font("Arial", FontWeight.BOLD, 11));
 			hBoxRetour.setAlignment(Pos.CENTER);
 			hBoxRetour.getChildren().add(btnRetour);
-			
+
 			btnInscrire.setOnAction(gestionInscrire);
 
 			hBoxButton.getChildren().addAll(btnInscrire);
@@ -373,7 +376,7 @@ public class Main extends Application {
 			VBox vBoxTF = new VBox();
 			vBoxTF.setSpacing(10);
 			vBoxTF.setPadding(new Insets(10));
-			vBoxTF.getChildren().addAll(tfNumTel,  btnConfirmationNum);
+			vBoxTF.getChildren().addAll(tfNumTel, btnConfirmationNum);
 
 			hBoxInfo.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInfo.setBorder(border2);
@@ -392,7 +395,8 @@ public class Main extends Application {
 			hBoxInfoNom.getChildren().addAll(vBoxLabelNom, vBoxTFNom);
 			hBoxInfoNom.setBorder(border2);
 
-			vBoxAdherant.getChildren().addAll(labelConnexionNumTel, hBoxInfo, labelConnexionNom, hBoxInfoNom, hBoxButton, hBoxRetour);
+			vBoxAdherant.getChildren().addAll(labelConnexionNumTel, hBoxInfo, labelConnexionNom, hBoxInfoNom,
+					hBoxButton, hBoxRetour);
 
 			stageAdherant = new Stage();
 			stageAdherant.setTitle("Médiathèque");
@@ -404,7 +408,25 @@ public class Main extends Application {
 				stageAdherant.close();
 				debutLogin();
 			});
+
+			btnConfirmationNum.setOnAction(e -> {
+				booValidationNumTel = verifLoginNumTel(tfNumTel);			
+				if (booValidationNumTel) {
+					btnConfirmationNum.setOnAction(gestionConnexion);
+					booUsager = true;
+				}
+			});
 			
+			btnConfirmation.setOnAction(e -> {
+				booValidationNomPrenom = verifLoginNomPrenom(tfNom, tfPrenom);			
+				if (booValidationNomPrenom) {
+					btnConfirmation.setOnAction(gestionConnexion);
+					booUsager = true;
+				}
+			});
+			
+			
+
 		}
 
 	};
@@ -414,6 +436,9 @@ public class Main extends Application {
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
 			parametreBoutton();
+			if(booValidationNumTel || booValidationNomPrenom) {
+				stageAdherant.close();
+			}
 			if (event.getSource().equals(btnUsager)) {
 				booUsager = true;
 			}
@@ -469,18 +494,17 @@ public class Main extends Application {
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
 			btnPret.setOnAction(gestionListAdherant);
-			
 
 			vBox2.getChildren().addAll(vBox3, vBox4);
 
 			RadioButton rbAuteur = new RadioButton("Auteur");
 			RadioButton rbMC = new RadioButton("Mots Clés");
-			
+
 			ToggleGroup tg1 = new ToggleGroup();
-			
+
 			rbAuteur.setToggleGroup(tg1);
 			rbMC.setToggleGroup(tg1);
-			
+
 			Label labelTri = new Label("Trier par : ");
 			HBox hBox = new HBox();
 			hBox.setSpacing(10);
@@ -516,10 +540,10 @@ public class Main extends Application {
 
 			fichier.lecture();
 
-			tabDoc.setContent(remplirTabDocument(tabDoc,true));
-			tabLivre.setContent(remplirTabLivre(tabLivre,true));
-			tabPerio.setContent(remplirTabPer(tabPerio,true));
-			tabDVD.setContent(remplirTabDVD(tabDVD,true));
+			tabDoc.setContent(remplirTabDocument(tabDoc, true));
+			tabLivre.setContent(remplirTabLivre(tabLivre, true));
+			tabPerio.setContent(remplirTabPer(tabPerio, true));
+			tabDVD.setContent(remplirTabDVD(tabDVD, true));
 
 			tabDoc.setClosable(false);
 			tabLivre.setClosable(false);
@@ -536,69 +560,66 @@ public class Main extends Application {
 			mediathequeFenetre.setPadding(new Insets(30));
 
 			// New window (Stage)
-			Stage newWindow = new Stage();
+			newWindow = new Stage();
 			newWindow.setTitle("Médiathèque");
 			newWindow.setScene(secondScene);
 			newWindow.setResizable(false);
 			btnQuitter.setOnAction(e -> {
 				try {
-					 //Fichier ser DVD
-				 FileOutputStream fileOutDvD =new FileOutputStream("DVD.ser",false);
-					         ObjectOutputStream outDvD = new ObjectOutputStream(fileOutDvD);
-					         for(int i = 0 ; i < fichier.getListDvd().size();i++) {
-					        	 outDvD.writeObject(fichier.getListDvd().get(i));
-					         }
-				         outDvD.close();
-				         fileOutDvD.close();
-				        
-				         
-				         
-				         //Fichier ser Periodique
-				        FileOutputStream fileOutPer =
-							     new FileOutputStream("Per.ser",false);
-							         ObjectOutputStream outPer = new ObjectOutputStream(fileOutPer);
-							         for(int i = 0 ; i < fichier.getListPeriodique().size();i++) {
-							        	 outPer.writeObject(fichier.getListPeriodique().get(i));
-							         }
-							         outPer.close();
-							         fileOutPer.close();
-							         //Fichier ser Livre
-							         FileOutputStream fileOutLivre = new FileOutputStream("Livre.ser",false);
-										         ObjectOutputStream outLivre = new ObjectOutputStream(fileOutLivre);
-										         for(int i = 0 ; i < fichier.getListLivre().size();i++) {
-										        	 outLivre.writeObject(fichier.getListLivre().get(i));
-										         }
-										         outLivre.close();
-										         fileOutLivre.close();
-										        //Fichier ser Doc 
-										         FileOutputStream fileOutDoc = new FileOutputStream("Doc.ser",false);
-										         ObjectOutputStream outDoc = new ObjectOutputStream(fileOutDoc);
-										         for(int i = 0 ; i < fichier.getListDoc().size();i++) {
-										        	 outDoc.writeObject(fichier.getListDoc().get(i));
-										         }
-										         outDoc.close();
-										         fileOutDoc.close();						         
-										         
-										       //Fichier ser Pret 
-										         
-										         FileOutputStream fileOutPret = new FileOutputStream("Pret.ser",false);
-										         ObjectOutputStream outPret = new ObjectOutputStream(fileOutPret);
-										         for(int i = 0 ; i < fichier.getListPret().size();i++) {
-										        	 outPret.writeObject(fichier.getListPret().get(i));
-										         }
-										         outPret.close();
-										         fileOutPret.close();
-										         //Fichier ser Adherent
-										         FileOutputStream fileOutAdherent= new FileOutputStream("Adherent.ser",false);
-										         ObjectOutputStream outAdherent = new ObjectOutputStream(fileOutAdherent);
-										         for(int i = 0 ; i < fichier.getListAdherent().size();i++) {
-										        	 outAdherent.writeObject(fichier.getListAdherent().get(i));
-										         }
-										         outAdherent.close();
-										         fileOutAdherent.close();
-										        
-				}catch (Exception e1) {
-				System.out.println(e1.getMessage() + " >>>");
+					// Fichier ser DVD
+					FileOutputStream fileOutDvD = new FileOutputStream("DVD.ser", false);
+					ObjectOutputStream outDvD = new ObjectOutputStream(fileOutDvD);
+					for (int i = 0; i < fichier.getListDvd().size(); i++) {
+						outDvD.writeObject(fichier.getListDvd().get(i));
+					}
+					outDvD.close();
+					fileOutDvD.close();
+
+					// Fichier ser Periodique
+					FileOutputStream fileOutPer = new FileOutputStream("Per.ser", false);
+					ObjectOutputStream outPer = new ObjectOutputStream(fileOutPer);
+					for (int i = 0; i < fichier.getListPeriodique().size(); i++) {
+						outPer.writeObject(fichier.getListPeriodique().get(i));
+					}
+					outPer.close();
+					fileOutPer.close();
+					// Fichier ser Livre
+					FileOutputStream fileOutLivre = new FileOutputStream("Livre.ser", false);
+					ObjectOutputStream outLivre = new ObjectOutputStream(fileOutLivre);
+					for (int i = 0; i < fichier.getListLivre().size(); i++) {
+						outLivre.writeObject(fichier.getListLivre().get(i));
+					}
+					outLivre.close();
+					fileOutLivre.close();
+					// Fichier ser Doc
+					FileOutputStream fileOutDoc = new FileOutputStream("Doc.ser", false);
+					ObjectOutputStream outDoc = new ObjectOutputStream(fileOutDoc);
+					for (int i = 0; i < fichier.getListDoc().size(); i++) {
+						outDoc.writeObject(fichier.getListDoc().get(i));
+					}
+					outDoc.close();
+					fileOutDoc.close();
+
+					// Fichier ser Pret
+
+					FileOutputStream fileOutPret = new FileOutputStream("Pret.ser", false);
+					ObjectOutputStream outPret = new ObjectOutputStream(fileOutPret);
+					for (int i = 0; i < fichier.getListPret().size(); i++) {
+						outPret.writeObject(fichier.getListPret().get(i));
+					}
+					outPret.close();
+					fileOutPret.close();
+					// Fichier ser Adherent
+					FileOutputStream fileOutAdherent = new FileOutputStream("Adherent.ser", false);
+					ObjectOutputStream outAdherent = new ObjectOutputStream(fileOutAdherent);
+					for (int i = 0; i < fichier.getListAdherent().size(); i++) {
+						outAdherent.writeObject(fichier.getListAdherent().get(i));
+					}
+					outAdherent.close();
+					fileOutAdherent.close();
+
+				} catch (Exception e1) {
+					System.out.println(e1.getMessage() + " >>>");
 				}
 				newWindow.close();
 				fichier.getListAdherent().clear();
@@ -615,7 +636,6 @@ public class Main extends Application {
 		}
 
 	};
-
 
 	private EventHandler<ActionEvent> gestionSupprimer = new EventHandler<ActionEvent>() {
 
@@ -655,10 +675,10 @@ public class Main extends Application {
 						fichier.getListDoc().remove(i);
 
 						// table.getItems().remove(doc);
-						tabDoc.setContent(remplirTabDocument(tabDoc,true));
-						tabLivre.setContent(remplirTabLivre(tabLivre,true));
-						tabPerio.setContent(remplirTabPer(tabPerio,true));
-						tabDVD.setContent(remplirTabDVD(tabDVD,true));
+						tabDoc.setContent(remplirTabDocument(tabDoc, true));
+						tabLivre.setContent(remplirTabLivre(tabLivre, true));
+						tabPerio.setContent(remplirTabPer(tabPerio, true));
+						tabDVD.setContent(remplirTabDVD(tabDVD, true));
 					}
 				}
 			}
@@ -679,8 +699,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc,true));
-				tabDVD.setContent(remplirTabDVD(tabDVD,true));
+				tabDoc.setContent(remplirTabDocument(tabDoc, true));
+				tabDVD.setContent(remplirTabDVD(tabDVD, true));
 
 			}
 
@@ -700,8 +720,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc,true));
-				tabLivre.setContent(remplirTabLivre(tabLivre,true));
+				tabDoc.setContent(remplirTabDocument(tabDoc, true));
+				tabLivre.setContent(remplirTabLivre(tabLivre, true));
 
 			}
 
@@ -721,8 +741,8 @@ public class Main extends Application {
 					}
 
 				}
-				tabDoc.setContent(remplirTabDocument(tabDoc,true));
-				tabPerio.setContent(remplirTabPer(tabPerio,true));
+				tabDoc.setContent(remplirTabDocument(tabDoc, true));
+				tabPerio.setContent(remplirTabPer(tabPerio, true));
 
 			}
 		}
@@ -741,25 +761,25 @@ public class Main extends Application {
 			VBox vBox = new VBox(10);
 			Text t = new Text("Pour quel adhérant faites-vous le prêt?");
 			comboBoxAdherent = new ComboBox();
-			
-			if(fichier.getListAdherent().size() == 0) {
+
+			if (fichier.getListAdherent().size() == 0) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Prêt impossible");
 				alert.setHeaderText(null);
-				alert.setContentText("Il n'y a pas d'adhérent inscrit dans la médiathèque. Pour faire un prêt, veuillez avoir au moins un adhérent inscrit.");
+				alert.setContentText(
+						"Il n'y a pas d'adhérent inscrit dans la médiathèque. Pour faire un prêt, veuillez avoir au moins un adhérent inscrit.");
 				alert.showAndWait();
 				listStage.close();
-			}
-			else {
+			} else {
 				ObservableList<Adherent> optionAdherent = FXCollections.observableArrayList(fichier.getListAdherent());
 				comboBoxAdherent = new ComboBox(optionAdherent);
 				comboBoxAdherent.getSelectionModel().selectFirst();
-				
+
 				comboBoxAdherent.setMinSize(150, 30);
 				Button btnChoisir = new Button("Choisir");
 				btnChoisir.setOnMouseClicked(e -> {
 					primaryStage.hide();
-					
+
 				});
 				btnChoisir.setOnAction(gestionPret);
 				vBox.getChildren().addAll(t, comboBoxAdherent, btnChoisir);
@@ -767,20 +787,17 @@ public class Main extends Application {
 				t.setTextAlignment(TextAlignment.CENTER);
 				listBP.setCenter(vBox);
 
-				
 				listStage.setScene(listScene);
 				listStage.show();
 				listStage.setTitle("Choix de l'adhérant");
 				listStage.setResizable(false);
-				listStage.sizeToScene();	
+				listStage.sizeToScene();
 			}
-			
-			
-			
+
 		}
-		
+
 	};
-	
+
 	private EventHandler<ActionEvent> gestionPret = new EventHandler<ActionEvent>() {
 
 		@Override
@@ -797,7 +814,7 @@ public class Main extends Application {
 					case LIVRE:
 						if (intCompteurLivre < 3) {
 							pret(doc);
-							tabLivre.setContent(remplirTabLivre(tabLivre,true));
+							tabLivre.setContent(remplirTabLivre(tabLivre, true));
 							intCompteurLivre++;
 
 						} else {
@@ -807,7 +824,7 @@ public class Main extends Application {
 					case PERIODIQUES:
 						if (intCompteurPerio < 3) {
 							pret(doc);
-							tabPerio.setContent(remplirTabPer(tabPerio,true));
+							tabPerio.setContent(remplirTabPer(tabPerio, true));
 							intCompteurPerio++;
 						} else {
 							messageErreurMaxPerio();
@@ -817,12 +834,12 @@ public class Main extends Application {
 						if (intCompteurDVD < 3) {
 							pret(doc);
 							intCompteurDVD++;
-							tabDVD.setContent(remplirTabDVD(tabDVD,true));
+							tabDVD.setContent(remplirTabDVD(tabDVD, true));
 						} else {
 							messageErreurMaxDVD();
 						}
 						break;
-						
+
 					}
 				} else {
 					Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -835,7 +852,7 @@ public class Main extends Application {
 				if (docLivre.getEtat() == "Disponible") {
 					if (intCompteurLivre < 3) {
 						pret(doc);
-						tabLivre.setContent(remplirTabLivre(tabLivre,true));
+						tabLivre.setContent(remplirTabLivre(tabLivre, true));
 						intCompteurLivre++;
 
 					} else {
@@ -848,7 +865,7 @@ public class Main extends Application {
 				if (docPer.getStrEtat() == "Disponible") {
 					if (intCompteurPerio < 3) {
 						pret(doc);
-						tabPerio.setContent(remplirTabPer(tabPerio,true));
+						tabPerio.setContent(remplirTabPer(tabPerio, true));
 						intCompteurPerio++;
 					} else {
 						messageErreurMaxPerio();
@@ -861,7 +878,7 @@ public class Main extends Application {
 					if (intCompteurDVD < 3) {
 						pret(doc);
 						intCompteurDVD++;
-						tabDVD.setContent(remplirTabDVD(tabDVD,true));
+						tabDVD.setContent(remplirTabDVD(tabDVD, true));
 					} else {
 						messageErreurMaxDVD();
 					}
@@ -1019,62 +1036,62 @@ public class Main extends Application {
 			Scene sceneInsciption = new Scene(vBoxInscire, 450, 380);
 			vBoxInscire.setBackground(bg2);
 			vBoxInscire.setPadding(new Insets(10));
-			
+
 			Label lableInscription = new Label("Inscription");
 			Label labelPrenom = new Label("Prénom : ");
 			Label labelNom = new Label("Nom : ");
 			Label labelTel = new Label("Numéro de téléphone : ");
 			Label labelAdresse = new Label("Adresse : ");
 			Label labelMDP = new Label("Mot de passe : ");
-			
+
 			TextField tfPrenom = new TextField();
 			TextField tfNom = new TextField();
 			TextField tfTel = new TextField();
 			TextField tfAdresse = new TextField();
 			TextField tfMDP = new TextField();
-			
+
 			HBox hBoxButton = new HBox();
 			hBoxButton.setPadding(new Insets(20));
 			hBoxButton.setAlignment(Pos.CENTER);
 			hBoxButton.setSpacing(20);
 			Button btnConfirmer = new Button("Confirmer");
 			Button btnAnnuler = new Button("Annuler");
-			
+
 			parametreBoutton();
 			btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnConfirmer.setGraphic(confirmerView);
 			btnAnnuler.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			btnAnnuler.setGraphic(annulerView);
-			
+
 			hBoxButton.getChildren().addAll(btnConfirmer, btnAnnuler);
-			
+
 			labelMDP.setMinSize(180, 30);
 			lableInscription.setMinSize(180, 30);
 			labelPrenom.setMinSize(180, 30);
 			labelNom.setMinSize(180, 30);
 			labelTel.setMinSize(180, 30);
 			labelAdresse.setMinSize(180, 30);
-			
+
 			tfMDP.setMinSize(180, 30);
 			tfPrenom.setMinSize(180, 30);
 			tfNom.setMinSize(180, 30);
 			tfTel.setMinSize(180, 30);
 			tfAdresse.setMinSize(180, 30);
-			
+
 			labelMDP.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			lableInscription.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelPrenom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelTel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 			labelAdresse.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-			
+
 			labelMDP.setTextFill(Color.WHITE);
 			lableInscription.setTextFill(Color.WHITE);
 			labelPrenom.setTextFill(Color.WHITE);
 			labelNom.setTextFill(Color.WHITE);
 			labelTel.setTextFill(Color.WHITE);
 			labelAdresse.setTextFill(Color.WHITE);
-			
+
 			HBox hBoxInscription = new HBox();
 			VBox vBoxLabel = new VBox();
 			vBoxLabel.setSpacing(10);
@@ -1088,52 +1105,53 @@ public class Main extends Application {
 
 			hBoxInscription.getChildren().addAll(vBoxLabel, vBoxTF);
 			hBoxInscription.setBorder(border2);
-			
+
 			vBoxInscire.getChildren().addAll(lableInscription, hBoxInscription, hBoxButton);
-			
-			
+
 			Stage stageInscription = new Stage();
 			stageInscription.setTitle("Inscription d'un adhérant");
 			stageInscription.setScene(sceneInsciption);
 			stageInscription.setResizable(false);
 			stageInscription.show();
-			
-			
+
 			btnAnnuler.setOnMouseClicked(e -> {
 				stageInscription.close();
 				debutLogin();
 			});
-			
+
 			Boolean booMDP = estValide(tfMDP.getText().trim());
-			
-			if(!booMDP) {
+
+			if (!booMDP) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Inscription impossible");
 				alert.setHeaderText(null);
 				alert.setContentText("Les charactères spéciaux ne sont pas acceptés dans la section Mot de passe");
 				alert.showAndWait();
 			}
-			
+
 			btnConfirmer.setOnMouseClicked(e -> {
 				booValidePrep = gestionErreurInscription(tfPrenom, tfNom, tfTel, tfAdresse);
-				if(booValidePrep) {
+				if (booValidePrep) {
 					int intNoEmp = (1000 + fichier.getListPrepose().size());
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Succès de l'inscription du préposé");
 					alert.setHeaderText(null);
-					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()  + " de vous avoir inscrit dans la base de donnée de la médiathèque.\nVotre numéro d'employé est : " + intNoEmp);
+					alert.setContentText("Merci " + tfPrenom.getText().trim() + " " + tfNom.getText().trim()
+							+ " de vous avoir inscrit dans la base de donnée de la médiathèque.\nVotre numéro d'employé est : "
+							+ intNoEmp);
 					alert.showAndWait();
 					stageInscription.close();
-					
-					Prepose p = new Prepose(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(), tfAdresse.getText().trim(), tfMDP.getText().trim(), intNoEmp);
+
+					Prepose p = new Prepose(tfPrenom.getText().trim(), tfNom.getText().trim(), tfTel.getText().trim(),
+							tfAdresse.getText().trim(), tfMDP.getText().trim(), intNoEmp);
 					fichier.getListPrepose().add(p);
 					debutLogin();
 				}
 			});
 		}
-		
+
 	};
-	
+
 	private EventHandler<MouseEvent> gestionConfirmer = new EventHandler<MouseEvent>() {
 
 		@Override
@@ -1155,19 +1173,20 @@ public class Main extends Application {
 					DVD dvd = new DVD("DVD" + intNumeroDocDVD, strTitre, date, 2, strAuteur, 0, "Disponible");
 					fichier.getListDvd().add(dvd);
 					fichier.getListDoc().add(docDvd);
-					tabDoc.setContent(remplirTabDocument(tabDoc,true));
-					tabDVD.setContent(remplirTabDVD(tabDVD,true));
+					tabDoc.setContent(remplirTabDocument(tabDoc, true));
+					tabDVD.setContent(remplirTabDVD(tabDVD, true));
 					break;
 				case "Periodiques":
 					int intNumeroDocPer = fichier.getListPeriodique().size() + 1;
 					Document docPer = new Document("Per" + intNumeroDocPer, strTitre, date, "Disponible", 0,
 							TypeDocument.PERIODIQUES);
-					Periodiques per = new Periodiques("Per" + intNumeroDocPer, strTitre, date, intVolumePerio, intNumPerio, "Disponible", 0, TypeDocument.PERIODIQUES);
+					Periodiques per = new Periodiques("Per" + intNumeroDocPer, strTitre, date, intVolumePerio,
+							intNumPerio, "Disponible", 0, TypeDocument.PERIODIQUES);
 					fichier.getListPeriodique().add(per);
 					fichier.getListDoc().add(docPer);
-					tabDoc.setContent(remplirTabDocument(tabDoc,true));
-					tabPerio.setContent(remplirTabPer(tabPerio,true));
-					
+					tabDoc.setContent(remplirTabDocument(tabDoc, true));
+					tabPerio.setContent(remplirTabPer(tabPerio, true));
+
 					break;
 				case "Livre":
 					int intNumeroDocLivre = fichier.getListLivre().size() + 1;
@@ -1178,8 +1197,8 @@ public class Main extends Application {
 					fichier.getListLivre().add(liv);
 					fichier.getListDoc().add(docLivre);
 
-					tabDoc.setContent(remplirTabDocument(tabDoc,true));
-					tabLivre.setContent(remplirTabLivre(tabLivre,true));
+					tabDoc.setContent(remplirTabDocument(tabDoc, true));
+					tabLivre.setContent(remplirTabLivre(tabLivre, true));
 					break;
 
 				default:
@@ -1202,7 +1221,7 @@ public class Main extends Application {
 			}
 		}
 	};
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
@@ -1217,7 +1236,7 @@ public class Main extends Application {
 			primaryStage.hide();
 			debutLogin();
 		});
-		
+
 		vBox.getChildren().addAll(t, btnContinuer);
 		vBox.setAlignment(Pos.CENTER);
 		t.setTextAlignment(TextAlignment.CENTER);
@@ -1229,7 +1248,7 @@ public class Main extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 	}
-	
+
 	public LectureFichier getFichier() {
 		return fichier;
 	}
@@ -1260,12 +1279,12 @@ public class Main extends Application {
 			stageLogin.hide();
 
 		});
-		
+
 		btnPreposer.setOnAction(gestionPrepose);
 		btnPreposer.setOnMouseClicked(e -> {
 			stageLogin.hide();
 		});
-		
+
 		btnConnexion.setOnAction(gestionConnexion);
 		btnConnexion.setOnMouseClicked(e -> {
 			parametreBoutton();
@@ -1300,17 +1319,95 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-		
+
 	}
 
-	public void verifLoginNumTel(TextField tf) {
+	public Boolean verifLoginNumTel(TextField tf) {
+		String strContenu = tf.getText();
+		Boolean booReponse = false;
+
+		if (strContenu.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Login de l'adhérent impossible");
+			alert.setHeaderText(null);
+			alert.setContentText(
+					"Vous devez mettre votre numéro de téléphone pour vous connectez à votre compte Adhérent");
+			alert.showAndWait();
+		} else {
+			if (fichier.getListAdherent().size() > 0) {
+				for (int i = 0; i < fichier.getListAdherent().size(); i++) {
+					if (strContenu.equals(fichier.getListAdherent().get(i).getStrNum())) {
+						booReponse = true;
+					} else {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Login de l'adhérent impossible");
+						alert.setHeaderText(null);
+						alert.setContentText(
+								"Impossible de trouver votre numéro de téléphone dans la base de donnée de la médiathèque. Avez-vous faites votre inscription?");
+						alert.showAndWait();
+					}
+				}
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Login de l'adhérent impossible");
+				alert.setHeaderText(null);
+				alert.setContentText(
+						"Il n'y a aucun adhérent dans la base de donné de la médiathèque. Avez-vous faites au moins une inscription?");
+				alert.showAndWait();
+			}
+
+		}
+		return booReponse;
+	}
+
+	public Boolean verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
+		String strNom = tfNom.getText();
+		String strPrenom = tfPrenom.getText();
+		Boolean booReponse = false;
 		
+		if (strNom.isEmpty() || strPrenom.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Login de l'adhérent impossible");
+			alert.setHeaderText(null);
+			alert.setContentText("Vous devez remplir les champs Prénom et Nom pour vous connectez à votre compte Adhérent");
+			alert.showAndWait();
+		}
+		else {
+			if(fichier.getListAdherent().size() > 0) {
+				for(int i = 0; i < fichier.getListAdherent().size(); i++) {
+					if(strNom.equals(fichier.getListAdherent().get(i).getStrNom())) {
+						if(strPrenom.equals(fichier.getListAdherent().get(i).getStrPrenom())) {
+							booReponse = true;
+						}
+						else {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Login de l'adhérent impossible");
+							alert.setHeaderText(null);
+							alert.setContentText("Votre Prénom ne correspond pas à le Nom inscrit dans la base de donnée");
+							alert.showAndWait();
+						}
+					}
+					else {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Login de l'adhérent impossible");
+						alert.setHeaderText(null);
+						alert.setContentText("Votre nom n'est pas trouvé dans la base de donnée. Avez-vous faites votre inscription?");
+						alert.showAndWait();
+					}
+				}
+			}
+			else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Login de l'adhérent impossible");
+				alert.setHeaderText(null);
+				alert.setContentText(
+						"Il n'y a aucun adhérent dans la base de donné de la médiathèque. Avez-vous faites au moins une inscription?");
+				alert.showAndWait();
+			}
+		}
+		return booReponse;
 	}
-	
-public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
-		                                                                                                                                                                                                                                                                                                                                                                                    
-	}
-	
+
 	public void parametreBoutton() {
 
 		addView.setFitHeight(40);
@@ -1371,7 +1468,6 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	public void pret(Document doc) {
 		int nbJour = 0;
-		
 
 		switch (doc.getTypeDocument()) {
 		case LIVRE:
@@ -1405,8 +1501,8 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 			}
 			break;
 		}
-		tabDoc.setContent(remplirTabDocument(tabDoc,true));
-		
+		tabDoc.setContent(remplirTabDocument(tabDoc, true));
+
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date datePret = new Date();
 
@@ -1425,7 +1521,7 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		alert.showAndWait();
 		listStage.close();
 
-		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour,0);
+		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour, 0);
 		fichier.getListPret().add(p);
 		doc.setEtat("Non Disponible");
 	}
@@ -1462,35 +1558,33 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		alert.showAndWait();
 		;
 	}
-	
+
 	public Boolean gestionErreurInscription(TextField tf1, TextField tf2, TextField tf3, TextField tf4) {
-		
+
 		String strPrenom = tf1.getText();
 		String strNom = tf2.getText();
 		String strNumTel = tf3.getText();
 		String strAdress = tf4.getText();
-		
-		
+
 		boolean booPrenomAlpha = estAlpha(strPrenom);
 		boolean booNomAlpha = estAlpha(strNom);
 		boolean booNumTel = estNumeric(strNumTel);
 		boolean booAddress = estValide(strAdress);
-		
+
 		if (strPrenom.isEmpty() || strNom.isEmpty() || strNumTel.isEmpty() || strAdress.isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Inscription impossible");
 			alert.setHeaderText(null);
 			alert.setContentText("Vous devez remplir toutes les cases pour vous inscire en tant qu'adhérant");
 			alert.showAndWait();
-		}
-		else if (!booPrenomAlpha || !booNomAlpha) {
+		} else if (!booPrenomAlpha || !booNomAlpha) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Inscription impossible");
 			alert.setHeaderText(null);
-			alert.setContentText("Seulement les charactères alphanumériques sont acceptés pour les sections Prénom et Nom");
+			alert.setContentText(
+					"Seulement les charactères alphanumériques sont acceptés pour les sections Prénom et Nom");
 			alert.showAndWait();
-		}
-		else if(strNumTel.trim().length() != 10) {
+		} else if (strNumTel.trim().length() != 10) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Inscription impossible");
 			alert.setHeaderText(null);
@@ -1500,13 +1594,13 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 				Alert alertNum = new Alert(AlertType.ERROR);
 				alertNum.setTitle("Inscription impossible");
 				alertNum.setHeaderText(null);
-				alertNum.setContentText("Seulement les charactères numériques sont acceptés pour la section Numéro de téléphone");
+				alertNum.setContentText(
+						"Seulement les charactères numériques sont acceptés pour la section Numéro de téléphone");
 				alertNum.showAndWait();
 			}
-			booNumTel=false;
-			
-		}
-		else if(!booAddress) {
+			booNumTel = false;
+
+		} else if (!booAddress) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Inscription impossible");
 			alert.setHeaderText(null);
@@ -1514,29 +1608,29 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 			alert.showAndWait();
 		}
 		return booPrenomAlpha && booNomAlpha && booNumTel && booAddress;
-		
+
 	}
-	
-	public boolean estAlpha(String s) {  
-	    return s != null && s.matches("[A-Za-z]+");  
-	}  
-	
-	public boolean estNumeric(String s) {  
-	    return s != null && s.matches("[-+]?\\d*\\.?\\d+");  
-	}  
+
+	public boolean estAlpha(String s) {
+		return s != null && s.matches("[A-Za-z]+");
+	}
+
+	public boolean estNumeric(String s) {
+		return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+	}
+
 	public boolean estValide(String s) {
 		return s != null && s.matches("[a-zA-Z0-9 ]*");
 	}
-	
 
-	public VBox remplirTabDocument(Tab tabDoc,boolean booRecherche) {
+	public VBox remplirTabDocument(Tab tabDoc, boolean booRecherche) {
 		// Tous les documents
-		if(booRecherche) {
+		if (booRecherche) {
 			donnees = FXCollections.observableArrayList(fichier.getListDoc());
-		}else {
-			donnees = FXCollections.observableArrayList(rc.getListDocumentRecherche());
+		} else {
+			donnees = FXCollections.observableArrayList(listDocumentRecherche);
 		}
-		
+
 		table = new TableView<Document>();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(table);
@@ -1572,14 +1666,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		return vbox;
 	}
 
-	public VBox remplirTabDVD(Tab tabDVD,boolean booRecherche) {
+	public VBox remplirTabDVD(Tab tabDVD, boolean booRecherche) {
 		// DVD
-		if(booRecherche) {
+		if (booRecherche) {
 			donneesDVD = FXCollections.observableArrayList(fichier.getListDvd());
-		}else {
-			donneesDVD = FXCollections.observableArrayList(rc.getListDvdRecherche());
+		} else {
+			donneesDVD = FXCollections.observableArrayList(listDvdRecherche);
 		}
-		
+
 		tableDVD = new TableView<DVD>();
 		VBox vboxDVD = new VBox();
 		vboxDVD.getChildren().add(tableDVD);
@@ -1623,14 +1717,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	}
 
-	public VBox remplirTabPer(Tab tabPerio,boolean booRecherche) {
+	public VBox remplirTabPer(Tab tabPerio, boolean booRecherche) {
 		// Periodiques
-		if(booRecherche) {
+		if (booRecherche) {
 			donneesPer = FXCollections.observableArrayList(fichier.getListPeriodique());
-		}else {
-			donneesPer = FXCollections.observableArrayList(rc.getListPeriodiqueRecherche());
+		} else {
+			donneesPer = FXCollections.observableArrayList(listPeriodiqueRecherche);
 		}
-		
+
 		tablePer = new TableView<Periodiques>();
 		VBox vboxPer = new VBox();
 		vboxPer.getChildren().add(tablePer);
@@ -1675,14 +1769,14 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	}
 
-	public VBox remplirTabLivre(Tab tabLivre,boolean booRecherche) {
+	public VBox remplirTabLivre(Tab tabLivre, boolean booRecherche) {
 		// Livre
-        if(booRecherche) {
-        	donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
-        }else {
-        	donneesLivre = FXCollections.observableArrayList(rc.getListLivreRecherche());
-        }
-		
+		if (booRecherche) {
+			donneesLivre = FXCollections.observableArrayList(fichier.getListLivre());
+		} else {
+			donneesLivre = FXCollections.observableArrayList(listLivreRecherche);
+		}
+
 		tableLivre = new TableView<Livre>();
 		VBox vboxLivre = new VBox();
 		vboxLivre.getChildren().add(tableLivre);
@@ -1721,60 +1815,59 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		return vboxLivre;
 
 	}
-	public void Recherche(Recherche recherche,String strReponse){
-		if(recherche.equals(Recherche.AUTEUR)) {
-			for(int i = 0; i < fichier.getListLivre().size();i++) {
-				if(fichier.getListLivre().get(i).getAuteur().equals(strReponse)) {
+
+	public void Recherche(Recherche recherche, String strReponse) {
+		if (recherche.equals(Recherche.AUTEUR)) {
+			for (int i = 0; i < fichier.getListLivre().size(); i++) {
+				if (fichier.getListLivre().get(i).getAuteur().equals(strReponse)) {
 					System.out.println("a");
 					listLivreRecherche.add(fichier.getListLivre().get(i));
 				}
 			}
-			for(int i = 0; i < fichier.getListDvd().size() ;i++) {
-				if(fichier.getListDvd().get(i).getStrAuteur().equals(strReponse)) {
+			for (int i = 0; i < fichier.getListDvd().size(); i++) {
+				if (fichier.getListDvd().get(i).getStrAuteur().equals(strReponse)) {
 					listDvdRecherche.add(fichier.getListDvd().get(i));
 				}
 			}
-		}else {
-			//Recherche des Document
-			for(int j = 0; j < fichier.getListDoc().size();j++) {
+		} else {
+			// Recherche des Document
+			for (int j = 0; j < fichier.getListDoc().size(); j++) {
 				String[] Titreparts = fichier.getListDoc().get(j).getTitre().split(" ");
-			for(int i = 0; i < Titreparts.length;i++) {
-				if(strReponse.equals(Titreparts[i])) {
-					listDocumentRecherche.add(fichier.getListDoc().get(j));
-				}
+				for (int i = 0; i < Titreparts.length; i++) {
+					if (strReponse.equals(Titreparts[i])) {
+						listDocumentRecherche.add(fichier.getListDoc().get(j));
+					}
 				}
 			}
-			//Recherche des DVD
-			for(int j = 0; j < fichier.getListDvd().size();j++) {
+			// Recherche des DVD
+			for (int j = 0; j < fichier.getListDvd().size(); j++) {
 				String[] Titreparts = fichier.getListDvd().get(j).getStrNomDuDvd().split(" ");
-					for(int i = 0; i < Titreparts.length;i++) {
-							if(strReponse.equals(Titreparts[i])) {
-								listDvdRecherche.add(fichier.getListDvd().get(j));
-							}
-						}
+				for (int i = 0; i < Titreparts.length; i++) {
+					if (strReponse.equals(Titreparts[i])) {
+						listDvdRecherche.add(fichier.getListDvd().get(j));
+					}
+				}
 			}
-			//Recherche des Livres
-			for(int j = 0; j < fichier.getListLivre().size();j++) {
+			// Recherche des Livres
+			for (int j = 0; j < fichier.getListLivre().size(); j++) {
 				String[] Titreparts = fichier.getListLivre().get(j).getTitre().split(" ");
-					for(int i = 0; i < Titreparts.length;i++) {
-							if(strReponse.equals(Titreparts[i])) {
-								listLivreRecherche.add(fichier.getListLivre().get(j));
-							}
-						}
+				for (int i = 0; i < Titreparts.length; i++) {
+					if (strReponse.equals(Titreparts[i])) {
+						listLivreRecherche.add(fichier.getListLivre().get(j));
+					}
+				}
 			}
-			//Recherche des Periodiques
-			for(int j = 0; j < fichier.getListPeriodique().size();j++) {
+			// Recherche des Periodiques
+			for (int j = 0; j < fichier.getListPeriodique().size(); j++) {
 				String[] Titreparts = fichier.getListPeriodique().get(j).getStrNomDuPeriodique().split(" ");
-					for(int i = 0; i < Titreparts.length;i++) {
-							if(strReponse.equals(Titreparts[i])) {
-								listPeriodiqueRecherche.add(fichier.getListPeriodique().get(j));
-							}
-						}
+				for (int i = 0; i < Titreparts.length; i++) {
+					if (strReponse.equals(Titreparts[i])) {
+						listPeriodiqueRecherche.add(fichier.getListPeriodique().get(j));
+					}
+				}
 			}
-			
-			
+
 		}
-		
-		
+
 	}
 }
