@@ -12,10 +12,11 @@ public class RechercheMotCle {
 	private ArrayList<Periodiques> listPeriodiqueRecherche = new ArrayList<Periodiques>();
 	private ArrayList<Livre> listLivreRecherche = new ArrayList<Livre>();
 	private Main main;
-	public void Recherche(Recherche recherche,String strReponse){
-		LectureFichier fichier = new LectureFichier();
+	/*public void Recherche(Recherche recherche,String strReponse){
 		if(recherche.equals(Recherche.AUTEUR)) {
-			for(int i = 0; i < fichier.getListLivre().size() ;i++) {
+			System.out.println("Auteurr");
+			for(int i = 0; i < fichier.getListLivre().size();i++) {
+				System.out.println(strReponse);
 				if(fichier.getListLivre().get(i).getAuteur().equals(strReponse)) {
 					listLivreRecherche.add(fichier.getListLivre().get(i));
 				}
@@ -36,20 +37,38 @@ public class RechercheMotCle {
 				}
 			}
 			//Recherche des DVD
-			for(int j = 0; j < fichier.getListDoc().size();j++) {
-				String[] Titreparts = fichier.getListDoc().get(j).getTitre().split(" ");
-			for(int i = 0; i < Titreparts.length;i++) {
-				if(strReponse.equals(Titreparts[i])) {
-					listDocumentRecherche.add(fichier.getListDoc().get(j));
-				}
-				}
+			for(int j = 0; j < fichier.getListDvd().size();j++) {
+				String[] Titreparts = fichier.getListDvd().get(j).getStrNomDuDvd().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listDvdRecherche.add(fichier.getListDvd().get(j));
+							}
+						}
+			}
+			//Recherche des Livres
+			for(int j = 0; j < fichier.getListLivre().size();j++) {
+				String[] Titreparts = fichier.getListLivre().get(j).getTitre().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listLivreRecherche.add(fichier.getListLivre().get(j));
+							}
+						}
+			}
+			//Recherche des Periodiques
+			for(int j = 0; j < fichier.getListPeriodique().size();j++) {
+				String[] Titreparts = fichier.getListPeriodique().get(j).getStrNomDuPeriodique().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listPeriodiqueRecherche.add(fichier.getListPeriodique().get(j));
+							}
+						}
 			}
 			
 			
 		}
 		
 		
-	}
+	}*/
 	public ArrayList<Document> getListDocumentRecherche() {
 		return listDocumentRecherche;
 	}

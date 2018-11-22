@@ -8,10 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import javax.rmi.ssl.SslRMIClientSocketFactory;
-import javax.swing.text.MaskFormatter;
 
 import application.DVD;
 import application.Document;
@@ -64,8 +60,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import application.Pret;
+import application.Recherche;
 import application.RechercheMotCle;
-import application.LectureFichier;
 import application.Adherent;
 import application.Prepose;
 
@@ -149,37 +145,10 @@ public class Main extends Application {
 	private ObservableList<Periodiques> donneesPer;
 	private TableView<Periodiques> tablePer;
 	private TableView<Document> table;
-	public TableView<Periodiques> getTablePer() {
-		return tablePer;
-	}
-
-	public void setTablePer(TableView<Periodiques> tablePer) {
-		this.tablePer = tablePer;
-	}
-
-	public TableView<Document> getTable() {
-		return table;
-	}
-
-	public void setTable(TableView<Document> table) {
-		this.table = table;
-	}
-
-	public TableView<DVD> getTableDVD() {
-		return tableDVD;
-	}
-
-	public void setTableDVD(TableView<DVD> tableDVD) {
-		this.tableDVD = tableDVD;
-	}
-
-	public TableView<Livre> getTableLivre() {
-		return tableLivre;
-	}
-
-	public void setTableLivre(TableView<Livre> tableLivre) {
-		this.tableLivre = tableLivre;
-	}
+	private ArrayList<Document> listDocumentRecherche = new ArrayList<Document>();
+	private ArrayList<DVD> listDvdRecherche = new ArrayList<DVD>();
+	private ArrayList<Periodiques> listPeriodiqueRecherche = new ArrayList<Periodiques>();
+	private ArrayList<Livre> listLivreRecherche = new ArrayList<Livre>();
 
 	private TableView<DVD> tableDVD;
 	private ObservableList<Livre> donneesLivre;
@@ -196,38 +165,6 @@ public class Main extends Application {
 	private Stage listStage;
     private RechercheMotCle rc = new RechercheMotCle();
     
-    
-	public ObservableList<Document> getDonnees() {
-		return donnees;
-	}
-
-	public void setDonnees(ObservableList<Document> donnees) {
-		this.donnees = donnees;
-	}
-
-	public ObservableList<DVD> getDonneesDVD() {
-		return donneesDVD;
-	}
-
-	public void setDonneesDVD(ObservableList<DVD> donneesDVD) {
-		this.donneesDVD = donneesDVD;
-	}
-
-	public ObservableList<Periodiques> getDonneesPer() {
-		return donneesPer;
-	}
-
-	public void setDonneesPer(ObservableList<Periodiques> donneesPer) {
-		this.donneesPer = donneesPer;
-	}
-
-	public ObservableList<Livre> getDonneesLivre() {
-		return donneesLivre;
-	}
-
-	public void setDonneesLivre(ObservableList<Livre> donneesLivre) {
-		this.donneesLivre = donneesLivre;
-	}
 
 	private EventHandler<ActionEvent> gestionInscrire = new EventHandler<ActionEvent>() {
 
@@ -525,6 +462,8 @@ public class Main extends Application {
 				btnPret.setDisable(true);
 			}
 
+			
+			
 			btnAjouter.setOnAction(gestionAjouter);
 			btnRetour.setOnAction(gestionRetour);
 			btnPret.setOnAction(gestionListAdherant);
@@ -561,7 +500,11 @@ public class Main extends Application {
 			tabLivre.setClosable(false);
 			tabPerio.setClosable(false);
 			tabDVD.setClosable(false);
-
+			Recherche(Recherche.MOTCLE, "le");
+			
+			for(int i = 0;i< listDocumentRecherche.size();i++) {
+					System.out.println(listDocumentRecherche.get(i).getTitre());
+			}
 			// Supprimer
 			btnSupprimer.setOnAction(gestionSupprimer);
 
@@ -1252,6 +1195,7 @@ public class Main extends Application {
 			primaryStage.hide();
 			debutLogin();
 		});
+		
 		vBox.getChildren().addAll(t, btnContinuer);
 		vBox.setAlignment(Pos.CENTER);
 		t.setTextAlignment(TextAlignment.CENTER);
@@ -1264,6 +1208,14 @@ public class Main extends Application {
 		primaryStage.sizeToScene();
 	}
 	
+	public LectureFichier getFichier() {
+		return fichier;
+	}
+
+	public void setFichier(LectureFichier fichier) {
+		this.fichier = fichier;
+	}
+
 	public Stage debutLogin() {
 		Stage stageLogin = new Stage();
 		BorderPane bpLogin = new BorderPane();
@@ -1326,6 +1278,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+		
 	}
 
 	public void verifLoginNumTel(TextField tf) {
@@ -1396,7 +1349,6 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 
 	public void pret(Document doc) {
 		int nbJour = 0;
-		
 		
 
 		switch (doc.getTypeDocument()) {
@@ -1746,5 +1698,61 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		tableLivre.setItems(donneesLivre);
 		return vboxLivre;
 
+	}
+	public void Recherche(Recherche recherche,String strReponse){
+		if(recherche.equals(Recherche.AUTEUR)) {
+			for(int i = 0; i < fichier.getListLivre().size();i++) {
+				if(fichier.getListLivre().get(i).getAuteur().equals(strReponse)) {
+					System.out.println("a");
+					listLivreRecherche.add(fichier.getListLivre().get(i));
+				}
+			}
+			for(int i = 0; i < fichier.getListDvd().size() ;i++) {
+				if(fichier.getListDvd().get(i).getStrAuteur().equals(strReponse)) {
+					listDvdRecherche.add(fichier.getListDvd().get(i));
+				}
+			}
+		}else {
+			//Recherche des Document
+			for(int j = 0; j < fichier.getListDoc().size();j++) {
+				String[] Titreparts = fichier.getListDoc().get(j).getTitre().split(" ");
+			for(int i = 0; i < Titreparts.length;i++) {
+				if(strReponse.equals(Titreparts[i])) {
+					listDocumentRecherche.add(fichier.getListDoc().get(j));
+				}
+				}
+			}
+			//Recherche des DVD
+			for(int j = 0; j < fichier.getListDvd().size();j++) {
+				String[] Titreparts = fichier.getListDvd().get(j).getStrNomDuDvd().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listDvdRecherche.add(fichier.getListDvd().get(j));
+							}
+						}
+			}
+			//Recherche des Livres
+			for(int j = 0; j < fichier.getListLivre().size();j++) {
+				String[] Titreparts = fichier.getListLivre().get(j).getTitre().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listLivreRecherche.add(fichier.getListLivre().get(j));
+							}
+						}
+			}
+			//Recherche des Periodiques
+			for(int j = 0; j < fichier.getListPeriodique().size();j++) {
+				String[] Titreparts = fichier.getListPeriodique().get(j).getStrNomDuPeriodique().split(" ");
+					for(int i = 0; i < Titreparts.length;i++) {
+							if(strReponse.equals(Titreparts[i])) {
+								listPeriodiqueRecherche.add(fichier.getListPeriodique().get(j));
+							}
+						}
+			}
+			
+			
+		}
+		
+		
 	}
 }
