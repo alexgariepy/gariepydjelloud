@@ -26,11 +26,25 @@ public class RechercheMotCle {
 				}
 			}
 		}else {
-			Document doc = main.getTable().getSelectionModel().getSelectedItem();
-			String[] Titreparts = doc.getTitre().split(" ");
-			/*for() {
-				
-			}*/
+			//Recherche des Document
+			for(int j = 0; j < fichier.getListDoc().size();j++) {
+				String[] Titreparts = fichier.getListDoc().get(j).getTitre().split(" ");
+			for(int i = 0; i < Titreparts.length;i++) {
+				if(strReponse.equals(Titreparts[i])) {
+					listDocumentRecherche.add(fichier.getListDoc().get(j));
+				}
+				}
+			}
+			//Recherche des DVD
+			for(int j = 0; j < fichier.getListDoc().size();j++) {
+				String[] Titreparts = fichier.getListDoc().get(j).getTitre().split(" ");
+			for(int i = 0; i < Titreparts.length;i++) {
+				if(strReponse.equals(Titreparts[i])) {
+					listDocumentRecherche.add(fichier.getListDoc().get(j));
+				}
+				}
+			}
+			
 			
 		}
 		
