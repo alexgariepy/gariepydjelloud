@@ -1384,7 +1384,7 @@ public void verifLoginNomPrenom(TextField tfNom, TextField tfPrenom) {
 		alert.showAndWait();
 		listStage.close();
 
-		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour);
+		Pret p = new Pret((Adherent) comboBoxAdherent.getSelectionModel().getSelectedItem(), datePret, dateRetour,0);
 		fichier.getListPret().add(p);
 		doc.setEtat("Non Disponible");
 	}

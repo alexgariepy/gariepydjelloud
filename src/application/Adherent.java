@@ -1,6 +1,8 @@
 package application;
 
-public class Adherent {
+import java.io.Serializable;
+
+public class Adherent implements Serializable {
 	
 private	String strPrenom;
 private	String strNom;

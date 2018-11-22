@@ -1,21 +1,29 @@
 package application;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Pret {
+public class Pret  implements Serializable{
 	private Adherent adh;
 	private	Date DatePret;
 	private Date DateRetourPrevu;
-	private Date DateDeRemise;
+	
+	private double dblAmende;
 
 
-	public Pret(Adherent adh,Date DatePret,Date DateRetourPrevu){
+	public Pret(Adherent adh,Date DatePret,Date DateRetourPrevu,double dblAmende){
 
 		this.adh = adh;
 		this.DatePret = DatePret;
 		this.DateRetourPrevu = DateRetourPrevu;
+		Date d = new Date();
+		this.dblAmende = retournemontantamende(DateRetourPrevu, d);
+		
+	}
+	public double getDblAmende() {
+		return dblAmende;
 	}
 	public static void main(String[] args) {
 		try {
