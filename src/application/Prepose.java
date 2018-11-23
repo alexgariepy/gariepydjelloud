@@ -29,7 +29,15 @@ public class Prepose implements Serializable{
 			this.strAdresse = strAdresse;
 			this.strMDP = strMDP;
 			this.intNoEmploye = intNoEmploye;
-	 } 
+	 }
+
+	public String getStrMDP() {
+		return strMDP;
+	}
+
+	public int getIntNoEmploye() {
+		return intNoEmploye;
+	} 
 
 
 

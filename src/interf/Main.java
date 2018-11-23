@@ -9,11 +9,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import application.Adherent;
 import application.DVD;
 import application.Document;
 import application.LectureFichier;
 import application.Livre;
 import application.Periodiques;
+import application.Prepose;
+import application.Pret;
+import application.Recherche;
+import application.RechercheMotCle;
 import application.TypeDocument;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -61,11 +66,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import application.Pret;
-import application.Recherche;
-import application.RechercheMotCle;
-import application.Adherent;
-import application.Prepose;
 
 public class Main extends Application {
 	private BorderPane root;
@@ -114,6 +114,7 @@ public class Main extends Application {
 	private Tab tabLivre = new Tab("Livres");
 	private Tab tabPerio = new Tab("Périodiques");
 	private Tab tabDVD = new Tab("DVDS");
+	private Stage stageLogin;
 
 	private BackgroundSize bgTaille = new BackgroundSize(500, 400, false, false, false, false);
 	private BackgroundSize bgTaille2 = new BackgroundSize(1290, 730, false, false, false, false);
@@ -174,8 +175,13 @@ public class Main extends Application {
 	private Boolean booValidationNumTel = false;
 	private Boolean booValidationNomPrenom = false;
 	private Boolean booAnnuler = false;
-	private TableView<Adherent> tableAdherent ;
+	private TableView<Adherent> tableAdherent;
 	private ObservableList<Adherent> donneeAdherent;
+	private Boolean booConnect = false;
+	private Boolean boodebut = false;
+	private Stage stageInscription;
+	private Stage stagePerso;
+	private Tab tabAdherent = new Tab("Adhérents");
 
 	private EventHandler<ActionEvent> gestionPersonnel = new EventHandler<ActionEvent>() {
 
@@ -188,15 +194,17 @@ public class Main extends Application {
 			Scene sceneInsciption = new Scene(vBoxPersonnel, 450, 375);
 			vBoxPersonnel.setBackground(bg2);
 			vBoxPersonnel.setPadding(new Insets(10));
-			
+
+			TabPane tp = new TabPane();
+			tabAdherent.setContent(remplirTabAdherent(tabAdherent));
+			tp.getTabs().add(tabAdherent);
+
 			VBox vBox1 = new VBox();
 			vBox1.setPrefSize(400, 300);
 			vBox1.setSpacing(20);
 			vBox1.setBackground(bg3);
-			vBox1.setBorder(border); 
-			
-			Tab tabAdherent = new Tab();
-			vBox1.getChildren().add(remplirTabAdherent(tabAdherent));
+			vBox1.setBorder(border);
+			vBox1.getChildren().add(tp);
 			VBox vBox2 = new VBox();
 			vBox2.setPrefSize(400, 80);
 			vBox2.setSpacing(20);
@@ -204,15 +212,15 @@ public class Main extends Application {
 			hBoxGestion.setPadding(new Insets(10));
 			Button btnAjouter = new Button("Ajouter");
 			booAnnuler = true;
+			boodebut = true;
 			btnAjouter.setOnAction(gestionInscrire);
-			
 			Button btnSupprimer = new Button("Supprimer");
 			btnSupprimer.setOnAction(e -> {
 				Adherent a = tableAdherent.getSelectionModel().getSelectedItem();
 				if (a != null) {
 					fichier.getListAdherent().remove(a);
 					tabAdherent.setContent(remplirTabAdherent(tabAdherent));
-					
+
 				} else {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Suppression de l'adhérent impossible");
@@ -232,61 +240,52 @@ public class Main extends Application {
 					vBoxModif.setPadding(new Insets(10));
 					Scene sceneModif = new Scene(vBoxModif, 400, 200);
 					vBoxModif.setBackground(bg2);
-					
+
 					TextField tfAdresse = new TextField();
-					TextField tfTel = new TextField();
-					
+					TextField tfNumeroDeTelephone = new TextField();
+
 					Label labelA = new Label("Adresse : ");
 					Label labelT = new Label("Numéro de téléphone : ");
-					
+
 					VBox vBoxtf = new VBox();
 					vBoxtf.setSpacing(10);
 					VBox vBoxLabel = new VBox();
 					vBoxtf.setPadding(new Insets(5));
 					vBoxLabel.setSpacing(10);
-					
+
 					labelA.setMinSize(180, 30);
 					labelT.setMinSize(180, 30);
 					vBoxtf.setMinSize(180, 30);
 					vBoxLabel.setMinSize(180, 30);
-					
+
 					labelA.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 					labelA.setTextFill(Color.WHITE);
 					labelT.setFont(Font.font("Arial", FontWeight.BOLD, 13));
 					labelT.setTextFill(Color.WHITE);
-					
-					vBoxtf.getChildren().addAll(tfAdresse, tfTel);
+
+					vBoxtf.getChildren().addAll(tfAdresse, tfNumeroDeTelephone);
 					vBoxLabel.getChildren().addAll(labelA, labelT);
-					
+
 					HBox hBoxModif = new HBox();
 					hBoxModif.setSpacing(10);
 					hBoxModif.getChildren().addAll(vBoxLabel, vBoxtf);
-					
+
 					Button btnConfirmer = new Button("Confirmer");
-					Boolean booA = estValide(tfAdresse.getText());
-					Boolean booT = estNumeric(tfTel.getText());
-			
-					btnConfirmer.setOnAction(e2 ->{
-						if(booA && booT) {
-							a.setStrAdresse(tfAdresse.getText());
-							a.setStrNum(tfTel.getText()); 
-						}
-						else {
-							Alert alert = new Alert(AlertType.ERROR);
-							alert.setTitle("Modification de l'adhérent impossible");
-							alert.setHeaderText(null);
-							alert.setContentText("Veuillez bien remplir les champs requis pour modifier l'adhérent");
-							alert.showAndWait();
-						}
-						
+
+					btnConfirmer.setOnMouseClicked(e2 -> {
+
+						a.setStrAdresse(tfAdresse.getText().trim());
+						a.setStrNum(tfNumeroDeTelephone.getText().trim());
+						tabAdherent.setContent(remplirTabAdherent(tabAdherent));
+
 					});
-					
+
 					btnConfirmer.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-					
+
 					vBoxModif.setAlignment(Pos.CENTER);
 					vBoxModif.getChildren().addAll(hBoxModif, btnConfirmer);
-					
-					Stage stageModif= new Stage();
+
+					Stage stageModif = new Stage();
 					stageModif.setTitle("Modification des adhérents");
 					stageModif.setScene(sceneModif);
 					stageModif.setResizable(false);
@@ -308,11 +307,11 @@ public class Main extends Application {
 			vBox2.getChildren().add(hBoxGestion);
 
 			vBoxPersonnel.getChildren().addAll(vBox1, vBox2);
-			Stage stageInscription = new Stage();
-			stageInscription.setTitle("Gestion des adhérents");
-			stageInscription.setScene(sceneInsciption);
-			stageInscription.setResizable(false);
-			stageInscription.show();
+			stagePerso = new Stage();
+			stagePerso.setTitle("Gestion des adhérents");
+			stagePerso.setScene(sceneInsciption);
+			stagePerso.setResizable(false);
+			stagePerso.show();
 		}
 
 	};
@@ -427,15 +426,37 @@ public class Main extends Application {
 								alertErr.showAndWait();
 							} else {
 								fichier.getListAdherent().add(a);
+								tabAdherent.setContent(remplirTabAdherent(tabAdherent));
+								System.out.println(fichier.getListAdherent().get(0).getStrPrenom());
 								stageInscription.close();
-								debutLogin();
+								if (boodebut == false) {
+									debutLogin();
+								} else {
+									try {
+										stagePerso.close();
+									} catch (Exception e4) {
+
+									}
+
+								}
+
 							}
 						}
 					} else {
 						fichier.getListAdherent().add(a);
+						tabAdherent.setContent(remplirTabAdherent(tabAdherent));
+						System.out.println(fichier.getListAdherent().get(0).getStrPrenom());
 						stageInscription.close();
-						debutLogin();
+						if (boodebut == false) {
+							debutLogin();
+						} else {
+							try {
+								stagePerso.close();
+							} catch (Exception e1) {
 
+							}
+
+						}
 					}
 
 				}
@@ -582,6 +603,9 @@ public class Main extends Application {
 			if (booValidationNumTel || booValidationNomPrenom) {
 				stageAdherant.close();
 			}
+			if (booConnect) {
+				stageLogin.close();
+			}
 			if (event.getSource().equals(btnUsager)) {
 				booUsager = true;
 			}
@@ -681,8 +705,6 @@ public class Main extends Application {
 			vBox2.setBorder(border);
 
 			tp.setMaxSize(900, 550);
-
-			fichier.lecture();
 
 			tabDoc.setContent(remplirTabDocument(tabDoc, true));
 			tabLivre.setContent(remplirTabLivre(tabLivre, true));
@@ -1376,6 +1398,7 @@ public class Main extends Application {
 		Text t = new Text("Bienvenue au projet de\nMohamed Djelloud et Alex Gariépy");
 		t.setFont(Font.font("Calibri", FontWeight.MEDIUM, 15));
 		Button btnContinuer = new Button("Continuer");
+
 		btnContinuer.setOnMouseClicked(e -> {
 			primaryStage.hide();
 			debutLogin();
@@ -1402,9 +1425,19 @@ public class Main extends Application {
 	}
 
 	public Stage debutLogin() {
-		Stage stageLogin = new Stage();
+		boodebut = false;
+		booUsager = false;
+		fichier.lecture();
+		try {
+			System.out.println(fichier.getListPrepose().get(0).getIntNoEmploye());
+		} catch (Exception e) {
+
+		}
+
+		stageLogin = new Stage();
 		BorderPane bpLogin = new BorderPane();
 		Scene sceneLogin = new Scene(bpLogin, 500, 400);
+
 		bpLogin.setBackground(bg1);
 		bpLogin.setPadding(new Insets(10));
 
@@ -1429,12 +1462,16 @@ public class Main extends Application {
 			stageLogin.hide();
 		});
 
-		btnConnexion.setOnAction(gestionConnexion);
-		btnConnexion.setOnMouseClicked(e -> {
-			booUsager = false;
-			parametreBoutton();
-			stageLogin.hide();
-
+		btnConnexion.setOnAction(e -> {
+			booConnect = verifLoginPrep(tfNoEmploye, tfMDP);
+			if (booConnect) {
+				System.out.println("yes");
+				btnConnexion.setOnAction(gestionConnexion);
+				btnConnexion.setOnMouseClicked(e5 -> {
+					booUsager = false;
+					parametreBoutton();
+				});
+			}
 		});
 
 		labelNoEmploye.setFont(Font.font("Arial", 15));
@@ -1550,6 +1587,58 @@ public class Main extends Application {
 			}
 		}
 		return booReponse;
+	}
+
+	public Boolean verifLoginPrep(TextField tfNoEmp, TextField tfMDP) {
+		Boolean booValide = false;
+
+		String strNoEmp = tfNoEmp.getText();
+		String strMDP = tfMDP.getText();
+
+		if (strNoEmp.isEmpty() || strMDP.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Login impossible");
+			alert.setHeaderText(null);
+			alert.setContentText(
+					"Vous devez remplir les champs No. d'employé et Mot de passe pour vous connectez à votre compte Préposé");
+			alert.showAndWait();
+		} else {
+			if (fichier.getListPrepose().size() > 0) {
+				for (int i = 0; i < fichier.getListPrepose().size(); i++) {
+					if (strNoEmp.equals(Integer.toString(fichier.getListPrepose().get(i).getIntNoEmploye()))) {
+						if (strMDP.equals(fichier.getListPrepose().get(i).getStrMDP())) {
+							booValide = true;
+						} else {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Login impossible");
+							alert.setHeaderText(null);
+							alert.setContentText(
+									"Votre Mot de passe ne correspond pas à le numéro d'employé inscrit dans la base de donnée");
+							alert.showAndWait();
+						}
+
+					} else {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Login impossible");
+						alert.setHeaderText(null);
+						alert.setContentText(
+								"Le numéro d'employé n'est pas trouvé dans la base de donnée. Avez-vous faites votre inscription?");
+						alert.showAndWait();
+					}
+
+				}
+			} else {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Login impossible");
+				alert.setHeaderText(null);
+				alert.setContentText(
+						"Il n'y a aucun préposé dans la base de donné de la médiathèque. Avez-vous faites au moins une inscription?");
+				alert.showAndWait();
+			}
+		}
+
+		return booValide;
+
 	}
 
 	public void parametreBoutton() {
@@ -1966,29 +2055,33 @@ public class Main extends Application {
 		tableAdherent = new TableView<Adherent>();
 		VBox vBoxTab = new VBox();
 		vBoxTab.getChildren().add(tableAdherent);
-		
 
-		TableColumn<Adherent, String> colonneNom = new TableColumn<Adherent, String>("Nom");
-		TableColumn<Adherent, String> colonnePrenom = new TableColumn<Adherent, String>("Prénom");
+		TableColumn<Adherent, String> colonneNom = new TableColumn<Adherent, String>("Prénom");
+		TableColumn<Adherent, String> colonnePrenom = new TableColumn<Adherent, String>("Nom");
 		TableColumn<Adherent, String> colonneNumTel = new TableColumn<Adherent, String>("Téléphone");
+		TableColumn<Adherent, String> colonneAdress = new TableColumn<Adherent, String>("Adresse");
 
 		colonneNom.setCellValueFactory(new PropertyValueFactory<>("strNom"));
 		colonnePrenom.setCellValueFactory(new PropertyValueFactory<>("strPrenom"));
 		colonneNumTel.setCellValueFactory(new PropertyValueFactory<>("strNum"));
+		colonneAdress.setCellValueFactory(new PropertyValueFactory<>("strAdresse"));
 
 		colonneNom.setResizable(false);
 		colonnePrenom.setResizable(false);
 		colonneNumTel.setResizable(false);
+		colonneAdress.setResizable(false);
 
-		colonneNom.setMinWidth(150);
-		colonnePrenom.setMinWidth(150);
-		colonneNumTel.setMinWidth(150);
+		colonneNom.setMinWidth(100);
+		colonnePrenom.setMinWidth(100);
+		colonneNumTel.setMinWidth(100);
+		colonneAdress.setResizable(false);
 
-		tableAdherent.getColumns().addAll(colonneNom, colonnePrenom, colonneNumTel);
+		tableAdherent.getColumns().addAll(colonneNom, colonnePrenom, colonneNumTel, colonneAdress);
+		tableAdherent.setItems(donneeAdherent);
 		return vBoxTab;
 
 	}
-	
+
 	public void Recherche(Recherche recherche, String strReponse) {
 		if (recherche.equals(Recherche.AUTEUR)) {
 			for (int i = 0; i < fichier.getListLivre().size(); i++) {
